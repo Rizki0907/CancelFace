@@ -1,17 +1,16 @@
 <!DOCTYPE html>
-
-<html data-theme="light" lang="id">
+<html lang="id" data-theme="dark">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width,initial-scale=1.0" name="viewport"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>CancelFace - Secure Face Biometrics</title>
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800;900&amp;family=Figtree:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" rel="stylesheet"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800;900&family=Figtree:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<script src="data.js"></script>
 <style>
+
 :root {
   /* SIPEDA design system — light first, indigo/crimson dual brand, multi-accent data cards */
   --bg:#f3f4fa;--bg1:#ffffff;--bg2:#ffffff;--bg3:#f0f1f7;--bg4:#e7e9f1;
@@ -21,7 +20,7 @@
 
   --c-blue:#0ea5e9;
   --c-red:#f43f5e;
-  --c-green:#15a35a;
+  --c-green:#10b981;
   --c-amber:#f5a524;
   --c-teal:#0c93ab;
   --c-purple:#6366f1;
@@ -33,9 +32,9 @@
   --c-indigo:#6366f1;
   --c-yellow:#d79a06;
 
-  --z-merah:#e0293f;
-  --z-kuning:#e89500;
-  --z-hijau:#0f9d58;
+  --z-merah:#f43f5e;
+  --z-kuning:#eab308;
+  --z-hijau:#10b981;
 
   --glow-b:0 0 32px rgba(79,70,229,0.22);
   --glow-r:0 0 32px rgba(251,78,106,0.22);
@@ -1248,2190 +1247,478 @@ body.sb-collapsed .main {
 /* tab indicator (removed visual, but keep for JS compat) */
 #tab-indicator { display: none !important; }
 
+
+/* CANCELFACE CUSTOM CSS */
+.cf-shield-container {
+    font-size: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: shield-pulse 3s ease-in-out infinite;
+    position: relative;
+    height: 100%;
+}
+@keyframes shield-pulse {
+    0%, 100% { transform: scale(1) translateY(0); filter: drop-shadow(0 0 20px rgba(14,165,233,0.3)); }
+    50% { transform: scale(1.05) translateY(-10px); filter: drop-shadow(0 0 40px rgba(14,165,233,0.6)); }
+}
+.cf-scanner {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: #0ea5e9;
+    box-shadow: 0 0 15px #0ea5e9;
+    animation: scan 2s linear infinite;
+    opacity: 0.7;
+    border-radius: 50%;
+}
+@keyframes scan {
+    0% { top: 10%; opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { top: 90%; opacity: 0; }
+}
+.hex-rain {
+    position: absolute;
+    color: var(--c-blue);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: bold;
+    opacity: 0;
+    pointer-events: none;
+    animation: rain 3s linear infinite;
+}
+@keyframes rain {
+    0% { transform: translateY(-20px); opacity: 0; }
+    20% { opacity: 0.5; }
+    80% { opacity: 0.5; }
+    100% { transform: translateY(100px); opacity: 0; }
+}
+
+.sim-box {
+    background: var(--bg2);
+    border: 1px solid var(--bord);
+    border-radius: 12px;
+    padding: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    color: var(--txt);
+    min-height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    word-break: break-all;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
+}
+.sim-btn {
+    background: linear-gradient(135deg, var(--c-blue), var(--c-purple));
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(14,165,233,0.4);
+    transition: transform 0.2s;
+}
+.sim-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(14,165,233,0.6);
+}
+.page { display: none; }
+.page.active { display: block; animation: pg-in .45s cubic-bezier(.16,1,.3,1); }
+
 </style>
-<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script><script src="data.js"></script></head>
+</head>
 <body>
 <canvas id="bg-canvas"></canvas>
-<canvas id="mosquito-canvas"></canvas>
-<div class="sb-overlay" id="sb-overlay" onclick="closeSidebarMobile()"></div>
-<aside class="sidebar" id="sidebar">
-<!-- Sidebar header -->
-<div class="sb-header">
-<button aria-label="Toggle sidebar" class="sb-toggle" id="sb-toggle" onclick="toggleSidebar()">
-<svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.3" viewbox="0 0 24 24" width="15"><line x1="3" x2="21" y1="6" y2="6"></line><line x1="3" x2="21" y1="12" y2="12"></line><line x1="3" x2="21" y1="18" y2="18"></line></svg>
-</button>
-<div class="sb-logo-wrap" onclick="navigate('beranda')">
-<svg class="logo-svg" height="28" viewbox="0 0 34 34" width="28">
-<defs><radialgradient cx="50%" cy="50%" id="slg1" r="50%"><stop offset="0%" stop-color="#a78bfa" stop-opacity="0.9"></stop><stop offset="100%" stop-color="#22d3ee" stop-opacity="0.7"></stop></radialgradient></defs>
-<circle cx="17" cy="17" fill="rgba(167,139,250,0.08)" r="16" stroke="rgba(167,139,250,0.4)" stroke-width="1.2"></circle>
-<path d="M17 6 Q22 12 22 17 Q22 22 17 26 Q12 22 12 17 Q12 12 17 6Z" fill="url(#slg1)" opacity="0.9"></path>
-<circle cx="17" cy="19" fill="#ff4d6d" opacity="0.9" r="3.5"></circle>
-<line opacity="0.7" stroke="#ff4d6d" stroke-linecap="round" stroke-width="1.2" x1="12" x2="8" y1="17" y2="14"></line>
-<line opacity="0.7" stroke="#ff4d6d" stroke-linecap="round" stroke-width="1.2" x1="22" x2="26" y1="17" y2="14"></line>
-</svg>
-<span class="sb-logo-text"><span class="si">SI</span><span class="pe">PE</span><span class="da">DA</span></span>
-</div>
-</div>
-<!-- Navigation -->
-<nav class="sb-nav">
-<div class="sb-item active" data-label="Beranda" id="stab-beranda" onclick="navigate('beranda')">
-<span class="sb-icon"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9,22 9,12 15,12 15,22"></polyline></svg></span>
-<span class="sb-label">Ringkasan Utama</span>
-</div>
-<div class="sb-item" data-label="Eksplorasi Data" id="stab-eda" onclick="navigate('eda')">
-<span class="sb-icon"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><rect height="12" rx="1" width="4" x="3" y="9"></rect><rect height="16" rx="1" width="4" x="9" y="5"></rect><rect height="19" rx="1" width="4" x="15" y="2"></rect></svg></span>
-<span class="sb-label">Analisis Keamanan</span>
-</div>
-<div class="sb-item" data-label="Model &amp; Evaluasi" id="stab-model" onclick="navigate('model')">
-<span class="sb-icon"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><rect height="6" rx="1" width="6" x="9" y="9"></rect><rect height="16" rx="2" width="16" x="4" y="4"></rect><path d="M9 1v3M15 1v3M9 20v3M15 20v3M1 9h3M1 15h3M20 9h3M20 15h3"></path></svg></span>
-<span class="sb-label">Ketahanan Resolusi</span>
-</div>
-<div class="sb-item" data-label="Peta Zonasi LIVE" id="stab-peta" onclick="navigate('peta')">
-<span class="sb-icon"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><polygon points="1,6 1,22 8,18 16,22 23,18 23,2 16,6 8,2"></polygon><line x1="8" x2="8" y1="2" y2="18"></line><line x1="16" x2="16" y1="6" y2="22"></line></svg></span>
-<span class="sb-label">Heatmap Evaluasi</span>
-<span class="sb-star">Live</span>
-</div>
-<div class="sb-item" data-label="Forecast 2026 Q1" id="stab-forecast" onclick="navigate('forecast')">
-<span class="sb-icon"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><polyline points="23,6 13,16 8,11 1,18"></polyline><polyline points="17,6 23,6 23,12"></polyline></svg></span>
-<span class="sb-label">Simulasi Sistem</span>
-<span class="sb-badge">Q1</span>
-</div>
-<div class="sb-item" data-label="Simulasi Skenario" id="stab-simulasi" onclick="navigate('simulasi')">
-<span class="sb-icon"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="M9 3h6m-5 0v6l-5 9a1 1 0 0 0 .9 1.5h10.2A1 1 0 0 0 21 18l-5-9V3"></path><path d="M6 17h12"></path></svg></span>
-<span class="sb-label">Evaluasi Kinerja</span>
-</div>
-<div class="sb-item" data-label="Metodologi" id="stab-metodologi" onclick="navigate('metodologi')">
-<span class="sb-icon"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><circle cx="12" cy="12" r="10"></circle><line x1="12" x2="12" y1="8" y2="8"></line><line x1="12" x2="12" y1="12" y2="16"></line></svg></span>
-<span class="sb-label">API Dokumentasi</span>
-</div>
-</nav>
-<div class="sb-divider"></div>
-<!-- Sidebar widgets -->
-<div class="sb-widgets">
-<!-- Alert widget -->
-<div class="sb-alert">
-<div class="sb-alert-dot"></div>
-<div>
-<div class="sb-alert-text">Status: Risiko Tinggi</div>
-<div class="sb-alert-sub">Forecast Q1 2026 aktif</div>
-</div>
-</div>
-<!-- Zona Stats -->
-<div class="sb-widget">
-<div class="sb-w-title">Zona Kecamatan · Total</div>
-<div class="sb-w-caption" id="sb-zona-caption">Akumulasi seluruh kecamatan &amp; minggu, forecast Q1 2026</div>
-<div class="sb-stat-row">
-<span class="sb-stat-label">🔴 Merah (&gt;P75)</span>
-<span class="sb-stat-val" id="sb-merah-cnt" style="color:var(--z-merah)">18</span>
-</div>
-<div class="sb-ring">
-<div class="sb-ring-bar"><div class="sb-ring-fill" id="sb-merah-bar" style="width:41%;background:var(--z-merah)"></div></div>
-</div>
-<div class="sb-stat-row" style="margin-top:8px">
-<span class="sb-stat-label">🟡 Kuning</span>
-<span class="sb-stat-val" id="sb-kuning-cnt" style="color:var(--z-kuning)">12</span>
-</div>
-<div class="sb-ring">
-<div class="sb-ring-bar"><div class="sb-ring-fill" id="sb-kuning-bar" style="width:27%;background:var(--z-kuning)"></div></div>
-</div>
-<div class="sb-stat-row" style="margin-top:8px">
-<span class="sb-stat-label">🟢 Hijau</span>
-<span class="sb-stat-val" id="sb-hijau-cnt" style="color:var(--z-hijau)">14</span>
-</div>
-<div class="sb-ring">
-<div class="sb-ring-bar"><div class="sb-ring-fill" id="sb-hijau-bar" style="width:32%;background:var(--z-hijau)"></div></div>
-</div>
-</div>
-<!-- Model perf -->
-<div class="sb-widget">
-<div class="sb-w-title">Model Terbaik</div>
-<div class="sb-stat-row">
-<span class="sb-stat-label" id="sb-model-name">LightGBM</span>
-<span class="sb-stat-val" id="sb-model-r2" style="color:var(--c-blue)">R²=0.77</span>
-</div>
-<div class="sb-stat-row">
-<span class="sb-stat-label">MAE</span>
-<span class="sb-stat-val" id="sb-model-mae">2.95 kasus</span>
-</div>
-<div class="sb-stat-row">
-<span class="sb-stat-label">Data periode</span>
-<span class="sb-stat-val">2017–2025</span>
-</div>
-</div>
-<!-- Swat score -->
-<div class="sb-widget">
-<div class="sb-w-title">🦟 Nyamuk Tertepuk</div>
-<div style="text-align:center;padding:4px 0">
-<div id="swat-score" style="font-size:28px;font-weight:900;font-family:'Sora',sans-serif;color:var(--c-red)">0</div>
-<div style="font-size:10px;color:var(--txt3);margin-top:2px">Klik nyamuk yang terbang!</div>
-</div>
-</div>
-</div>
-<!-- Footer -->
-<div class="sb-footer">
-<div class="sb-footer-live"><div class="live-dot" style="background:var(--c-green);width:6px;height:6px"></div>LIVE</div>
-<span class="sb-footer-text">SIPEDA v1.0 · DKI Jakarta</span>
-</div>
-</aside>
-<header class="header">
-<div class="header-logo" onclick="navigate('beranda')">
-<svg class="logo-svg" viewbox="0 0 34 34">
-<defs><radialgradient cx="50%" cy="50%" id="lg1" r="50%"><stop offset="0%" stop-color="#a78bfa" stop-opacity="0.9"></stop><stop offset="100%" stop-color="#22d3ee" stop-opacity="0.7"></stop></radialgradient></defs>
-<circle cx="17" cy="17" fill="rgba(167,139,250,0.08)" r="16" stroke="rgba(167,139,250,0.4)" stroke-width="1.2"></circle>
-<path d="M17 6 Q22 12 22 17 Q22 22 17 26 Q12 22 12 17 Q12 12 17 6Z" fill="url(#lg1)" opacity="0.9"></path>
-<circle cx="17" cy="19" fill="#ff4d6d" opacity="0.9" r="3.5"></circle>
-<line opacity="0.7" stroke="#ff4d6d" stroke-linecap="round" stroke-width="1.2" x1="12" x2="8" y1="17" y2="14"></line>
-<line opacity="0.7" stroke="#ff4d6d" stroke-linecap="round" stroke-width="1.2" x1="22" x2="26" y1="17" y2="14"></line>
-</svg>
-<span class="logo-text"><span class="si" style="color:var(--c-blue)">Cancel</span><span class="pe" style="color:var(--c-red)">Face</span></span>
-</div>
-<div class="header-divider"></div>
-<span class="header-sub">Protokol Biometrik Wajah Cancelable · ISO/IEC 24745 Compliant</span>
-<div class="header-spacer"></div>
-<div class="live-pill"><div class="live-dot"></div>Status Sistem: SECURE</div>
-<button aria-label="Open sidebar" class="hdr-sb-toggle hdr-btn" onclick="openSidebarMobile()"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.3" style="display:inline-block;vertical-align:middle;flex-shrink:0" viewbox="0 0 24 24" width="16"><line x1="3" x2="21" y1="6" y2="6"></line><line x1="3" x2="21" y1="12" y2="12"></line><line x1="3" x2="21" y1="18" y2="18"></line></svg></button><div class="hdr-btns">
-<button class="hdr-btn" id="theme-btn" onclick="toggleTheme()"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" style="display:inline-block;vertical-align:middle;flex-shrink:0" viewbox="0 0 24 24" width="16"><circle cx="12" cy="12" r="5"></circle><line x1="12" x2="12" y1="1" y2="3"></line><line x1="12" x2="12" y1="21" y2="23"></line><line x1="4.22" x2="5.64" y1="4.22" y2="5.64"></line><line x1="18.36" x2="19.78" y1="18.36" y2="19.78"></line><line x1="1" x2="3" y1="12" y2="12"></line><line x1="21" x2="23" y1="12" y2="12"></line><line x1="4.22" x2="5.64" y1="19.78" y2="18.36"></line><line x1="18.36" x2="19.78" y1="5.64" y2="4.22"></line></svg></button>
-<button class="hdr-btn" onclick="navigate('metodologi')"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" style="display:inline-block;vertical-align:middle;flex-shrink:0" viewbox="0 0 24 24" width="16"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" x2="12.01" y1="17" y2="17"></line></svg></button>
-</div>
-</header>
-<nav class="tabbar" id="tabbar">
-<div class="tab-indicator" id="tab-indicator"></div>
-<div class="tab active" id="tab-beranda" onclick="navigate('beranda')">Ringkasan Utama</div>
-<div class="tab" id="tab-eda" onclick="navigate('eda')">Analisis Keamanan</div>
-<div class="tab" id="tab-model" onclick="navigate('model')">Ketahanan Resolusi</div>
-<div class="tab" id="tab-peta" onclick="navigate('peta')">Heatmap Evaluasi</div>
-<div class="tab" id="tab-forecast" onclick="navigate('forecast')">Simulasi Sistem</div>
-<div class="tab" id="tab-simulasi" onclick="navigate('simulasi')">Evaluasi Kinerja</div>
-<div class="tab" id="tab-metodologi" onclick="navigate('metodologi')">API Dokumentasi</div>
-</nav>
-<div class="ticker">
-<div class="ticker-label">LATEST METRICS</div>
-<div class="ticker-track">
-<div class="ticker-inner" id="ticker-inner"><div class="tick-item"><div class="tick-dot" style="color:var(--c-blue)"></div>Akurasi Gender Attacker: 57.14% (Aman)</div><div class="tick-item"><div class="tick-dot" style="color:var(--c-blue)"></div>Re-identifikasi Lintas CCTV: Mustahil (0.00%)</div><div class="tick-item"><div class="tick-dot" style="color:var(--c-blue)"></div>Standar Keamanan: ISO/IEC 24745 Lulus</div><div class="tick-item"><div class="tick-dot" style="color:var(--c-blue)"></div>Rank-1 Accuracy: 34.5% (Kompetitif)</div><div class="tick-item"><div class="tick-dot" style="color:var(--c-blue)"></div>Akurasi Gender Attacker: 57.14% (Aman)</div><div class="tick-item"><div class="tick-dot" style="color:var(--c-blue)"></div>Re-identifikasi Lintas CCTV: Mustahil (0.00%)</div><div class="tick-item"><div class="tick-dot" style="color:var(--c-blue)"></div>Standar Keamanan: ISO/IEC 24745 Lulus</div><div class="tick-item"><div class="tick-dot" style="color:var(--c-blue)"></div>Rank-1 Accuracy: 34.5% (Kompetitif)</div></div>
-</div>
-</div>
-<div class="main">
-<!-- PAGE: BERANDA -->
-<div class="page active" id="page-beranda">
-<div class="hero mb24">
-<div class="hero-glow1"></div><div class="hero-glow2"></div>
-<div class="hero-inner">
-<div>
-<div class="hero-eyebrow"><span>Sistem Keamanan Biometrik · Cancelable Face 2026</span></div>
-<h1 class="hero-title">Proteksi Wajah.<br/>Privasi Aman.<br/>Presisi Tinggi.</h1>
-<p class="hero-desc">CancelFace membangun protokol perlindungan data biometrik wajah berbasis Cancelable Biometrics. Sistem memastikan identitas tidak dapat direkonstruksi (Non-invertible) dan aman digunakan pada pengawasan CCTV.</p>
-<div class="hero-stats">
-<div class="hstat"><div class="hstat-val" data-counter="44">34.5%</div><div class="hstat-label">RANK-1 ACCURACY</div></div>
-<div class="hstat"><div class="hstat-val" data-counter="9">47.0%</div><div class="hstat-label">AKURASI USIA</div></div>
-<div class="hstat"><div class="hstat-val" data-counter="5">0.111</div><div class="hstat-label">REKONSTRUKSI (COS)</div></div>
-<div class="hstat"><div class="hstat-val" data-counter="13">0.00%</div><div class="hstat-label">RE-IDENTIFIKASI</div></div>
-<div class="hstat"><div class="hstat-val">LULUS</div><div class="hstat-label">ISO 24745</div></div>
-</div>
-</div>
-<div aria-hidden="true" class="hero-deco"><div style="font-size:120px; animation:hd-float 4s ease-in-out infinite; margin-top:40px;">🛡️</div></div>
-<div class="hero-chart">
-<div class="hero-chart-title">VISUALISASI T-SNE TEMPLATE (PRIVASI TERJAGA)</div>
-<div class="ch-200" style="position:relative"><canvas id="heroDonut"></canvas><div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;display:flex;align-items:center;justify-content:center;"><svg fill="none" style="width:54px;height:54px;opacity:0.85" viewbox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-<ellipse cx="40" cy="45" fill="rgba(230,57,70,0.7)" rx="9" ry="15"></ellipse>
-<ellipse cx="40" cy="28" fill="rgba(230,57,70,0.7)" rx="7" ry="8"></ellipse>
-<line stroke="rgba(230,57,70,0.8)" stroke-width="2.5" x1="40" x2="40" y1="20" y2="10"></line>
-<line stroke="rgba(230,57,70,0.8)" stroke-width="2.5" x1="40" x2="35" y1="10" y2="5"></line>
-<line stroke="rgba(230,57,70,0.8)" stroke-width="2.5" x1="40" x2="45" y1="10" y2="5"></line>
-<path d="M31 40 Q20 32 10 36" fill="none" stroke="rgba(0,170,255,0.75)" stroke-width="3"></path>
-<path d="M31 38 Q19 25 10 26" fill="none" stroke="rgba(0,170,255,0.6)" stroke-width="2.5"></path>
-<path d="M49 40 Q60 32 70 36" fill="none" stroke="rgba(0,170,255,0.75)" stroke-width="3"></path>
-<path d="M49 38 Q61 25 70 26" fill="none" stroke="rgba(0,170,255,0.6)" stroke-width="2.5"></path>
-<line stroke="rgba(230,57,70,0.65)" stroke-width="2.5" x1="35" x2="28" y1="56" y2="68"></line>
-<line stroke="rgba(230,57,70,0.65)" stroke-width="2.5" x1="45" x2="52" y1="56" y2="68"></line>
-<line stroke="rgba(230,57,70,0.65)" stroke-width="2.5" x1="40" x2="40" y1="58" y2="70"></line>
-</svg></div></div>
-</div>
-</div>
-</div>
-<div class="mb16"><div class="sec-head"><div class="sec-title"><div class="sec-title-line"></div>Alur Pipeline SIPEDA</div></div></div>
-<div class="flow-diagram mb24">
-<div class="flow-step"><div class="flow-icon"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" style="display:inline-block;vertical-align:middle;flex-shrink:0" viewbox="0 0 24 24" width="16"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7,10 12,15 17,10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg><span class="flow-number">1</span></div><div class="flow-label">Ingest Data<br/>Iklim dan DBD</div></div>
-<div class="flow-arrow">→</div>
-<div class="flow-step"><div class="flow-icon"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" style="display:inline-block;vertical-align:middle;flex-shrink:0" viewbox="0 0 24 24" width="16"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg><span class="flow-number" style="background:var(--c-purple)">2</span></div><div class="flow-label">Feature<br/>Engineering</div></div>
-<div class="flow-arrow">→</div>
-<div class="flow-step"><div class="flow-icon"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" style="display:inline-block;vertical-align:middle;flex-shrink:0" viewbox="0 0 24 24" width="16"><circle cx="11" cy="11" r="8"></circle><line x1="21" x2="16.65" y1="21" y2="16.65"></line></svg><span class="flow-number" style="background:var(--c-teal)">3</span></div><div class="flow-label">EDA dan<br/>Spasial</div></div>
-<div class="flow-arrow">→</div>
-<div class="flow-step"><div class="flow-icon"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" style="display:inline-block;vertical-align:middle;flex-shrink:0" viewbox="0 0 24 24" width="16"><rect height="6" rx="1" width="6" x="9" y="9"></rect><rect height="16" rx="2" width="16" x="4" y="4"></rect><path d="M9 1v3M15 1v3M9 20v3M15 20v3M1 9h3M1 15h3M20 9h3M20 15h3"></path></svg><span class="flow-number" style="background:var(--c-amber)">4</span></div><div class="flow-label">Training<br/>Rolling CV</div></div>
-<div class="flow-arrow">→</div>
-<div class="flow-step"><div class="flow-icon"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" style="display:inline-block;vertical-align:middle;flex-shrink:0" viewbox="0 0 24 24" width="16"><polyline points="23,6 13,16 8,11 1,18"></polyline><polyline points="17,6 23,6 23,12"></polyline></svg><span class="flow-number" style="background:var(--c-red)">5</span></div><div class="flow-label">Forecast<br/>Q1 2026</div></div>
-<div class="flow-arrow">→</div>
-<div class="flow-step"><div class="flow-icon"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" style="display:inline-block;vertical-align:middle;flex-shrink:0" viewbox="0 0 24 24" width="16"><polygon points="1,6 1,22 8,18 16,22 23,18 23,2 16,6 8,2"></polygon><line x1="8" x2="8" y1="2" y2="18"></line><line x1="16" x2="16" y1="6" y2="22"></line></svg><span class="flow-number" style="background:var(--z-merah)">6</span></div><div class="flow-label">Peta Zona<br/>Surveilans</div></div>
-</div>
-<div class="mb16"><div class="sec-head"><div class="sec-title"><div class="sec-title-line" style="background:var(--c-teal)"></div>Sistem Zonasi Surveilans DBD</div><span class="tag tag-blue">WHO EWARS dan Endemicity Channel</span></div></div>
-<div class="zone-cards mb24">
-<div class="zone-card merah">
-<div class="zone-card-icon"><svg height="36" viewbox="0 0 36 36" width="36"><circle cx="18" cy="18" fill="rgba(230,57,70,0.2)" r="16" stroke="rgba(230,57,70,0.6)" stroke-width="2"></circle><circle cx="18" cy="18" fill="rgba(230,57,70,0.7)" r="10"></circle></svg></div>
-<div class="zone-card-name">Zona Merah</div>
-<div class="zone-card-threshold">EWARS: lebih dari P75 · EC: lebih dari Mean+SD</div>
-<div class="zone-card-desc">Kecamatan dengan prediksi kasus di atas persentil ke-75 historis. Membutuhkan respons segera berupa fogging, edukasi masyarakat, dan pengaktifan tim gerak cepat.</div>
-<div class="zone-card-action">Tindakan: Fogging dan PSN Intensif dan Edukasi Publik</div>
-</div>
-<div class="zone-card kuning">
-<div class="zone-card-icon"><svg height="36" viewbox="0 0 36 36" width="36"><circle cx="18" cy="18" fill="rgba(244,185,66,0.2)" r="16" stroke="rgba(244,185,66,0.6)" stroke-width="2"></circle><circle cx="18" cy="18" fill="rgba(244,185,66,0.8)" r="10"></circle></svg></div>
-<div class="zone-card-name">Zona Kuning</div>
-<div class="zone-card-threshold">EWARS: P50-P75 · EC: Mean hingga Mean+SD</div>
-<div class="zone-card-desc">Kecamatan dalam kondisi waspada. Prediksi kasus berada di rentang menengah. Perlu peningkatan surveilans aktif dan kegiatan PSN terjadwal.</div>
-<div class="zone-card-action">Tindakan: PSN Intensif dan Surveilans Aktif</div>
-</div>
-<div class="zone-card hijau">
-<div class="zone-card-icon"><svg height="36" viewbox="0 0 36 36" width="36"><circle cx="18" cy="18" fill="rgba(46,204,113,0.2)" r="16" stroke="rgba(46,204,113,0.6)" stroke-width="2"></circle><circle cx="18" cy="18" fill="rgba(46,204,113,0.7)" r="10"></circle></svg></div>
-<div class="zone-card-name">Zona Hijau</div>
-<div class="zone-card-threshold">EWARS: maksimal P50 · EC: maksimal Mean</div>
-<div class="zone-card-desc">Kecamatan dengan prediksi kasus di bawah median historis. Kondisi terkendali, cukup menjalankan surveilans rutin dan edukasi berkala kepada masyarakat.</div>
-<div class="zone-card-action">Tindakan: Surveilans Rutin dan Edukasi Berkala</div>
-</div>
-</div>
-<div class="mb16"><div class="sec-head"><div class="sec-title"><div class="sec-title-line" style="background:var(--c-red)"></div>Ringkasan Forecast Q1 2026</div></div></div>
-<div class="g4 mb24">
-<div class="card pulse-card">
-<div class="card-top" style="background:linear-gradient(90deg,var(--c-red),#ff6b6b)"></div>
-<div class="card-icon" style="--ic:var(--c-red)"><svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24" width="20"><path d="M3 3v18h18"></path><path d="M7 14l4-4 3 3 5-6"></path></svg></div>
-<div class="card-label">Total Prediksi Kasus Q1</div>
-<div class="card-value mono" data-counter="2247" id="kpi-total-val" style="color:var(--z-merah)">2.247</div>
-<div class="card-sub">Seluruh 44 kecamatan · Minggu 1-13 tahun 2026</div>
-<div class="card-trend"><span style="color:var(--c-amber)">▲</span><span style="color:var(--txt3)">+15% vs rata-rata Q1 historis</span></div>
-</div>
-<div class="card">
-<div class="card-top" style="background:linear-gradient(90deg,var(--z-merah),var(--z-kuning))"></div>
-<div class="card-icon" style="--ic:var(--z-kuning)"><svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24" width="20"><path d="M12 9v4"></path><path d="M12 17h.01"></path><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path></svg></div>
-<div class="card-label">Puncak Kecamatan Merah</div>
-<div class="card-value mono" id="kpi-merah-val" style="color:var(--z-kuning)">18</div>
-<div class="card-sub" id="kpi-merah-sub">Kecamatan zona Merah di puncak pada Minggu 6</div>
-<div class="card-trend"><span id="kpi-merah-trend" style="color:var(--txt3)">dari 44 kecamatan total (40.9%)</span></div>
-</div>
-<div class="card">
-<div class="card-top" style="background:linear-gradient(90deg,var(--c-blue),var(--c-teal))"></div>
-<div class="card-icon" style="--ic:var(--c-blue)"><svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24" width="20"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="4.5"></circle><circle cx="12" cy="12" fill="currentColor" r="0.6"></circle></svg></div>
-<div class="card-label">Model Terbaik R2</div>
-<div class="card-value mono" id="kpi-r2-val" style="color:var(--c-blue)">0.76</div>
-<div class="card-sub" id="kpi-r2-sub">LightGBM Tweedie · MAE = 2.95 kasus/minggu</div>
-<div class="card-trend"><span style="color:var(--c-green)">▲</span><span style="color:var(--txt3)">Terbaik dari 5 model kandidat</span></div>
-</div>
-<div class="card">
-<div class="card-top" style="background:linear-gradient(90deg,var(--c-teal),var(--c-purple))"></div>
-<div class="card-icon" style="--ic:var(--c-teal)"><svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24" width="20"><path d="M12 2a7 7 0 0 0-7 7c0 2.4 1.1 4 2.5 5.5S9 17 9 19h6c0-2 .9-3 2.5-4.5S19 11.4 19 9a7 7 0 0 0-7-7z"></path><line x1="9" x2="15" y1="22" y2="22"></line></svg></div>
-<div class="card-label">Fitur Utama SHAP</div>
-<div class="card-value" id="kpi-shap-val" style="font-size:14px;font-family:'JetBrains Mono',monospace;color:var(--c-teal);letter-spacing:-0.5px;line-height:1.6;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">kasus lag1</div>
-<div class="card-sub">Spasial kasus merupakan prediktor terkuat</div>
-<div class="card-trend"><span style="color:var(--txt3)">diikuti kasus DBD rolling-4 dan kasus DBD lag-1</span></div>
-</div>
-</div>
-</div>
-<!-- PAGE: EDA -->
-<div class="page" id="page-eda">
-<div class="info-box mb24">
-<div class="info-icon"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" style="display:inline-block;vertical-align:middle;flex-shrink:0" viewbox="0 0 24 24" width="16"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect height="4" rx="1" ry="1" width="8" x="8" y="2"></rect></svg></div>
-<div><strong>Eksplorasi Data Awal (EDA)</strong> - Analisis distribusi kasus DBD, uji normalitas, perbedaan antarwilayah, dan korelasi fitur iklim terhadap target. Data mencakup 44 kecamatan DKI Jakarta, mingguan 2017-2025. Variabel target adalah jumlah kasus DBD per kecamatan per minggu.</div>
-</div>
-<div class="sec-head mb16"><div class="sec-title"><div class="sec-title-line"></div>Distribusi Variabel Target</div></div>
-<div class="g2 mb24">
-<div class="card">
-<div class="card-title">Histogram kasus DBD</div>
-<div class="card-subtitle">Distribusi sangat condong ke kanan (skewness sekitar 3.14). Sebagian besar minggu memiliki 0 hingga 5 kasus per kecamatan.</div>
-<div class="ch-260"><canvas id="chartHist"></canvas></div>
-</div>
-<div class="card">
-<div class="card-title">Statistik Deskriptif kasus DBD</div>
-<div class="card-subtitle">Ringkasan statistik variabel target dan perbandingan distribusi original vs transformasi log1p.</div>
-<table class="stat-table" id="tbl-eda-stats" style="margin-top:8px;">
-<tr><td>Mean</td><td id="stat-mean">3.18</td></tr><tr><td>Median</td><td id="stat-median">1.00</td></tr>
-<tr><td>Std Dev</td><td id="stat-std">4.92</td></tr><tr><td>Skewness</td><td id="stat-skew" style="color:var(--c-amber)">3.42</td></tr>
-<tr><td>Kurtosis</td><td id="stat-kurt" style="color:var(--c-amber)">17.8</td></tr><tr><td>Min / Maks</td><td id="stat-minmax">0 / 68</td></tr>
-<tr><td>Persentase data = 0</td><td id="stat-zero">28.4%</td></tr><tr><td>Persentase data lebih dari 30</td><td id="stat-gt10">14.2%</td></tr>
-</table>
-<div class="info-box" style="margin-top:12px;margin-bottom:0;padding:10px 12px;">
-<div class="info-icon"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" style="display:inline-block;vertical-align:middle;flex-shrink:0" viewbox="0 0 24 24" width="16"><path d="M9 3h6m-5 0v6l-5 9a1 1 0 0 0 .9 1.5h10.2A1 1 0 0 0 21 18l-5-9V3"></path><path d="M6 17h12"></path></svg></div>
-<div id="stat-shapiro" style="font-size:11px;">Shapiro-Wilk (original): p kurang dari 0.001 sehingga distribusi tidak normal. Setelah transformasi log1p: distribusi mendekati normal (p=0.12).</div>
-</div>
-</div>
-</div>
-<div class="sec-head mb16"><div class="sec-title"><div class="sec-title-line" style="background:var(--c-teal)"></div>Tren Kasus DBD Mingguan 2017-2025</div></div>
-<div class="card mb24">
-<div class="card-title">Total Kasus DBD DKI Jakarta per Minggu</div>
-<div class="card-subtitle">Terlihat pola musiman konsisten: puncak di Q1 (Januari-Maret), lembah di Q3 (Juli-September). Tahun 2020 menunjukkan lonjakan akibat banjir besar Januari 2020.</div>
-<div class="ch-320"><canvas id="chartTS"></canvas></div>
-</div>
-<div class="card mb24">
-<div class="card-title">Pola Kasus per Minggu - Overlay Antar Tahun</div>
-<div class="card-subtitle">Setiap garis mewakili satu tahun. Pola Q1 (minggu 1-13) secara konsisten lebih tinggi dibanding kuartal lainnya di semua tahun.</div>
-<div class="ch-280"><canvas id="chartYearOverlay"></canvas></div>
-</div>
-<div class="g2 mb24">
-<div class="card">
-<div class="card-title">Perbandingan per Kabupaten/Kota</div>
-<div class="card-subtitle">Rata-rata kasus DBD per minggu per kecamatan. ANOVA menunjukkan perbedaan signifikan (F=18.4, p kurang dari 0.001).</div>
-<div class="ch-260"><canvas id="chartKab"></canvas></div>
-</div>
-<div class="card">
-<div class="card-title">Pola per Kuartal</div>
-<div class="card-subtitle">Q1 (Jan-Mar) secara konsisten lebih tinggi. Uji Kruskal-Wallis: H=122.4, p kurang dari 0.001 yang berarti perbedaan signifikan.</div>
-<div class="ch-260"><canvas id="chartKuartal"></canvas></div>
-</div>
-</div>
-<div class="sec-head mb16"><div class="sec-title"><div class="sec-title-line" style="background:var(--c-purple)"></div>Korelasi Spearman Fitur vs Target</div></div>
-<div class="card mb24">
-<div class="card-title">Top 15 Fitur Berkorelasi dengan kasus DBD</div>
-<div class="card-subtitle">Koefisien Spearman absolut. Fitur lag temporal mendominasi, diikuti curah hujan dan suhu dengan lag 1 minggu.</div>
-<div class="ch-320"><canvas id="chartCorr"></canvas></div>
-</div>
-<div class="sec-head mb16"><div class="sec-title"><div class="sec-title-line" style="background:var(--z-merah)"></div>Top 10 Kecamatan - Total Kasus 2017-2025</div></div>
-<div class="tbl-wrap mb24">
-<div class="tbl-hrow"><span class="tbl-htitle">Kecamatan dengan Beban Kasus DBD Tertinggi</span><span class="tag tag-red">Seluruh periode 2017-2025</span></div>
-<div class="tbl-scroll"><table>
-<thead><tr><th>#</th><th>Kecamatan</th><th>Kabupaten</th><th>Total Kasus</th><th>Rata-rata per Minggu</th><th>Puncak Tahunan</th><th>Tren</th></tr></thead>
-<tbody id="tbl-top-kec"></tbody>
-</table></div>
-</div>
-</div>
-<!-- PAGE: MODEL -->
-<div class="page" id="page-model">
-<div class="info-box mb24">
-<div class="info-icon"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" style="display:inline-block;vertical-align:middle;flex-shrink:0" viewbox="0 0 24 24" width="16"><rect height="6" rx="1" width="6" x="9" y="9"></rect><rect height="16" rx="2" width="16" x="4" y="4"></rect><path d="M9 1v3M15 1v3M9 20v3M15 20v3M1 9h3M1 15h3M20 9h3M20 15h3"></path></svg></div>
-<div><strong>Evaluasi 5 Model Prediksi</strong> - Rolling Window Cross-Validation dengan 3 fold (2023, 2024, 2025 sebagai tahun validasi bergantian). Model melatih pada data tahun-tahun sebelumnya dan divalidasi pada satu tahun ke depan, mensimulasikan kondisi prediksi nyata.</div>
-</div>
-<div class="sec-head mb16"><div class="sec-title"><div class="sec-title-line"></div>Perbandingan Performa Model</div></div>
-<div class="model-compare-grid mb24" id="model-cards"></div>
-<div class="g2 mb24">
-<div class="card">
-<div class="card-title">Radar Performa - Semua Model</div>
-<div class="card-subtitle">Normalisasi metrik: nilai lebih besar berarti lebih baik. LightGBM unggul di mayoritas dimensi evaluasi.</div>
-<div style="height:400px;position:relative"><canvas id="chartRadar"></canvas></div>
-</div>
-<div class="card">
-<div class="card-title">Performa CV per Fold</div>
-<div class="card-subtitle">R2 per fold rolling window untuk setiap model. Fold terakhir (validasi tahun 2025) paling relevan untuk kondisi saat ini.</div>
-<div class="ch-320"><canvas id="chartFold"></canvas></div>
-</div>
-</div>
-<div class="sec-head mb16"><div class="sec-title"><div class="sec-title-line" style="background:var(--c-teal)"></div>Pentingnya Fitur - SHAP Values</div></div>
-<div class="g-7-3 mb24">
-<div class="card card-flex-col" style="min-height:520px">
-<div class="card-title">Top 15 Fitur Berpengaruh (Mean SHAP absolut)</div>
-<div class="card-subtitle">Lag kasus 1-2 minggu mendominasi, diikuti fitur iklim. Fitur spasial tetangga dan siklus musiman juga berkontribusi signifikan.</div>
-<div class="ch-fill" style="min-height:440px"><canvas id="chartSHAP"></canvas></div>
-</div>
-<div class="card">
-<div class="card-title">Interpretasi SHAP</div>
-<div class="card-subtitle" style="margin-bottom:16px">Penjelasan pengaruh masing-masing fitur terhadap prediksi model LightGBM.</div>
-<div id="shap-explain"></div>
-</div>
-</div>
-<div class="card mb24">
-<div class="card-title">Prediksi vs Aktual - Fold Terakhir (2025)</div>
-<div class="card-subtitle" id="scatter-subtitle">Titik-titik ideal berada di garis diagonal. LightGBM menunjukkan distribusi paling konsisten tanpa bias sistematik.</div>
-<div class="ctrl-row" style="margin-bottom:10px">
-<span class="ctrl-label">Tampilkan Model:</span>
-<select class="ctrl-sel" id="scatter-model-sel" onchange="onScatterModelChange(this.value)"></select>
-<span class="ctrl-badge" id="scatter-n-pts">— titik</span>
-</div>
-<div class="ch-320"><canvas id="chartScatter"></canvas></div>
-</div>
-<div class="sec-head mb16"><div class="sec-title"><div class="sec-title-line" style="background:var(--c-amber)"></div>Tabel Metrik Lengkap</div></div>
-<div class="tbl-wrap mb24">
-<div class="tbl-hrow"><span class="tbl-htitle">Metrik Evaluasi per Model - Rata-rata 3 Fold CV</span></div>
-<div class="tbl-scroll"><table>
-<thead><tr><th>Model</th><th>R2</th><th>MAE</th><th>RMSE</th><th>Status</th></tr></thead>
-<tbody id="tbl-model-metrics"></tbody>
-</table></div>
-</div>
-</div>
-<!-- PAGE: PETA ZONASI -->
-<div class="page" id="page-peta">
-<div class="info-box mb16">
-<div class="info-icon"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" style="display:inline-block;vertical-align:middle;flex-shrink:0" viewbox="0 0 24 24" width="16"><polygon points="1,6 1,22 8,18 16,22 23,18 23,2 16,6 8,2"></polygon><line x1="8" x2="8" y1="2" y2="18"></line><line x1="16" x2="16" y1="6" y2="22"></line></svg></div>
-<div><strong>Peta Zonasi Interaktif Dual</strong> - Dua sistem threshold WHO ditampilkan secara berdampingan dan sinkron. Gunakan slider minggu untuk melihat perubahan zona dari waktu ke waktu. Klik kecamatan untuk melihat detail prediksi.</div>
-</div>
+<div class="sb-overlay" onclick="toggleSidebar()"></div>
 
-<div class="dual-maps mb16">
-<div class="map-half" style="border-right:1px solid var(--bord)">
-<div class="map-header">
-<div>
-<div class="map-header-title" style="color:var(--c-blue)">Distribusi Perbandingan Metode</div>
-<div class="map-header-sub" id="map-mode-label-1">Mengukur tradeoff antara Utility vs Privacy</div>
-</div>
-<span class="tag tag-blue" id="ewars-merah-count">Merah: 0</span>
-</div>
-<div id="map-ewars"></div>
-
-</div>
-<div class="map-half">
-<div class="map-header">
-<div>
-<div class="map-header-title" style="color:var(--c-teal)">Sistem 2: Endemicity Channel WHO</div>
-<div class="map-header-sub">Hijau maksimal Mean · Kuning Mean hingga Mean+SD · Merah lebih dari Mean+SD</div>
-</div>
-<span class="tag tag-teal" id="ec-merah-count">Merah: 0</span>
-</div>
-<div id="map-ec"></div>
-
-</div>
-</div>
-
-<div class="tbl-wrap">
-<div class="tbl-hrow"><span class="tbl-htitle">Kecamatan Zona Merah Minggu Ini</span><span class="tag tag-red" id="peta-week-label">Minggu 1</span></div>
-<div class="tbl-scroll"><table>
-<thead><tr><th>#</th><th>Kecamatan</th><th>Kabupaten</th><th id="tbl-kasus-col-hdr">Kasus</th><th>Zona EWARS</th><th>Zona EC</th><th>Threshold P75</th></tr></thead>
-<tbody id="tbl-peta-merah"></tbody>
-</table></div>
-</div>
-</div>
-<!-- PAGE: FORECAST Q1 2026 -->
-<div class="page" id="page-forecast">
-<div class="info-box mb24">
-<div class="info-icon"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" style="display:inline-block;vertical-align:middle;flex-shrink:0" viewbox="0 0 24 24" width="16"><polyline points="23,6 13,16 8,11 1,18"></polyline><polyline points="17,6 23,6 23,12"></polyline></svg></div>
-<div><strong>Forecast Q1 2026 (Minggu 1-13)</strong> - Model akhir dilatih pada seluruh data 2017-2025 dan melakukan prediksi iteratif. Prediksi minggu N+1 menggunakan prediksi minggu N sebagai fitur lag, mensimulasikan prediksi real-time sesuai kondisi lapangan.</div>
-</div>
-<div class="sec-head mb16"><div class="sec-title"><div class="sec-title-line"></div>Timeline Mingguan Q1 2026</div><span class="tag tag-red">Klik minggu untuk detail</span></div>
-<div class="forecast-week-grid mb24" id="fc-week-grid"></div>
-<div class="g2 mb24">
-<div class="card">
-<div class="card-title">Total Kasus Prediksi per Minggu</div>
-<div class="card-subtitle">Jumlah kasus di seluruh 44 kecamatan. Puncak diprediksi terjadi pada Minggu 5-7 dengan total 190-210 kasus per minggu.</div>
-<div class="ch-280"><canvas id="chartFcBar"></canvas></div>
-</div>
-<div class="card">
-<div class="card-title">Distribusi Zona per Minggu</div>
-<div class="card-subtitle">Proporsi kecamatan di setiap zona dari minggu ke minggu. Zona merah memuncak di Minggu 6, kemudian berangsur membaik.</div>
-<div class="ch-280"><canvas id="chartFcZone"></canvas></div>
-</div>
-</div>
-<div class="card mb24" id="fc-detail-card">
-<div class="card-title">Detail Minggu Terpilih</div>
-<div class="card-subtitle" id="fc-detail-sub">Klik kartu minggu di atas untuk melihat detail per kecamatan.</div>
-<div class="tbl-scroll"><table>
-<thead><tr><th>#</th><th>Kecamatan</th><th>Prediksi Kasus</th><th>Zona EWARS</th><th>Zona EC</th><th>vs Rata-rata Historis</th></tr></thead>
-<tbody id="tbl-fc-detail"></tbody>
-</table></div>
-</div>
-<div class="sec-head mb16"><div class="sec-title"><div class="sec-title-line" style="background:var(--z-merah)"></div>Top 10 Kecamatan - Total Prediksi Q1 2026</div></div>
-<div class="tbl-wrap mb24">
-<div class="tbl-hrow"><span class="tbl-htitle">Kecamatan dengan Beban Prediksi Tertinggi</span><span class="tag tag-amber">Minggu 1-13 tahun 2026</span></div>
-<div class="tbl-scroll"><table>
-<thead><tr><th>#</th><th>Kecamatan</th><th>Kabupaten</th><th>Total Q1 Prediksi</th><th>Rata-rata per Minggu</th><th>Zona Maks EWARS</th><th>Minggu Puncak</th></tr></thead>
-<tbody id="tbl-fc-top"></tbody>
-</table></div>
-</div>
-</div>
-<!-- PAGE: SIMULASI -->
-<div class="page" id="page-simulasi">
-<div class="info-box mb16">
-<div class="info-icon"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" style="display:inline-block;vertical-align:middle;flex-shrink:0" viewbox="0 0 24 24" width="16"><path d="M9 3h6m-5 0v6l-5 9a1 1 0 0 0 .9 1.5h10.2A1 1 0 0 0 21 18l-5-9V3"></path><path d="M6 17h12"></path></svg></div>
-<div><strong>Simulator Prediksi Interaktif</strong> - Eksplorasi bagaimana pilihan kecamatan, minggu, dan tahun memengaruhi prediksi kasus DBD. Semua hasil merupakan perkiraan berbasis hubungan statistik model ML SIPEDA.</div>
-</div>
-<div class="sim-tabs">
-<div class="sim-tab active" onclick="switchSimTab(0,this)">Kecamatan dan Minggu</div>
-<div class="sim-tab" onclick="switchSimTab(1,this)">Perbandingan Tahun</div>
-</div>
-<!-- Pane 0 -->
-<div class="sim-pane active" id="simpane-0">
-<div class="g2 mb16">
-<div class="card">
-<div class="card-title">Pilih Kecamatan dan Minggu</div>
-<div class="card-subtitle" style="margin-bottom:14px">Pilih kecamatan dan minggu target untuk melihat prediksi kasus dan zonasi.</div>
-<div class="ctrl-row">
-<div style="flex:1"><div class="ctrl-label" style="margin-bottom:6px">Kecamatan</div><select class="ctrl-sel" id="sim-kec" onchange="runKecSim()" style="width:100%"></select></div>
-<div><div class="ctrl-label" style="margin-bottom:6px">Tahun</div><select class="ctrl-sel" id="sim-year" onchange="runKecSim()"><option selected="" value="2026">2026 (Forecast)</option><option value="2025">2025</option><option value="2024">2024</option><option value="2023">2023</option></select></div>
-</div>
-<div style="margin-bottom:14px">
-<div class="ctrl-label" style="margin-bottom:6px">Minggu ke-<span id="sim-wk-disp" style="color:var(--c-blue)">1</span></div>
-<input id="sim-week" max="52" min="1" oninput="onSimWeekSlide(this);runKecSim()" style="--pct:0%;width:100%" type="range" value="1"/>
-<div class="slider-row"><span>1</span><span>52</span></div>
-</div>
-</div>
-<div class="sim-result">
-<div class="sim-result-label">Prediksi Kasus DBD</div>
-<div class="sim-result-val" id="sim-pred-val">-</div>
-<div class="sim-result-unit">kasus · minggu terpilih · kecamatan ini</div>
-<div class="sim-zones">
-<div class="sim-zone-card" id="sim-ewars-card"><div class="sim-zone-label">Zona EWARS</div><div class="sim-zone-val" id="sim-ewars-zone">-</div></div>
-<div class="sim-zone-card" id="sim-ec-card"><div class="sim-zone-label">Zona EC</div><div class="sim-zone-val" id="sim-ec-zone">-</div></div>
-</div>
-<div id="sim-kec-info" style="font-size:11px;color:var(--txt3);line-height:1.6">Pilih kecamatan dan minggu untuk melihat hasil.</div>
-</div>
-</div>
-<div class="card">
-<div class="card-title">Profil Prediksi Tahunan - Kecamatan Terpilih</div>
-<div class="card-subtitle">Prediksi kasus per minggu sepanjang tahun untuk kecamatan yang dipilih, dibandingkan rata-rata historis.</div>
-<div class="ch-260"><canvas id="chartSimProfile"></canvas></div>
-</div>
-</div>
-<!-- Pane 1 -->
-<div class="sim-pane" id="simpane-1">
-<div class="card mb16">
-<div class="ctrl-row">
-<select class="ctrl-sel" id="sim-kec-yr" onchange="runYearSim()" style="flex:1"></select>
-<span class="tag tag-blue">Semua Tahun 2017-2026</span>
-</div>
-</div>
-<div class="card">
-<div class="card-title">Perbandingan Pola Mingguan Antar Tahun</div>
-<div class="card-subtitle">Kasus prediksi vs aktual per minggu untuk setiap tahun. Tahun 2026 merupakan forecast model akhir.</div>
-<div class="ch-320"><canvas id="chartYearSim"></canvas></div>
-</div>
-</div>
-</div>
-<!-- PAGE: METODOLOGI -->
-<div class="page" id="page-metodologi">
-<div class="sec-head mb16"><div class="sec-title"><div class="sec-title-line"></div>Arsitektur dan Metodologi SIPEDA</div></div>
-<div class="method-step">
-<div class="method-num">1</div>
-<div>
-<div class="method-title">Pengumpulan dan Integrasi Data</div>
-<div class="method-desc">Data iklim mingguan (curah hujan, suhu, kelembapan, kecepatan angin, lama penyinaran) dan data kasus DBD per kecamatan DKI Jakarta tahun 2017-2025 diintegrasikan bersama shapefile batas kecamatan. Harmonisasi nama kecamatan dilakukan dengan algoritma fuzzy matching.</div>
-<div><span class="method-tag">Sumber: Dinas Kesehatan DKI</span><span class="method-tag">Data Iklim BMKG</span><span class="method-tag">Shapefile BPS</span></div>
-</div>
-</div>
-<div class="method-step">
-<div class="method-num" style="background:linear-gradient(135deg,var(--c-purple),#6d28d9)">2</div>
-<div>
-<div class="method-title">Feature Engineering</div>
-<div class="method-desc">Pembentukan fitur lag temporal (1-2 minggu) untuk kasus DBD dan variabel iklim, fitur rolling mean (4 dan 8 minggu), rata-rata spasial kecamatan tetangga (bobot Queen contiguity), encoding siklus musiman (sin/cos minggu), serta fitur interaksi curah hujan dikalikan suhu.</div>
-<div class="formula-block">
-<span class="fhl">lag kasus 1</span> <span class="fop">= kasus[t-1]</span><br/>
-<span class="fhl">spatial kasus</span> <span class="fop">= mean(kasus[t, tetangga_i])</span><br/>
-<span class="fhl">minggu sin</span> <span class="fop">= sin(2pi x minggu / 52)</span><br/>
-<span class="fhl">ch suhu</span> <span class="fop">= curah hujan x suhu rata</span>
-</div>
-</div>
-</div>
-<div class="method-step">
-<div class="method-num" style="background:linear-gradient(135deg,var(--c-teal),#0891b2)">3</div>
-<div>
-<div class="method-title">Analisis Spasial (Moran's I)</div>
-<div class="method-desc">Autokorelasi spasial kasus DBD diuji dengan Moran's I menggunakan matriks bobot Queen contiguity (kecamatan yang berbatasan langsung). Hasil menunjukkan klaster spasial signifikan, memvalidasi perlunya fitur spasial dalam model.</div>
-<div class="formula-block">
-<span class="fhl">I</span> <span class="fop">= (N / S0) x (jumlah wij(xi-rata)(xj-rata)) / (jumlah(xi-rata)²)</span><br/>
-<span class="fop">N = jumlah kecamatan, S0 = jumlah wij, wij = bobot Queen</span>
-</div>
-</div>
-</div>
-<div class="method-step">
-<div class="method-num" style="background:linear-gradient(135deg,var(--c-amber),#b45309)">4</div>
-<div>
-<div class="method-title">Model Training dengan Rolling Window CV</div>
-<div class="method-desc">Lima model dilatih menggunakan Rolling Window Cross-Validation: Naive Baseline, Poisson Ridge, XGBoost (Tweedie, Optuna 80 trial), LightGBM (Tweedie, Optuna 100 trial), CatBoost (Tweedie, Optuna). Target dilog-transformasi (log1p) untuk menangani distribusi skewed.</div>
-<div><span class="method-tag">Fold 1: Latih 2017-2022 lalu Validasi 2023</span><span class="method-tag">Fold 2: Latih 2017-2023 lalu Validasi 2024</span><span class="method-tag">Fold 3: Latih 2017-2024 lalu Validasi 2025</span></div>
-</div>
-</div>
-<div class="method-step">
-<div class="method-num" style="background:linear-gradient(135deg,var(--z-merah),#9b1c1c)">5</div>
-<div>
-<div class="method-title">Sistem Zonasi Dua Threshold</div>
-<div class="method-desc">Dua pendekatan WHO digunakan secara paralel. Threshold dihitung per kecamatan per minggu dari data historis, memastikan kontekstualisasi terhadap pola endemisitas lokal.</div>
-<div class="formula-block">
-<span class="fop">- WHO EWARS Percentile -</span><br/>
-<span class="fhl">Hijau</span> <span class="fop">: kasus prediksi maksimal</span> <span class="fval">P50(kecamatan, minggu)</span><br/>
-<span class="fhl">Kuning</span> <span class="fop">: P50 sampai maksimal</span> <span class="fval">P75(kecamatan, minggu)</span><br/>
-<span class="fhl">Merah</span> <span class="fop">: kasus prediksi lebih dari</span> <span class="fval">P75(kecamatan, minggu)</span><br/>
-<span class="fop">- Endemicity Channel WHO -</span><br/>
-<span class="fhl">Hijau</span> <span class="fop">: kasus prediksi maksimal</span> <span class="fval">mean(kecamatan, minggu)</span><br/>
-<span class="fhl">Kuning</span> <span class="fop">: mean sampai maksimal</span> <span class="fval">mean + 1xSD</span><br/>
-<span class="fhl">Merah</span> <span class="fop">: kasus prediksi lebih dari</span> <span class="fval">mean + 1xSD</span>
-</div>
-</div>
-</div>
-<div class="method-step">
-<div class="method-num" style="background:linear-gradient(135deg,var(--c-blue),var(--c-teal))">6</div>
-<div>
-<div class="method-title">Forecast Q1 2026 - Prediksi Iteratif</div>
-<div class="method-desc">Model akhir dilatih pada seluruh data 2017-2025. Forecast dilakukan secara iteratif: prediksi Minggu N digunakan sebagai lag feature untuk Minggu N+1. Fitur iklim Q1 2026 diisi dari rata-rata nilai Q1 tahun-tahun sebelumnya untuk minggu yang sama.</div>
-<div class="formula-block">
-<span class="fhl">pred[W]</span> <span class="fop">= model(X[W]) digunakan sebagai</span> <span class="fval">lag1</span> <span class="fop">di W+1</span><br/>
-<span class="fop">iklim[W, 2026] kira-kira sama dengan mean(iklim[W, 2017-2025])</span>
-</div>
-</div>
-</div>
-<div class="card mb24">
-<div class="card-title">Referensi dan Standar</div>
-<div class="g3" style="margin-top:14px">
-<div style="font-size:12px;color:var(--txt2);line-height:1.7"><strong style="color:var(--c-blue)">WHO EWARS</strong><br/>Early Warning and Response System - panduan surveilans penyakit menular berbasis threshold persentil historis.</div>
-<div style="font-size:12px;color:var(--txt2);line-height:1.7"><strong style="color:var(--c-teal)">Endemicity Channel</strong><br/>Metode WHO untuk klasifikasi tingkat endemisitas berbasis rata-rata dan simpangan baku historis per kecamatan.</div>
-<div style="font-size:12px;color:var(--txt2);line-height:1.7"><strong style="color:var(--c-purple)">Moran's I</strong><br/>Uji autokorelasi spasial global. Nilai positif dan signifikan mengindikasikan pengelompokan geografis kasus.</div>
-</div>
-</div>
-</div>
-</div><!-- /main -->
-<script>
-/* DATA (dimuat dari file JSON eksternal)
-   Struktur file yang dibutuhkan:
-   data/kecamatan_stats.json
-   data/forecast_q1_2026.json
-   data/jakarta.geojson
-   data/historis_weekly.json   (opsional)
-   data/model_metrics.json     (opsional) */
-let KECAMATAN = [];   // diisi oleh loadAllData()
-let FC2026    = {};   // diisi oleh loadAllData()
-let geoJsonData = null; // GeoJSON polygon kecamatan
-// Fallback: data demo digunakan jika fetch gagal
-const KECAMATAN_DEMO = [
-  {id:'penjaringan',name:'Penjaringan',kab:'Jakarta Utara',lat:-6.103,lng:106.726,base:3.2,P50:2.1,P75:5.4,ecMean:3.2,ecSd:1.8},
-  {id:'pademangan',name:'Pademangan',kab:'Jakarta Utara',lat:-6.128,lng:106.847,base:2.8,P50:1.9,P75:4.8,ecMean:2.8,ecSd:1.5},
-  {id:'tanjung_priok',name:'Tanjung Priok',kab:'Jakarta Utara',lat:-6.118,lng:106.883,base:3.5,P50:2.4,P75:5.9,ecMean:3.5,ecSd:2.0},
-  {id:'koja',name:'Koja',kab:'Jakarta Utara',lat:-6.126,lng:106.905,base:3.1,P50:2.1,P75:5.1,ecMean:3.1,ecSd:1.7},
-  {id:'kelapa_gading',name:'Kelapa Gading',kab:'Jakarta Utara',lat:-6.162,lng:106.908,base:2.6,P50:1.7,P75:4.2,ecMean:2.6,ecSd:1.4},
-  {id:'cilincing',name:'Cilincing',kab:'Jakarta Utara',lat:-6.107,lng:106.934,base:3.8,P50:2.6,P75:6.3,ecMean:3.8,ecSd:2.2},
-  {id:'cengkareng',name:'Cengkareng',kab:'Jakarta Barat',lat:-6.143,lng:106.730,base:3.4,P50:2.3,P75:5.6,ecMean:3.4,ecSd:1.9},
-  {id:'grogol_petamburan',name:'Grogol Petamburan',kab:'Jakarta Barat',lat:-6.167,lng:106.790,base:2.9,P50:1.9,P75:4.7,ecMean:2.9,ecSd:1.6},
-  {id:'tambora',name:'Tambora',kab:'Jakarta Barat',lat:-6.147,lng:106.808,base:3.3,P50:2.2,P75:5.5,ecMean:3.3,ecSd:1.8},
-  {id:'taman_sari',name:'Taman Sari',kab:'Jakarta Barat',lat:-6.147,lng:106.820,base:3.0,P50:2.0,P75:5.0,ecMean:3.0,ecSd:1.6},
-  {id:'palmerah',name:'Palmerah',kab:'Jakarta Barat',lat:-6.200,lng:106.780,base:2.7,P50:1.8,P75:4.4,ecMean:2.7,ecSd:1.5},
-  {id:'kebon_jeruk',name:'Kebon Jeruk',kab:'Jakarta Barat',lat:-6.192,lng:106.763,base:3.1,P50:2.1,P75:5.1,ecMean:3.1,ecSd:1.7},
-  {id:'kembangan',name:'Kembangan',kab:'Jakarta Barat',lat:-6.210,lng:106.724,base:2.8,P50:1.9,P75:4.6,ecMean:2.8,ecSd:1.5},
-  {id:'kalideres',name:'Kalideres',kab:'Jakarta Barat',lat:-6.148,lng:106.703,base:3.6,P50:2.4,P75:6.0,ecMean:3.6,ecSd:2.0},
-  {id:'gambir',name:'Gambir',kab:'Jakarta Pusat',lat:-6.170,lng:106.820,base:2.2,P50:1.4,P75:3.6,ecMean:2.2,ecSd:1.2},
-  {id:'sawah_besar',name:'Sawah Besar',kab:'Jakarta Pusat',lat:-6.153,lng:106.838,base:2.5,P50:1.6,P75:4.1,ecMean:2.5,ecSd:1.4},
-  {id:'kemayoran',name:'Kemayoran',kab:'Jakarta Pusat',lat:-6.160,lng:106.856,base:2.8,P50:1.8,P75:4.6,ecMean:2.8,ecSd:1.5},
-  {id:'senen',name:'Senen',kab:'Jakarta Pusat',lat:-6.177,lng:106.845,base:2.6,P50:1.7,P75:4.3,ecMean:2.6,ecSd:1.4},
-  {id:'cempaka_putih',name:'Cempaka Putih',kab:'Jakarta Pusat',lat:-6.178,lng:106.869,base:3.0,P50:2.0,P75:5.0,ecMean:3.0,ecSd:1.6},
-  {id:'johar_baru',name:'Johar Baru',kab:'Jakarta Pusat',lat:-6.188,lng:106.859,base:2.9,P50:1.9,P75:4.8,ecMean:2.9,ecSd:1.6},
-  {id:'menteng',name:'Menteng',kab:'Jakarta Pusat',lat:-6.195,lng:106.832,base:1.8,P50:1.2,P75:2.9,ecMean:1.8,ecSd:1.0},
-  {id:'tanah_abang',name:'Tanah Abang',kab:'Jakarta Pusat',lat:-6.197,lng:106.808,base:2.4,P50:1.6,P75:3.9,ecMean:2.4,ecSd:1.3},
-  {id:'tebet',name:'Tebet',kab:'Jakarta Selatan',lat:-6.228,lng:106.850,base:3.5,P50:2.4,P75:5.8,ecMean:3.5,ecSd:1.9},
-  {id:'setiabudi',name:'Setiabudi',kab:'Jakarta Selatan',lat:-6.219,lng:106.821,base:2.9,P50:1.9,P75:4.7,ecMean:2.9,ecSd:1.6},
-  {id:'mampang_prapatan',name:'Mampang Prapatan',kab:'Jakarta Selatan',lat:-6.238,lng:106.810,base:3.2,P50:2.1,P75:5.3,ecMean:3.2,ecSd:1.8},
-  {id:'pasar_minggu',name:'Pasar Minggu',kab:'Jakarta Selatan',lat:-6.282,lng:106.844,base:4.1,P50:2.8,P75:6.8,ecMean:4.1,ecSd:2.3},
-  {id:'cilandak',name:'Cilandak',kab:'Jakarta Selatan',lat:-6.295,lng:106.796,base:3.7,P50:2.5,P75:6.1,ecMean:3.7,ecSd:2.0},
-  {id:'pesanggrahan',name:'Pesanggrahan',kab:'Jakarta Selatan',lat:-6.263,lng:106.762,base:3.3,P50:2.2,P75:5.4,ecMean:3.3,ecSd:1.8},
-  {id:'kebayoran_lama',name:'Kebayoran Lama',kab:'Jakarta Selatan',lat:-6.255,lng:106.783,base:3.8,P50:2.6,P75:6.3,ecMean:3.8,ecSd:2.1},
-  {id:'kebayoran_baru',name:'Kebayoran Baru',kab:'Jakarta Selatan',lat:-6.245,lng:106.801,base:3.0,P50:2.0,P75:4.9,ecMean:3.0,ecSd:1.6},
-  {id:'pancoran',name:'Pancoran',kab:'Jakarta Selatan',lat:-6.244,lng:106.842,base:3.4,P50:2.3,P75:5.6,ecMean:3.4,ecSd:1.9},
-  {id:'jagakarsa',name:'Jagakarsa',kab:'Jakarta Selatan',lat:-6.335,lng:106.833,base:4.4,P50:3.0,P75:7.2,ecMean:4.4,ecSd:2.5},
-  {id:'matraman',name:'Matraman',kab:'Jakarta Timur',lat:-6.206,lng:106.869,base:3.6,P50:2.4,P75:5.9,ecMean:3.6,ecSd:2.0},
-  {id:'jatinegara',name:'Jatinegara',kab:'Jakarta Timur',lat:-6.213,lng:106.885,base:4.0,P50:2.7,P75:6.6,ecMean:4.0,ecSd:2.2},
-  {id:'kramat_jati',name:'Kramat Jati',kab:'Jakarta Timur',lat:-6.274,lng:106.861,base:4.5,P50:3.1,P75:7.4,ecMean:4.5,ecSd:2.5},
-  {id:'pasar_rebo',name:'Pasar Rebo',kab:'Jakarta Timur',lat:-6.313,lng:106.857,base:4.2,P50:2.8,P75:6.9,ecMean:4.2,ecSd:2.3},
-  {id:'ciracas',name:'Ciracas',kab:'Jakarta Timur',lat:-6.332,lng:106.879,base:4.8,P50:3.3,P75:7.9,ecMean:4.8,ecSd:2.7},
-  {id:'cipayung',name:'Cipayung',kab:'Jakarta Timur',lat:-6.332,lng:106.903,base:4.6,P50:3.1,P75:7.5,ecMean:4.6,ecSd:2.6},
-  {id:'cakung',name:'Cakung',kab:'Jakarta Timur',lat:-6.195,lng:106.931,base:4.3,P50:2.9,P75:7.1,ecMean:4.3,ecSd:2.4},
-  {id:'duren_sawit',name:'Duren Sawit',kab:'Jakarta Timur',lat:-6.229,lng:106.910,base:4.0,P50:2.7,P75:6.6,ecMean:4.0,ecSd:2.2},
-  {id:'pulogadung',name:'Pulogadung',kab:'Jakarta Timur',lat:-6.204,lng:106.904,base:3.9,P50:2.6,P75:6.4,ecMean:3.9,ecSd:2.2},
-  {id:'makasar',name:'Makasar',kab:'Jakarta Timur',lat:-6.258,lng:106.886,base:4.1,P50:2.8,P75:6.8,ecMean:4.1,ecSd:2.3},
-  {id:'kep_seribu_utara',name:'Kepulauan Seribu Utara',kab:'Kepulauan Seribu',lat:-5.552,lng:106.578,base:0.3,P50:0.1,P75:0.4,ecMean:0.3,ecSd:0.2},
-  {id:'kep_seribu_selatan',name:'Kepulauan Seribu Selatan',kab:'Kepulauan Seribu',lat:-5.700,lng:106.598,base:0.2,P50:0.1,P75:0.3,ecMean:0.2,ecSd:0.15},
-];
-// ─────────────────────────────────────────────────────────
-// Data runtime (diisi setelah loadAllData())
-// ─────────────────────────────────────────────────────────
-let KEC_MAP = {};
-const YEAR_EFF = {2017:1.0,2018:1.08,2019:0.92,2020:1.38,2021:0.85,2022:0.93,2023:1.04,2024:1.12,2025:1.00,2026:1.16};
-const MODELS = [
-  {name:'Naive Baseline',key:'naive',R2:0.69,MAE:3.40,RMSE:4.95,best:false},
-  {name:'Poisson Ridge',key:'poisson',R2:0.57,MAE:3.89,RMSE:5.75,best:false},
-  {name:'XGBoost',key:'xgb',R2:0.76,MAE:3.01,RMSE:4.29,best:false},
-  {name:'LightGBM',key:'lgb',R2:0.77,MAE:2.95,RMSE:4.20,best:true},
-  {name:'CatBoost',key:'cat',R2:0.76,MAE:2.92,RMSE:4.22,best:false},
-];
-const SHAP_FEATS = [
-  {name:'kasus DBD lag1',val:0.89},{name:'kasus DBD lag2',val:0.67},
-  {name:'kasus DBD rolling4',val:0.58},{name:'curah hujan lag1',val:0.45},
-  {name:'suhu rata',val:0.42},{name:'minggu sin',val:0.38},
-  {name:'kelembapan rata',val:0.35},{name:'kecamatan endemisitas',val:0.32},
-  {name:'spatial kasus tetangga lag1',val:0.28},{name:'curah hujan lag2',val:0.24},
-  {name:'minggu cos',val:0.22},{name:'suhu kuadrat',val:0.18},
-  {name:'interaksi ch suhu',val:0.15},{name:'kecepatan angin lag1',val:0.12},
-  {name:'lama penyinaran lag1',val:0.09},
-];
-
-function seasonal(w) {
-  const a = ((w-1)/52)*2*Math.PI;
-  return 0.32 + 0.68*(0.5+0.5*Math.cos(a-0.5));
-}
-function seededRand(seed) {
-  let x = Math.sin(seed+1)*10000; return x-Math.floor(x);
-}
-function getPred(kec, year, week) {
-  const yr = parseInt(year);
-  if(yr === 2026) {
-    if(FC2026[kec.id] && FC2026[kec.id][week-1]) {
-      return FC2026[kec.id][week-1].pred;
-    }
-    return null;
-  }
-  if(window._historisKecWeekly) {
-    const kecData = window._historisKecWeekly[kec.id];
-    if(kecData && kecData[String(yr)]) {
-      const weekArr = kecData[String(yr)];
-      const val = weekArr[week-1];
-      return (val !== undefined && val !== null) ? Number(val) : 0;
-    }
-    return null;
-  }
-  return null;
-}
-function getPredSafe(kec, year, week) {
-  const v = getPred(kec, year, week);
-  return (v !== null && v !== undefined) ? v : 0;
-}
-function zonaEWARS(pred, kec) {
-  if(pred === null || pred === undefined) return 'No Data';
-  if(pred > kec.P75) return 'Merah';
-  if(pred > kec.P50) return 'Kuning';
-  return 'Hijau';
-}
-function zonaEC(pred, kec) {
-  if(pred === null || pred === undefined) return 'No Data';
-  if(pred > kec.ecMean+kec.ecSd) return 'Merah';
-  if(pred > kec.ecMean) return 'Kuning';
-  return 'Hijau';
-}
-// FC2026 diisi dari data/forecast_q1_2026.json setelah loadAllData()
-function getWeeklyTotals(year) {
-  const yr = parseInt(year);
-  if(window._historisWeekly && window._historisWeekly[String(yr)]) {
-    return window._historisWeekly[String(yr)];
-  }
-  if(yr === 2026) {
-    return Array.from({length:52},(_,i)=>KECAMATAN.reduce((s,k)=>{const p=getPred(k,yr,i+1);return s+(p!==null?p:0);},0));
-  }
-  if(window._historisKecWeekly) {
-    return Array.from({length:52},(_,i)=>KECAMATAN.reduce((s,k)=>{const p=getPred(k,yr,i+1);return s+(p!==null?p:0);},0));
-  }
-  return null;
-}
-// KEC_POLYGONS dihapus — peta sekarang menggunakan GeoJSON dari data/jakarta.geojson
-
-const ZCOLORS = {Merah:'#e63946',Kuning:'#f4b942',Hijau:'#2ecc71','No Data':'#555'};
-
-/* NAVIGATION */
-let currentPage = 'beranda';
-const pages = ['beranda','eda','model','peta','forecast','simulasi','metodologi'];
-const pageInited = {};
-
-function navigate(id) {
-  if(!pages.includes(id)) return;
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.getElementById('page-'+id)?.classList.add('active');
-  document.getElementById('tab-'+id)?.classList.add('active');
-  updateTabIndicator(id);
-  currentPage = id;
-  if(!pageInited[id]) { pageInited[id]=true; initPage(id); }
-}
-function updateTabIndicator(id) {
-  const tab = document.getElementById('tab-'+id);
-  if(!tab) return;
-  const bar = document.getElementById('tabbar');
-  const rect = tab.getBoundingClientRect();
-  const barRect = bar.getBoundingClientRect();
-  const ind = document.getElementById('tab-indicator');
-  ind.style.left = (rect.left - barRect.left + bar.scrollLeft) + 'px';
-  ind.style.width = rect.width + 'px';
-}
-function initPage(id) {
-  if(id==='beranda') initBeranda();
-  if(id==='eda') initEDA();
-  if(id==='model') initModel();
-  if(id==='peta') { initMaps(); updateMaps(); }
-  if(id==='forecast') initForecast();
-  if(id==='simulasi') initSimulasi();
-}
-
-/* THEME */
-let darkMode = false;
-function toggleTheme() {
-  darkMode = !darkMode;
-  document.documentElement.setAttribute('data-theme', darkMode?'dark':'light');
-  document.getElementById('theme-btn').innerHTML = darkMode?'<svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" style=\"display:inline-block;vertical-align:middle;flex-shrink:0\"><path d=\"M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z\"/></svg>':'<svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" style=\"display:inline-block;vertical-align:middle;flex-shrink:0\"><circle cx=\"12\" cy=\"12\" r=\"5\"/><line x1=\"12\" y1=\"1\" x2=\"12\" y2=\"3\"/><line x1=\"12\" y1=\"21\" x2=\"12\" y2=\"23\"/><line x1=\"4.22\" y1=\"4.22\" x2=\"5.64\" y2=\"5.64\"/><line x1=\"18.36\" y1=\"18.36\" x2=\"19.78\" y2=\"19.78\"/><line x1=\"1\" y1=\"12\" x2=\"3\" y2=\"12\"/><line x1=\"21\" y1=\"12\" x2=\"23\" y2=\"12\"/><line x1=\"4.22\" y1=\"19.78\" x2=\"5.64\" y2=\"18.36\"/><line x1=\"18.36\" y1=\"5.64\" x2=\"19.78\" y2=\"4.22\"/></svg>';
-  updateMapTiles();
-  Object.values(allCharts).forEach(c=>{if(c){
-    c.options.plugins.legend.labels.color = darkMode?'#6fa8d0':'#1a4e7a';
-    if(c.options.scales) Object.values(c.options.scales).forEach(sc=>{
-      if(sc.ticks) sc.ticks.color = darkMode?'#355f82':'#3a6a9a';
-      if(sc.grid) sc.grid.color = darkMode?'rgba(27,51,88,0.4)':'rgba(138,180,217,0.3)';
-    });
-    c.update();
-  }});
-}
-
-/* CHART UTILS */
-const allCharts = {};
-function mkChart(id, cfg) {
-  if(allCharts[id]) allCharts[id].destroy();
-  const ctx = document.getElementById(id);
-  if(!ctx) return null;
-  const isDark = darkMode;
-  const base = {
-    responsive:true, maintainAspectRatio:false,
-    animation:{duration:700,easing:'easeInOutQuart'},
-    plugins:{legend:{labels:{color:isDark?'#6fa8d0':'#1a4e7a',font:{family:'Figtree',size:11}}}},
-  };
-  if(cfg.options?.scales) {
-    Object.values(cfg.options.scales).forEach(sc=>{
-      if(sc.ticks) sc.ticks.color = isDark?'#355f82':'#3a6a9a';
-      if(sc.grid) { sc.grid.color=isDark?'rgba(27,51,88,0.4)':'rgba(138,180,217,0.3)'; sc.grid.lineWidth=1; }
-      if(sc.border) sc.border.color='transparent';
-    });
-  }
-  cfg.options = deepMerge(base, cfg.options||{});
-  allCharts[id] = new Chart(ctx, cfg);
-  return allCharts[id];
-}
-function deepMerge(a, b) {
-  const r = Object.assign({},a);
-  for(const k in b) {
-    if(b[k]&&typeof b[k]==='object'&&!Array.isArray(b[k])&&!(b[k] instanceof HTMLElement))
-      r[k] = deepMerge(a[k]||{},b[k]);
-    else r[k] = b[k];
-  }
-  return r;
-}
-const C = {blue:'rgba(0,170,255,',teal:'rgba(0,210,200,',red:'rgba(230,57,70,',amber:'rgba(244,185,66,',green:'rgba(46,204,113,',purple:'rgba(139,92,246,'};
-
-/* PAGE: BERANDA */
-function initBeranda() {
-  animateCounters();
-  // Update KPI cards dari data JSON yang sudah di-load
-  if(window._q1Summary) {
-    const q = window._q1Summary;
-    // Total kasus Q1
-    const totalEl = document.querySelector('[data-counter="2247"]');
-    if(totalEl) { totalEl.setAttribute('data-counter', Math.round(q.total_kasus)); totalEl.textContent = Math.round(q.total_kasus).toLocaleString('id'); }
-    // Puncak kecamatan merah
-    const peakMerah = q.weekly ? Math.max(...q.weekly.map(w=>w.merah_ewars||0)) : 18;
-    const peakWeek = q.weekly ? (q.weekly.findIndex(w=>(w.merah_ewars||0)===peakMerah)+1) : 6;
-    const merahValEl = document.getElementById('kpi-merah-val');
-    if(merahValEl) merahValEl.textContent = peakMerah;
-    const merahSubEl = document.getElementById('kpi-merah-sub');
-    if(merahSubEl) merahSubEl.textContent = `Kecamatan zona Merah di puncak pada Minggu ${peakWeek}`;
-    const merahTrendEl = document.getElementById('kpi-merah-trend');
-    if(merahTrendEl) merahTrendEl.textContent = `dari 44 kecamatan total (${(peakMerah/44*100).toFixed(1)}%)`;
-  }
-  if(MODELS && MODELS.length) {
-    const best = MODELS.find(m=>m.best) || MODELS[0];
-    const r2El = document.getElementById('kpi-r2-val');
-    if(r2El) r2El.textContent = (best.R2||0).toFixed(2);
-    const r2SubEl = document.getElementById('kpi-r2-sub');
-    if(r2SubEl) r2SubEl.textContent = `${best.name} · MAE = ${(best.MAE||0).toFixed(2)} kasus/minggu`;
-    // Update hero hstat R²
-    const hstatR2 = document.querySelector('.hstat-val:not([data-counter])');
-    if(hstatR2) hstatR2.textContent = (best.R2||0).toFixed(2);
-  }
-  if(SHAP_FEATS && SHAP_FEATS.length) {
-    const top = SHAP_FEATS[0];
-    const shapEl = document.getElementById('kpi-shap-val');
-    if(shapEl) { shapEl.textContent = top.name; shapEl.title = top.name; }
-  }
-  // Donut chart - gunakan data q1Summary jika ada
-  let donutData = [18, 12, 14];
-  if(window._q1Summary && window._q1Summary.zona_ewars) {
-    const z = window._q1Summary.zona_ewars;
-    donutData = [z.Merah||0, z.Kuning||0, z.Hijau||0];
-  }
-  mkChart('heroDonut',{
-    type:'doughnut',
-    data:{
-      labels:['Merah (lebih dari P75)','Kuning (P50 sampai P75)','Hijau (maksimal P50)'],
-      datasets:[{data:donutData,backgroundColor:['rgba(230,57,70,0.85)','rgba(244,185,66,0.85)','rgba(46,204,113,0.85)'],borderWidth:0,hoverOffset:6}]
-    },
-    options:{cutout:'68%',plugins:{legend:{display:true,position:'bottom',labels:{font:{size:10},padding:8}},tooltip:{callbacks:{label:l=>` ${l.label}: ${l.raw} kecamatan`}}}}
-  });
-}
-function animateCounters() {
-  document.querySelectorAll('[data-counter]').forEach(el=>{
-    const target = parseInt(el.getAttribute('data-counter'));
-    let current = 0;
-    const step = Math.max(1, Math.floor(target/30));
-    const t = setInterval(()=>{
-      current = Math.min(current+step, target);
-      el.textContent = current;
-      if(current>=target) clearInterval(t);
-    }, 30);
-  });
-}
-
-/* PAGE: EDA */
-function initEDA() {
-  // Update statistik deskriptif dari data JSON jika tersedia
-  if(window._edaStats) {
-    // Data statistik ada di sub-objek kasus_dbd
-    const s = window._edaStats.kasus_dbd || window._edaStats;
-    if(s.mean !== undefined) document.getElementById('stat-mean').textContent = s.mean.toFixed(2);
-    if(s.median !== undefined) document.getElementById('stat-median').textContent = s.median.toFixed(2);
-    if(s.std !== undefined) document.getElementById('stat-std').textContent = s.std.toFixed(2);
-    if(s.skewness !== undefined) document.getElementById('stat-skew').textContent = s.skewness.toFixed(2);
-    if(s.kurtosis !== undefined) document.getElementById('stat-kurt').textContent = s.kurtosis.toFixed(1);
-    if(s.min !== undefined && s.max !== undefined) document.getElementById('stat-minmax').textContent = `${s.min} / ${s.max}`;
-    if(s.pct_zero !== undefined) document.getElementById('stat-zero').textContent = s.pct_zero.toFixed(1) + '%';
-    // Python mengexport pct_gt_30 (kasus > 30), sesuaikan field name
-    const gt = s.pct_gt_30 ?? s.pct_gt10;
-    if(gt !== undefined) document.getElementById('stat-gt10').textContent = gt.toFixed(1) + '%';
-  }
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+  <div class="sb-header">
+    <button class="hdr-btn" onclick="toggleSidebar()" style="border:none; box-shadow:none; background:transparent;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
+    </button>
+    <a href="#" class="sb-logo-wrap">
+      <div class="logo-text"><span class="si" style="color:var(--c-blue)">Cancel</span><span class="pe" style="color:var(--c-red)">Face</span></div>
+    </a>
+  </div>
+  <div class="sb-menu">
+    <div class="sb-item active" onclick="nav('beranda', this)">
+      <div class="sb-icon">🏠</div><div class="sb-label">Beranda</div>
+    </div>
+    <div class="sb-item" onclick="nav('keamanan', this)">
+      <div class="sb-icon">🛡️</div><div class="sb-label">Analisis Keamanan</div>
+    </div>
+    <div class="sb-item" onclick="nav('eda', this)">
+      <div class="sb-icon">📊</div><div class="sb-label">Eksplorasi Data (EDA)</div>
+    </div>
+    <div class="sb-item" onclick="nav('metodologi', this)">
+      <div class="sb-icon">📜</div><div class="sb-label">Metodologi</div>
+    </div>
+    <div class="sb-item" onclick="nav('simulasi', this)">
+      <div class="sb-icon">💻</div><div class="sb-label">Simulasi</div>
+    </div>
+  </div>
   
-  // Histogram data - gunakan dari JSON jika ada
-  // Struktur JSON: eda_stats.kasus_dbd.histogram (bukan top-level)
-  let hbins, hvals;
-  const _hist = window._edaStats?.kasus_dbd?.histogram ?? window._edaStats?.histogram;
-  if(_hist && _hist.bins && _hist.counts) {
-    hbins = _hist.bins;
-    hvals = _hist.counts;
-  } else {
-    hbins=[0,1,2,3,4,5,6,7,8,10,15,20,30,50,999];
-    hvals=[3200,2800,2200,1800,1400,1100,800,600,700,480,260,120,40,8];
-  }
-  // Buat label bin histogram — bin terakhir (>=999) ditampilkan sebagai ">50"
-  const histLabels = hbins.slice(0, hvals.length).map((v, i) => {
-    const next = hbins[i + 1];
-    if(next === undefined || next >= 999) return `>${v}`;
-    return `${v}\u2013${next}`;
-  });
-  mkChart('chartHist',{
-    type:'bar',
-    data:{labels:histLabels,datasets:[{label:'Frekuensi',data:hvals,backgroundColor:C.blue+'0.7)',borderColor:C.blue+'1)',borderWidth:1}]},
-    options:{scales:{x:{title:{display:true,text:'Kasus DBD per kecamatan per minggu',color:'#6fa8d0',font:{size:10}},ticks:{font:{size:9},maxRotation:45}},y:{title:{display:true,text:'Frekuensi (observasi)',color:'#6fa8d0',font:{size:10}},beginAtZero:true}},plugins:{legend:{display:false},tooltip:{callbacks:{label:l=>`Frekuensi: ${l.raw.toLocaleString('id')}`}}}}
-  });
-  const years=[2017,2018,2019,2020,2021,2022,2023,2024,2025];
-  const allWeeks=[],allVals=[];
-  years.forEach(yr=>{
-    const d=getWeeklyTotals(yr);
-    for(let w=0;w<52;w++){allWeeks.push(`${yr}-W${String(w+1).padStart(2,'0')}`);allVals.push(d?Math.round(d[w]||0):0);}
-  });
-  mkChart('chartTS',{
-    type:'line',
-    data:{labels:allWeeks,datasets:[{label:'Total Kasus DKI per Minggu',data:allVals,borderColor:C.blue+'1)',backgroundColor:C.blue+'0.08)',borderWidth:1.5,pointRadius:0,fill:true,tension:0.3}]},
-    options:{scales:{x:{ticks:{maxTicksLimit:18,font:{size:9}}},y:{title:{display:true,text:'Total Kasus',color:'#6fa8d0',font:{size:10}}}},plugins:{legend:{display:false},tooltip:{mode:'index',intersect:false}}}
-  });
-  const palette=['#00aaff','#00d2c8','#e63946','#f4b942','#2ecc71','#8b5cf6','#f97316','#ec4899','#84cc16'];
-  mkChart('chartYearOverlay',{
-    type:'line',
-    data:{labels:Array.from({length:52},(_,i)=>`W${i+1}`),datasets:years.map((yr,i)=>{const d=getWeeklyTotals(yr);return{label:String(yr),data:d?d.map(v=>Math.round(v||0)):Array(52).fill(0),borderColor:palette[i],backgroundColor:'transparent',borderWidth:yr===2020?2.5:1.2,pointRadius:0,tension:0.3};})},
-    options:{scales:{x:{ticks:{maxTicksLimit:13,font:{size:10}}},y:{title:{display:true,text:'Total Kasus per Minggu',color:'#6fa8d0',font:{size:10}}}},plugins:{legend:{position:'right',labels:{font:{size:10},boxWidth:12,padding:6}}},interaction:{mode:'index',intersect:false}}
-  });
-  const kabs=['Jakarta Timur','Jakarta Selatan','Jakarta Utara','Jakarta Barat','Jakarta Pusat','Kepulauan Seribu'];
-  let kabMeans=[4.2,3.8,3.4,3.1,2.8,0.4];
-  // Gunakan data kabupaten_stats dari JSON jika tersedia
-  if(window._edaStats && window._edaStats.kabupaten_stats) {
-    const ks = window._edaStats.kabupaten_stats;
-    const orderedKabs = kabs.filter(k=>ks[k]);
-    if(orderedKabs.length > 0) {
-      const sorted = Object.entries(ks).sort((a,b)=>b[1].mean-a[1].mean);
-      kabs.length = 0; kabMeans.length = 0;
-      sorted.forEach(([k,v])=>{ kabs.push(k); kabMeans.push(+(v.mean||0).toFixed(2)); });
-    }
-  }
-  mkChart('chartKab',{
-    type:'bar',
-    data:{labels:kabs,datasets:[{label:'Rata-rata kasus per minggu per kecamatan',data:kabMeans,backgroundColor:[C.red+'0.75)',C.amber+'0.75)',C.blue+'0.75)',C.teal+'0.75)',C.green+'0.75)',C.purple+'0.75)'],borderWidth:0}]},
-    options:{indexAxis:'y',scales:{x:{title:{display:true,text:'Rata-rata Kasus',color:'#6fa8d0',font:{size:10}}}},plugins:{legend:{display:false}}}
-  });
-  // Data kuartal - gunakan dari JSON jika tersedia
-  let kuartalMean=[4.8,2.9,1.6,2.8], kuartalMedian=[3.2,1.9,1.1,1.9];
-  if(window._edaStats && window._edaStats.kuartal_stats) {
-    const qs = window._edaStats.kuartal_stats;
-    // key: 1,2,3,4 atau 'Q1' dsb - normalize
-    const qKeys = Object.keys(qs).sort();
-    if(qKeys.length >= 4) {
-      kuartalMean = qKeys.map(k=>+(qs[k].mean||0).toFixed(2));
-      kuartalMedian = qKeys.map(k=>+(qs[k].median||0).toFixed(2));
-    }
-  }
-  mkChart('chartKuartal',{
-    type:'bar',
-    data:{labels:['Q1 Jan-Mar','Q2 Apr-Jun','Q3 Jul-Sep','Q4 Okt-Des'],datasets:[{label:'Mean',data:kuartalMean,backgroundColor:[C.red+'0.8)',C.amber+'0.7)',C.green+'0.7)',C.blue+'0.7)'],borderWidth:0},{label:'Median',data:kuartalMedian,backgroundColor:[C.red+'0.4)',C.amber+'0.4)',C.green+'0.4)',C.blue+'0.4)'],borderWidth:0}]},
-    options:{scales:{y:{title:{display:true,text:'Kasus per Minggu',color:'#6fa8d0',font:{size:10}}}},plugins:{legend:{position:'bottom',labels:{font:{size:10}}}}}
-  });
-  mkChart('chartCorr',{
-    type:'bar',
-    data:{
-      labels: window._spearmanCorr ? window._spearmanCorr.map(f=>f.name) : SHAP_FEATS.map(f=>f.name),
-      datasets:[{
-        label:'Spearman absolut',
-        data: window._spearmanCorr ? window._spearmanCorr.map(f=>+(f.spearman||f.val||0).toFixed(3)) : SHAP_FEATS.map(f=>+(f.val*0.9+0.05).toFixed(3)),
-        backgroundColor: (window._spearmanCorr||SHAP_FEATS).map((_,i)=>`hsla(${200+i*8},80%,60%,0.75)`),
-        borderWidth:0
-      }]
-    },
-    options:{indexAxis:'y',scales:{x:{max:1,title:{display:true,text:'Koefisien Spearman absolut',color:'#6fa8d0',font:{size:10}}}},plugins:{legend:{display:false}}}
-  });
-  const sorted=[...KECAMATAN].filter(k=>k.kab!=='Kepulauan Seribu').sort((a,b)=>{
-    if(window._kecamatanAnnual) {
-      const aT = window._kecamatanAnnual[a.id]?.total || a.base*52*9*0.85;
-      const bT = window._kecamatanAnnual[b.id]?.total || b.base*52*9*0.85;
-      return bT - aT;
-    }
-    return b.base-a.base;
-  }).slice(0,10);
-  const tbody = document.getElementById('tbl-top-kec');
-  sorted.forEach((k,i)=>{
-    const ann = window._kecamatanAnnual ? window._kecamatanAnnual[k.id] : null;
-    const total = ann ? Math.round(ann.total) : Math.round(k.base*52*9*0.85);
-    const avgWeek = ann ? ann.avg_per_week.toFixed(2) : k.base.toFixed(2);
-    const peakVal = ann ? Math.round(ann.peak_cases) : Math.round(k.base*1.9);
-    const peakYr = ann ? ann.peak_year : '—';
-    const tc=k.base>3.5?'var(--z-merah)':k.base<2.5?'var(--z-hijau)':'var(--z-kuning)';
-    const tren=k.base>3.5?'Naik':k.base<2.5?'Turun':'Stabil';
-    tbody.innerHTML+=`<tr><td>${i+1}</td><td><strong>${k.name}</strong></td><td>${k.kab}</td><td class="mono" style="color:var(--z-merah)">${total.toLocaleString()}</td><td class="mono">${avgWeek}</td><td class="mono">${peakVal} <span style="color:var(--txt3);font-size:10px">(${peakYr})</span></td><td style="color:${tc}">${tren}</td></tr>`;
-  });
+  <!-- Sidebar Status Box -->
+  <div style="padding:15px; margin-top:auto;">
+    <div class="sb-status">
+        <div class="sb-status-title">Proteksi: Aktif</div>
+        <div class="sb-status-sub">Enkripsi Wajah Berjalan Normal</div>
+    </div>
+    <div class="sb-zone-card">
+        <div class="sb-zone-title">METRIK KEAMANAN</div>
+        <div class="sb-zone-sub">Evaluasi Performa & Privasi</div>
+        <div class="sb-z-item"><div class="zdot zdot-m"></div><div>Rank-1 Acc</div><div class="sb-z-val">34.5%</div></div>
+        <div class="sb-z-item"><div class="zdot zdot-k"></div><div>Usia Attacker</div><div class="sb-z-val">47.0%</div></div>
+        <div class="sb-z-item"><div class="zdot zdot-h"></div><div>Re-identifikasi</div><div class="sb-z-val">0.00%</div></div>
+    </div>
+  </div>
+  <div class="sb-foot">
+    <div class="sb-live"><div class="sb-live-dot"></div>SECURE</div>
+    <div class="sb-ver">CancelFace v1.0</div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header class="header">
+  <button class="hdr-btn" onclick="toggleSidebar()" style="display:none;" id="mobile-menu-btn">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
+  </button>
+  <div class="header-logo" style="margin-left: 56px;">
+    <div class="logo-text"><span class="si" style="color:var(--c-blue)">Cancel</span><span class="pe" style="color:var(--c-red)">Face</span></div>
+  </div>
+  <div class="header-divider"></div>
+  <div class="header-sub">Protokol Biometrik Wajah Cancelable · ISO/IEC 24745 Compliant</div>
+  <div class="header-spacer"></div>
+  <div class="live-pill"><div class="live-dot"></div><span>Status Sistem: SECURE</span></div>
+  <div class="hdr-btns">
+    <button class="hdr-btn" onclick="toggleTheme()" title="Ganti Tema">🌓</button>
+  </div>
+</header>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-label">LATEST METRICS</div>
+  <div class="ticker-track">
+    <div class="ticker-inner">
+      <div class="tick-item"><div class="tick-dot" style="color:var(--c-blue)"></div>Akurasi Gender Attacker: 57.14% (Aman)</div>
+      <div class="tick-item"><div class="tick-dot" style="color:var(--c-purple)"></div>Re-identifikasi Lintas CCTV: Mustahil (0.00%)</div>
+      <div class="tick-item"><div class="tick-dot" style="color:var(--c-green)"></div>Standar Keamanan: ISO/IEC 24745 Lulus</div>
+      <div class="tick-item"><div class="tick-dot" style="color:var(--c-red)"></div>Rank-1 Accuracy: 34.5% (Kompetitif)</div>
+      
+      <div class="tick-item"><div class="tick-dot" style="color:var(--c-blue)"></div>Akurasi Gender Attacker: 57.14% (Aman)</div>
+      <div class="tick-item"><div class="tick-dot" style="color:var(--c-purple)"></div>Re-identifikasi Lintas CCTV: Mustahil (0.00%)</div>
+      <div class="tick-item"><div class="tick-dot" style="color:var(--c-green)"></div>Standar Keamanan: ISO/IEC 24745 Lulus</div>
+      <div class="tick-item"><div class="tick-dot" style="color:var(--c-red)"></div>Rank-1 Accuracy: 34.5% (Kompetitif)</div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<main class="main" style="padding-left: 280px; transition: padding 0.38s cubic-bezier(.16,1,.3,1);" id="main-content">
+    
+    <!-- MENU 1: BERANDA -->
+    <div id="page-beranda" class="page active">
+        <!-- Hero Section -->
+        <div class="hero mb24" style="background:var(--card); border:1px solid var(--bord); border-radius:var(--radius-card); padding:24px; box-shadow:var(--shadow-card);">
+            <div class="hero-inner" style="display:grid; grid-template-columns:1fr 240px; gap:20px;">
+                <div>
+                    <div class="hero-eyebrow">Sistem Keamanan Biometrik · Cancelable Face 2026</div>
+                    <div class="hero-title">Proteksi Wajah.<br>Privasi Aman.<br>Presisi Tinggi.</div>
+                    <div class="hero-desc">CancelFace membangun protokol perlindungan data biometrik wajah berbasis Cancelable Biometrics. Sistem memastikan identitas tidak dapat direkonstruksi (Non-invertible) dan aman digunakan pada pengawasan CCTV massal tanpa mengorbankan privasi.</div>
+                    <div class="hero-stats">
+                        <div class="hstat"><div class="hstat-val">34.5%</div><div class="hstat-label">RANK-1 ACCURACY</div></div>
+                        <div class="hstat"><div class="hstat-val">47.0%</div><div class="hstat-label">AKURASI USIA</div></div>
+                        <div class="hstat"><div class="hstat-val">0.11</div><div class="hstat-label">COS-SIM REKONSTRUKSI</div></div>
+                        <div class="hstat"><div class="hstat-val">0.00%</div><div class="hstat-label">RE-IDENTIFIKASI</div></div>
+                    </div>
+                </div>
+                <div class="cf-shield-container">
+                    🛡️
+                    <div class="cf-scanner"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="g2 mb24">
+            <div class="card card-flex-col">
+                <div class="sec-head">
+                    <div class="sec-title"><div class="sec-title-line"></div>Heatmap Evaluasi (Utility vs Privacy)</div>
+                </div>
+                <div id="plt-heatmap" class="ch-fill"></div>
+            </div>
+            <div class="card card-flex-col">
+                <div class="sec-head">
+                    <div class="sec-title"><div class="sec-title-line"></div>Ketahanan Resolusi Wajah (BBox Area)</div>
+                </div>
+                <div id="plt-kualitas" class="ch-fill"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- MENU 2: ANALISIS KEAMANAN -->
+    <div id="page-keamanan" class="page">
+        <div class="sec-head mb24">
+            <div class="sec-title"><div class="sec-title-line"></div>Analisis Keamanan & Privasi</div>
+            <div class="sec-sub">Evaluasi serangan rekonstruksi dan tebakan atribut pada template CancelFace.</div>
+        </div>
+        <div class="g2 mb24">
+            <div class="card card-flex-col">
+                <div class="card-title">Serangan Rekonstruksi Wajah</div>
+                <div class="card-subtitle">Cosine Similarity antara Wajah Asli dan Template Curian</div>
+                <div id="plt-recon" class="ch-fill"></div>
+            </div>
+            <div class="card card-flex-col">
+                <div class="card-title">Serangan Penebakan Atribut</div>
+                <div class="card-subtitle">Akurasi klasifikasi Umur & Gender dari Template Curian</div>
+                <div id="plt-attr" class="ch-fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MENU 3: EDA -->
+    <div id="page-eda" class="page">
+        <div class="sec-head mb24">
+            <div class="sec-title"><div class="sec-title-line"></div>Eksplorasi Data (EDA)</div>
+            <div class="sec-sub">Visualisasi distribusi data, reduksi dimensi (T-SNE), dan pengaruh parameter.</div>
+        </div>
+        
+        <div class="g-7-3 mb24">
+            <div class="card card-flex-col">
+                <div class="card-title">Ablasi Dimensi Template</div>
+                <div class="card-subtitle">Pengaruh panjang dimensi (D) terhadap Rank-1 Accuracy</div>
+                <div id="plt-ablasi" class="ch-fill"></div>
+            </div>
+            <div class="card">
+                <div class="card-title">Interpretasi T-SNE</div>
+                <div class="card-subtitle">Sebaran Fitur Template (CancelFace vs Base)</div>
+                <p style="font-size:12.5px; color:var(--txt2); line-height:1.7;">
+                    Teknik t-SNE (t-Distributed Stochastic Neighbor Embedding) digunakan untuk mereduksi dimensi fitur menjadi 2D/3D. <br><br>
+                    <strong>Base Model:</strong> Membentuk cluster ketat berdasar identitas, yang berarti rawan pelacakan.<br><br>
+                    <strong>CancelFace:</strong> Cluster identitas dihancurkan secara spasial karena proses proyeksi acak, sehingga identitas tidak dapat dilacak secara visual, mengamankan privasi secara ekstrem.
+                </p>
+                <div class="card-trend mt-4" style="color:var(--c-green);">T-SNE Privacy Test: PASSED</div>
+            </div>
+        </div>
+        
+        <div class="card mb24">
+            <div class="card-title">Sample Data (Serangan Atribut)</div>
+            <div class="card-subtitle">Cuplikan data eksperimen prediksi usia dan gender.</div>
+            <div class="tbl-wrap tbl-scroll" style="margin-top:10px;">
+                <table class="stat-table" style="width:100%; text-align:left;">
+                    <thead style="background:var(--bg3);">
+                        <tr>
+                            <th>Metode</th>
+                            <th>Gender Target</th>
+                            <th>Age Target</th>
+                            <th>Gender Pred (Acc)</th>
+                            <th>Age Pred (Acc)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbl-sample-body">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- MENU 4: METODOLOGI -->
+    <div id="page-metodologi" class="page">
+        <div class="sec-head mb24">
+            <div class="sec-title"><div class="sec-title-line"></div>Metodologi & Standar Keamanan</div>
+            <div class="sec-sub">Kepatuhan protokol CancelFace terhadap standar internasional ISO/IEC 24745.</div>
+        </div>
+        
+        <div class="g2 mb24">
+            <div class="card">
+                <div class="card-title">Kepatuhan ISO/IEC 24745</div>
+                <div class="card-subtitle">Standar Perlindungan Informasi Biometrik</div>
+                
+                <div class="method-step">
+                    <div class="method-num" style="background:var(--c-green)">1</div>
+                    <div>
+                        <div class="method-title">Non-invertibility</div>
+                        <div class="method-desc">Sangat sulit secara komputasi untuk merekonstruksi sampel wajah asli dari referensi biometrik (template). CancelFace memutus korelasi geometrik secara acak.</div>
+                        <div class="method-tag">Status: LULUS</div>
+                    </div>
+                </div>
+                
+                <div class="method-step">
+                    <div class="method-num" style="background:var(--c-green)">2</div>
+                    <div>
+                        <div class="method-title">Revocability</div>
+                        <div class="method-title" style="font-size:11px; font-weight:normal; margin-bottom:5px;">(Renewability)</div>
+                        <div class="method-desc">Template yang bocor dapat dicabut dan diganti dengan template baru yang tidak memiliki kesamaan dengan template lama, menggunakan *seed* acak yang berbeda.</div>
+                        <div class="method-tag">Status: LULUS</div>
+                    </div>
+                </div>
+                
+                <div class="method-step">
+                    <div class="method-num" style="background:var(--c-green)">3</div>
+                    <div>
+                        <div class="method-title">Unlinkability</div>
+                        <div class="method-desc">Dua template yang dihasilkan dari individu yang sama pada sistem yang berbeda tidak dapat dihubungkan (di-*link*) satu sama lain. Melindungi dari *cross-matching*.</div>
+                        <div class="method-tag">Status: LULUS</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">Arsitektur GRL & R-LSH</div>
+                <div class="card-subtitle">Gradient Reversal Layer & Random Locality Sensitive Hashing</div>
+                <div style="padding: 20px; background:var(--bg3); border-radius:12px; margin-top:20px; text-align:center;">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Neural_network_example.svg/400px-Neural_network_example.svg.png" style="width:100%; max-width:300px; opacity:0.7; mix-blend-mode:luminosity;" alt="NN Architecture">
+                </div>
+                <p style="font-size:12.5px; color:var(--txt2); line-height:1.7; margin-top:20px;">
+                    <strong>1. GRL (Gradient Reversal Layer):</strong> Diterapkan selama pelatihan untuk mengelabui klasifikator atribut (Umur/Gender). Bobot model diperbarui secara berlawanan untuk membuang informasi sensitif.<br><br>
+                    <strong>2. LSH Projection:</strong> Fitur wajah matriks dimensi tinggi dikalikan dengan matriks proyeksi acak yang bergantung pada kunci (Seed). Hasilnya kemudian di-binarization menjadi deret bit yang *cancelable*.
+                </p>
+                <div class="formula-block">
+                    <span class="fhl">T</span> = sign(<span class="fval">W</span> * <span class="fval">X</span> + <span class="fval">B</span>)
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- MENU 5: SIMULASI -->
+    <div id="page-simulasi" class="page">
+        <div class="sec-head mb24">
+            <div class="sec-title"><div class="sec-title-line"></div>Simulasi Sistem (Enkripsi Template)</div>
+            <div class="sec-sub">Demonstrasi interaktif pengacakan wajah menjadi template biometrik.</div>
+        </div>
+        
+        <div class="card" style="text-align:center; padding: 40px 20px;">
+            <div style="font-size:40px; margin-bottom:20px;">👤 ➔ 🔐</div>
+            <div class="card-title mb16" style="font-size:20px;">Simulasi Ekstraksi Fitur CancelFace</div>
+            <p style="color:var(--txt2); max-width:500px; margin:0 auto 30px auto; line-height:1.6;">
+                Proses mengubah wajah asli menjadi template biometrik *cancelable*. Jika tombol ditekan, sistem akan meng-generate hash Hexadecimal unik berdasarkan *seed* enkripsi.
+            </p>
+            
+            <button class="sim-btn" onclick="simulateHash()" style="margin-bottom:30px;">Enkripsi Wajah Sekarang</button>
+            <button class="sim-btn" onclick="simulateHash()" style="margin-bottom:30px; background:linear-gradient(135deg, var(--c-red), var(--c-orange)); margin-left:10px;">Cabut (Revoke) & Regenerate</button>
+            
+            <div class="card-title" style="text-align:left;">Output Hash Template (Base64 / Hex):</div>
+            <div class="sim-box" id="hash-output">
+                Tekan tombol di atas untuk memulai simulasi pengacakan template.
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<script>
+// Theme Logic
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'light' ? 'dark' : 'light';
+  html.setAttribute('data-theme', next);
+  setTimeout(renderCharts, 100);
 }
 
-/* PAGE: MODEL */
-function initModel() {
-  const mc = document.getElementById('model-cards');
-  MODELS.forEach(m=>{
-    mc.innerHTML+=`<div class="model-crd${m.best?' best':''}"><div class="model-crd-name">${m.name}</div><div class="model-crd-r2">${(m.R2||0).toFixed(2)}</div><div class="model-crd-mae">MAE ${(m.MAE||0).toFixed(2)}</div><div style="margin-top:8px;font-size:9.5px;color:var(--txt3)">RMSE ${(m.RMSE||0).toFixed(2)}</div></div>`;
-  });
-  mkChart('chartRadar',{
-    type:'radar',
-    data:{
-      labels:['R²','Akurasi MAE','Akurasi RMSE','Kecepatan'],
-      datasets:MODELS.map((m,i)=>({label:m.name,data:[m.R2||0,1-(m.MAE||0)/4,1-(m.RMSE||0)/6,i===0?0.7:i===1?0.9:0.5],borderColor:[C.blue,C.teal,C.amber,C.green,C.purple][i%5]+'1)',backgroundColor:[C.blue,C.teal,C.amber,C.green,C.purple][i%5]+'0.08)',pointRadius:3,borderWidth:m.best?2.5:1.5}))
-    },
-    options:{scales:{r:{min:0,max:1,ticks:{stepSize:0.2,font:{size:9}},pointLabels:{font:{size:10.5},color:'#6fa8d0'}}},plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:12}}}}
-  });
-  let foldData = window._cvFoldResults || {naive_baseline:[0.14,0.17,0.18],poisson_ridge:[0.31,0.34,0.35],xgboost:[0.68,0.70,0.71],lightgbm:[0.73,0.75,0.76],catboost:[0.71,0.72,0.73]};
-  mkChart('chartFold',{
-    type:'bar',
-    data:{labels:['2023','2024','2025'],datasets:MODELS.map((m,i)=>({label:m.name,data:foldData[m.key]||[0,0,0],backgroundColor:[C.blue,C.teal,C.amber,C.green,C.purple][i%5]+'0.7)',borderWidth:0}))},
-    options:{scales:{y:{max:1,title:{display:true,text:'R²',color:'#6fa8d0',font:{size:10}}}},plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}}}}
-  });
-  mkChart('chartSHAP',{
-    type:'bar',
-    data:{labels:SHAP_FEATS.map(f=>f.name),datasets:[{label:'Mean SHAP absolut',data:SHAP_FEATS.map(f=>f.val||0),backgroundColor:SHAP_FEATS.map((_,i)=>`hsla(${195+i*10},80%,60%,0.8)`),borderWidth:0}]},
-    options:{indexAxis:'y',scales:{x:{max:1,title:{display:true,text:'Mean nilai SHAP absolut',color:'#6fa8d0',font:{size:10}}}},plugins:{legend:{display:false}}}
-  });
-  const se = document.getElementById('shap-explain');
-  if(se) se.innerHTML = '';
-  // Penjelasan interpretasi untuk setiap fitur SHAP
-  const shapExplanations = {
-    'kasus dbd lag1': 'Jumlah kasus DBD 1 minggu sebelumnya merupakan prediktor terkuat. Ini menunjukkan persistensi wabah dan pola transmisi virus dengue yang berkelanjutan.',
-    'kasus dbd lag2': 'Kasus 2 minggu sebelumnya masih berpengaruh signifikan, mencerminkan siklus hidup nyamuk Aedes aegypti (8-12 hari) dari telur hingga dewasa infektif.',
-    'kasus dbd rolling4': 'Rata-rata 4 minggu terakhir menangkap tren jangka menengah dan membantu meredam fluktuasi mingguan yang ekstrem.',
-    'curah hujan lag1': 'Curah hujan minggu sebelumnya meningkatkan habitat perkembangbiakan nyamuk. Genangan air hujan menjadi tempat ideal untuk bertelur.',
-    'suhu rata': 'Suhu optimal 25-30°C mempercepat siklus hidup nyamuk dan replikasi virus dengue dalam tubuh nyamuk.',
-    'minggu sin': 'Komponen sinusoidal dari encoding musiman, menangkap pola periodik tahunan kasus DBD di Indonesia.',
-    'kelembapan rata': 'Kelembapan tinggi memperpanjang umur nyamuk dewasa, meningkatkan peluang transmisi virus ke manusia.',
-    'kecamatan endemisitas': 'Level endemisitas historis kecamatan menunjukkan risiko baseline berdasarkan karakteristik wilayah.',
-    'spatial kasus tetangga lag1': 'Rata-rata kasus di kecamatan tetangga menangkap efek spillover dan penyebaran geografis wabah.',
-    'curah hujan lag2': 'Efek hujan 2 minggu lalu masih terasa karena genangan air membutuhkan waktu untuk menghasilkan nyamuk dewasa.',
-    'minggu cos': 'Komponen kosinus dari encoding musiman, bekerja bersama komponen sin untuk representasi siklus lengkap.',
-    'suhu kuadrat': 'Efek non-linear suhu - terlalu panas atau dingin sama-sama mengurangi aktivitas dan kelangsungan hidup nyamuk.',
-    'interaksi ch suhu': 'Kombinasi curah hujan dan suhu menciptakan kondisi ideal untuk ledakan populasi nyamuk.',
-    'kecepatan angin lag1': 'Angin kencang menghambat aktivitas terbang nyamuk, mengurangi kontak dengan manusia.',
-    'lama penyinaran lag1': 'Durasi penyinaran matahari memengaruhi aktivitas nyamuk yang cenderung menggigit saat senja dan fajar.'
-  };
-  // Fungsi lookup case-insensitive dan toleran spasi
-  function getShapExplain(name) {
-    const key = name.toLowerCase().trim();
-    if(shapExplanations[key]) return shapExplanations[key];
-    // coba match parsial
-    for(const k in shapExplanations) {
-      if(key.includes(k) || k.includes(key)) return shapExplanations[k];
-    }
-    return 'Fitur ini berkontribusi pada prediksi model dengan pengaruh yang terukur secara statistik.';
-  }
-  if(se) SHAP_FEATS.slice(0,5).forEach(f=>{
-    const pct = Math.round((f.val||0)*100);
-    const explanation = getShapExplain(f.name);
-    se.innerHTML+=`<div style="margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--bord)">
-      <div class="metric-bar" style="margin-bottom:8px"><div class="metric-name" style="font-weight:700;color:var(--txt)">${f.name}</div><div style="flex:1"><div class="prog-track"><div class="prog-fill" style="background:var(--c-blue);width:${pct}%"></div></div></div><div class="metric-val" style="color:var(--c-blue)">${(f.val||0).toFixed(2)}</div></div>
-      <div style="font-size:11.5px;color:var(--txt2);line-height:1.6;padding-left:2px">${explanation}</div>
-    </div>`;
-  });
-  const scatterSel = document.getElementById('scatter-model-sel');
-  if(scatterSel) {
-    MODELS.forEach(m=>{
-      const opt = document.createElement('option');
-      opt.value = m.key;
-      opt.textContent = m.name + (m.best ? ' ★ Terbaik' : '');
-      scatterSel.appendChild(opt);
-    });
-    // default ke model terbaik
-    const bestKey = (MODELS.find(m=>m.best)||MODELS[0]).key;
-    scatterSel.value = bestKey;
-  }
-  renderScatterChart((MODELS.find(m=>m.best)||MODELS[0]).key);
-  // Tabel metrik model
-  const tmb = document.getElementById('tbl-model-metrics');
-  MODELS.forEach(m=>{
-    tmb.innerHTML+=`<tr><td><strong>${m.name}</strong>${m.best?` <span class="best-badge">TERBAIK</span>`:''}</td><td class="mono" style="color:${m.best?'var(--c-blue)':'var(--txt2)'}">${(m.R2||0).toFixed(3)}</td><td class="mono">${(m.MAE||0).toFixed(3)}</td><td class="mono">${(m.RMSE||0).toFixed(3)}</td><td>${m.best?'<span class="zpill zpill-h">Dipilih</span>':'<span class="tag tag-blue" style="font-size:9px">Kandidat</span>'}</td></tr>`;
-  });
-}
-
-function onScatterModelChange(modelKey) {
-  renderScatterChart(modelKey);
-}
-
-function renderScatterChart(modelKey) {
-  const m = MODELS.find(m=>m.key===modelKey) || MODELS[0];
-  const scatterData = [];
-  const nEl = document.getElementById('scatter-n-pts');
-  const subEl = document.getElementById('scatter-subtitle');
-
-  if(window._scatterData && window._scatterData[modelKey]) {
-    window._scatterData[modelKey].forEach(pt=>scatterData.push({x:pt.actual,y:pt.predicted}));
-    if(subEl) subEl.textContent = `Aktual vs prediksi ${m.name} – fold terakhir (2025). Data dari scatter_data.json.`;
-    if(nEl) nEl.textContent = `${scatterData.length} titik`;
-  } else if(window._scatterData && Object.keys(window._scatterData).length > 0) {
-    // coba key pertama yg ada
-    const firstKey = Object.keys(window._scatterData)[0];
-    window._scatterData[firstKey].forEach(pt=>scatterData.push({x:pt.actual,y:pt.predicted}));
-    if(subEl) subEl.textContent = `Data scatter untuk "${modelKey}" tidak tersedia. Menampilkan "${firstKey}".`;
-    if(nEl) nEl.textContent = `${scatterData.length} titik`;
-  } else {
-    for(let i=0;i<180;i++){
-      const actual=Math.max(0,Math.random()*12);
-      const noise=(Math.random()-0.5)*3.0*(1+(1-(m.R2||0.5)));
-      scatterData.push({x:+(actual).toFixed(2),y:+Math.max(0,actual*0.92+0.3+noise).toFixed(2)});
-    }
-    if(subEl) subEl.innerHTML=`Titik-titik ideal berada di garis diagonal. <em style="color:var(--c-amber)">Data representatif (R²≈${(m.R2||0).toFixed(2)}) — tambahkan scatter_data.json untuk data nyata.</em>`;
-    if(nEl) nEl.textContent = `${scatterData.length} titik (simulasi)`;
-  }
-  const colorPalette=['rgba(0,170,255,','rgba(0,210,200,','rgba(244,185,66,','rgba(46,204,113,','rgba(139,92,246,'];
-  const mIdx = MODELS.findIndex(x=>x.key===modelKey);
-  const col = colorPalette[mIdx<0?0:mIdx%5];
-  const maxVal = scatterData.length>0 ? Math.max(...scatterData.map(p=>Math.max(p.x,p.y)))*1.1 : 16;
-  mkChart('chartScatter',{
-    type:'scatter',
-    data:{datasets:[
-      {label:m.name,data:scatterData,backgroundColor:col+'0.4)',pointRadius:4,pointHoverRadius:6},
-      {label:'Garis Sempurna',data:[{x:0,y:0},{x:maxVal,y:maxVal}],type:'line',borderColor:'rgba(230,57,70,0.7)',borderDash:[4,3],pointRadius:0,borderWidth:1.5}
-    ]},
-    options:{scales:{
-      x:{title:{display:true,text:'Aktual (kasus per minggu per kec)',color:'#6fa8d0',font:{size:10}},max:maxVal},
-      y:{title:{display:true,text:'Prediksi (kasus per minggu per kec)',color:'#6fa8d0',font:{size:10}},max:maxVal}
-    },plugins:{legend:{position:'bottom',labels:{font:{size:10}}}}}
-  });
-}
-
-/* DUAL LEAFLET MAPS */
-let map1=null, map2=null, geoLayer1=null, geoLayer2=null;
-let playInterval=null, playing=false;
-const DARK_TILE='https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
-const LIGHT_TILE='https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
-let tile1=null, tile2=null;
-function getTileUrl(){return darkMode?DARK_TILE:LIGHT_TILE;}
-
-function initMaps() {
-  if(map1) return;
-  const center=[-6.21,106.845], zoom=10;
-  map1=L.map('map-ewars',{center,zoom,zoomControl:true,attributionControl:false});
-  map2=L.map('map-ec',{center,zoom,zoomControl:false,attributionControl:false});
-  tile1=L.tileLayer(getTileUrl(),{maxZoom:16}).addTo(map1);
-  tile2=L.tileLayer(getTileUrl(),{maxZoom:16}).addTo(map2);
-  let lock=false;
-  map1.on('move zoom',()=>{if(!lock){lock=true;map2.setView(map1.getCenter(),map1.getZoom(),{animate:false});setTimeout(()=>lock=false,50);}});
-  map2.on('move zoom',()=>{if(!lock){lock=true;map1.setView(map2.getCenter(),map2.getZoom(),{animate:false});setTimeout(()=>lock=false,50);}});
-}
-function updateMapTiles(){if(tile1){tile1.setUrl(getTileUrl());}if(tile2){tile2.setUrl(getTileUrl());}}
-
-function getYearFromSel(){
-  const v=document.getElementById('peta-year')?.value||'2026';
-  return v.includes('2026')?2026:parseInt(v);
-}
-
-function updateMaps() {
-  if(!map1) return;
-  const year=getYearFromSel();
-  const isForecast = (year === 2026);
-  const sl=document.getElementById('week-slider');
-  // Batasi slider: 2026 hanya minggu 1-13 (forecast), historis 1-52
-  if(sl) {
-    const maxWk = isForecast ? 13 : 52;
-    sl.max = maxWk;
-    if(parseInt(sl.value) > maxWk) sl.value = maxWk;
-    sl.style.setProperty('--pct',((parseInt(sl.value)-1)/(maxWk-1)*100)+'%');
-  }
-  const sliderRow = document.querySelector('.slider-row');
-  if(sliderRow) {
-    const maxWk = isForecast ? 13 : 52;
-    sliderRow.children[1].textContent = `Minggu ${maxWk}`;
-  }
-  const week=parseInt(sl?.value||1);
-  document.getElementById('week-disp').textContent=`Minggu ${week}`;
-  document.getElementById('peta-week-label').textContent=`Minggu ${week} · ${year}`;
-
-  const zoneData=KECAMATAN.map(k=>{
-    const pred=getPred(k,year,week);
-    const hasActual = !isForecast && pred !== null;
-    return {...k,pred,ewars:zonaEWARS(pred,k),ec:zonaEC(pred,k),hasActual};
-  });
-
-  if(geoLayer1){ geoLayer1.remove(); geoLayer1=null; }
-  if(geoLayer2){ geoLayer2.remove(); geoLayer2=null; }
-
-  let ewarsCount={Merah:0,Kuning:0,Hijau:0,'No Data':0};
-  let ecCount={Merah:0,Kuning:0,Hijau:0,'No Data':0};
-  const merahKec=[];
-
-  // Build zone lookup by kec_id
-  const zoneById={};
-  zoneData.forEach(k=>{
-    zoneById[k.id]=k;
-    ewarsCount[k.ewars]=(ewarsCount[k.ewars]||0)+1;
-    ecCount[k.ec]=(ecCount[k.ec]||0)+1;
-    if(k.ewars==='Merah') merahKec.push(k);
-  });
-
-  // Helper: build GeoJSON layer for given zone type
-  function buildGeoLayer(map, zoneKey) {
-    if(!geoJsonData) {
-      // Fallback: render circles if GeoJSON belum tersedia
-      zoneData.forEach(k=>{
-        const zona = k[zoneKey];
-        const color=ZCOLORS[zona]||'#888';
-        const predVal = (k.pred !== null && k.pred !== undefined) ? k.pred : 0;
-        const radius=Math.max(500,Math.min(1400,350+predVal*180));
-        const m=L.circle([k.lat,k.lng],{radius,fillColor:color,fillOpacity:0.55,color:color,weight:2})
-          .addTo(map)
-          .bindPopup(buildPopup(k));
-        m.on('mouseover',function(){this.setStyle({fillOpacity:0.78,weight:2.5});});
-        m.on('mouseout',function(){this.setStyle({fillOpacity:0.55,weight:2});});
-      });
-      return null;
-    }
-    return L.geoJSON(geoJsonData, {
-      style: function(feature) {
-        const id = feature.properties.kec_id;
-        const k  = zoneById[id];
-        if(!k) return {fillColor:'#444',fillOpacity:0.3,color:'#666',weight:1,opacity:0.5};
-        const zona = k[zoneKey];
-        const col  = ZCOLORS[zona]||'#888';
-        return {fillColor:col, fillOpacity:0.55, color:col, weight:1.8, opacity:0.9};
-      },
-      onEachFeature: function(feature, layer) {
-        const id = feature.properties.kec_id;
-        const k  = zoneById[id];
-        if(!k) return;
-        layer.bindPopup(buildPopup(k));
-        layer.on('mouseover',function(){ this.setStyle({fillOpacity:0.80,weight:2.5}); });
-        layer.on('mouseout', function(){ this.setStyle({fillOpacity:0.55,weight:1.8}); });
-      }
-    }).addTo(map);
-  }
-
-  function buildPopup(k) {
-    const isHistorical = (year !== 2026);
-    const kasusLabel = isHistorical ? 'Kasus Aktual' : 'Prediksi Kasus';
-    let kasusVal;
-    if(k.pred === null || k.pred === undefined) {
-      kasusVal = 'N/A';
-    } else if(isHistorical) {
-      kasusVal = Math.round(k.pred).toString() + ' kasus';
-    } else {
-      kasusVal = k.pred.toFixed(2) + ' kasus (prediksi)';
-    }
-    const sourceTag = isHistorical
-      ? `<div style="font-size:9px;color:#2ecc71;margin-bottom:6px">✔ Data Aktual dari historis_kec_weekly.json</div>`
-      : `<div style="font-size:9px;color:#00aaff;margin-bottom:6px">⚡ Forecast dari forecast_q1_2026.json</div>`;
-    return `<div class="popup-name">${k.name}</div><div style="font-size:10px;color:var(--txt3);margin-bottom:4px">${k.kab}</div>${sourceTag}<div class="popup-row"><span>${kasusLabel}:</span><span class="popup-val">${kasusVal}</span></div><div class="popup-row"><span>Zona EWARS:</span><span class="popup-val" style="color:${ZCOLORS[k.ewars]||'#888'}">${k.ewars}</span></div><div class="popup-row"><span>Zona EC:</span><span class="popup-val" style="color:${ZCOLORS[k.ec]||'#888'}">${k.ec}</span></div><div class="popup-row"><span>P50 / P75:</span><span class="popup-val">${k.P50.toFixed(1)} / ${k.P75.toFixed(1)}</span></div><div class="popup-row"><span>EC Mean ± SD:</span><span class="popup-val">${k.ecMean.toFixed(1)} ± ${k.ecSd.toFixed(1)}</span></div>`;
-  }
-
-  geoLayer1 = buildGeoLayer(map1, 'ewars');
-  geoLayer2 = buildGeoLayer(map2, 'ec');
-
-  // Update mode label
-  const modeLabel1 = document.getElementById('map-mode-label-1');
-  const modeLabel2 = document.getElementById('map-mode-label-2');
-  if(modeLabel1) {
-    if(isForecast) {
-      modeLabel1.textContent = '⚡ Forecast Q1 2026 · Hijau ≤P50 · Kuning P50-P75 · Merah >P75';
-    } else if(!window._historisKecWeekly) {
-      modeLabel1.textContent = '⚠️ historis_kec_weekly.json belum tersedia – jalankan cell export historis_kec_weekly di notebook';
-    } else {
-      const hasData = zoneData.some(k => k.pred !== null);
-      modeLabel1.textContent = hasData
-        ? `📊 Data Aktual ${year} · Zonasi berdasarkan kasus aktual · Hijau ≤P50 · Kuning P50-P75 · Merah >P75`
-        : `⚠️ Tidak ada data aktual tersedia untuk tahun ${year}`;
-    }
-  }
-  if(modeLabel2) {
-    if(isForecast) {
-      modeLabel2.textContent = '⚡ Forecast Q1 2026 · Hijau ≤Mean · Kuning Mean-Mean+SD · Merah >Mean+SD';
-    } else if(!window._historisKecWeekly) {
-      modeLabel2.textContent = '⚠️ historis_kec_weekly.json belum tersedia';
-    } else {
-      const hasData = zoneData.some(k => k.pred !== null);
-      modeLabel2.textContent = hasData
-        ? `📊 Data Aktual ${year} · Zonasi berdasarkan kasus aktual · Hijau ≤Mean · Kuning Mean-Mean+SD · Merah >Mean+SD`
-        : `⚠️ Tidak ada data aktual tersedia untuk tahun ${year}`;
-    }
-  }
-
-  document.getElementById('ewars-merah-count').textContent=`Merah: ${ewarsCount.Merah}`;
-  document.getElementById('ec-merah-count').textContent=`Merah: ${ecCount.Merah}`;
-
-  const colHdr = document.getElementById('tbl-kasus-col-hdr');
-  if(colHdr) colHdr.textContent = isForecast ? 'Prediksi Kasus' : 'Kasus Aktual';
-
-  const total=KECAMATAN.length;
-  [['m','Merah'],['k','Kuning'],['h','Hijau']].forEach(([t,z])=>{
-    const ep=Math.round(ewarsCount[z]/total*100);
-    const ecp=Math.round(ecCount[z]/total*100);
-    const pbEl=document.getElementById(`pb-ewars-${t}`); if(pbEl) pbEl.style.width=ep+'%';
-    const vbEl=document.getElementById(`vb-ewars-${t}`); if(vbEl) vbEl.textContent=ewarsCount[z];
-    const pbEl2=document.getElementById(`pb-ec-${t}`); if(pbEl2) pbEl2.style.width=ecp+'%';
-    const vbEl2=document.getElementById(`vb-ec-${t}`); if(vbEl2) vbEl2.textContent=ecCount[z];
-  });
-
-  const tbody=document.getElementById('tbl-peta-merah');
-  tbody.innerHTML='';
-  merahKec.sort((a,b)=>b.pred-a.pred).forEach((k,i)=>{
-    const ecZ=k.ec;
-    const ecCls=ecZ==='Merah'?'m':ecZ==='Kuning'?'k':'h';
-    tbody.innerHTML+=`<tr><td>${i+1}</td><td><strong>${k.name}</strong></td><td>${k.kab}</td><td class="mono" style="color:var(--z-merah)">${k.pred.toFixed(2)}</td><td><span class="zpill zpill-m"><span class="zdot zdot-m"></span>Merah</span></td><td><span class="zpill zpill-${ecCls}"><span class="zdot zdot-${ecCls}"></span>${ecZ}</span></td><td class="mono">${k.P75.toFixed(2)}</td></tr>`;
-  });
-  if(merahKec.length===0) tbody.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--z-hijau);padding:20px">Tidak ada kecamatan zona Merah pada minggu ini</td></tr>';
-}
-
-function onWeekSlide(el) {
-  const v=parseInt(el.value);
-  const maxWk=parseInt(el.max)||52;
-  el.style.setProperty('--pct',((v-1)/(maxWk-1)*100)+'%');
-  updateMaps();
-}
-
-function togglePlay() {
-  playing=!playing;
-  const btn=document.getElementById('play-btn');
-  if(playing) {
-    btn.textContent='⏸';
-    const speed=parseInt(document.getElementById('speed-sel').value||700);
-    playInterval=setInterval(()=>{
-      const sl=document.getElementById('week-slider');
-      const isFc=(getYearFromSel()===2026);
-      const maxWk=isFc?13:52;
-      let v=parseInt(sl.value)+1;
-      if(v>maxWk) v=1;
-      sl.value=v;
-      onWeekSlide(sl);
-    }, speed);
-  } else {
-    btn.textContent='▶';
-    clearInterval(playInterval);
-  }
-}
-
-/* PAGE: FORECAST */
-function initForecast() {
-  const grid=document.getElementById('fc-week-grid');
-  let weekTotals, merahCounts=[], kuningCounts=[], hijauCounts=[];
-  if(window._q1Summary && window._q1Summary.weekly) {
-    weekTotals = window._q1Summary.weekly.map(w=>w.total);
-    window._q1Summary.weekly.forEach(w=>{
-      merahCounts.push(w.merah_ewars||0);
-      kuningCounts.push(w.kuning_ewars||0);
-      hijauCounts.push(w.hijau_ewars||0);
-    });
-  } else {
-    weekTotals=Array.from({length:13},(_,i)=>KECAMATAN.reduce((s,k)=>s+(FC2026[k.id]&&FC2026[k.id][i]?FC2026[k.id][i].pred:0),0));
-    for(let i=0;i<13;i++){
-      merahCounts.push(KECAMATAN.filter(k=>FC2026[k.id]&&FC2026[k.id][i]&&FC2026[k.id][i].ewars==='Merah').length);
-      kuningCounts.push(KECAMATAN.filter(k=>FC2026[k.id]&&FC2026[k.id][i]&&FC2026[k.id][i].ewars==='Kuning').length);
-      hijauCounts.push(KECAMATAN.filter(k=>FC2026[k.id]&&FC2026[k.id][i]&&FC2026[k.id][i].ewars==='Hijau').length);
-    }
-  }
-  const maxTotal=Math.max(...weekTotals);
-  weekTotals.forEach((total,i)=>{
-    const w=i+1;
-    const pct=Math.round(total/maxTotal*100);
-    const mCount=merahCounts[i];
-    const isHot=mCount>=12;
-    grid.innerHTML+=`<div class="fc-week${w===6?' active':''}" onclick="selectFcWeek(${w},this)"><div class="fc-wnum">W${w}</div><div class="fc-total" style="color:${isHot?'var(--z-merah)':'var(--c-blue)'}">${Math.round(total)}</div><div class="fc-bar-wrap"><div class="fc-bar" style="width:${pct}%;background:${isHot?'var(--z-merah)':mCount>=8?'var(--z-kuning)':'var(--c-blue)'}"></div></div><div class="fc-zone-row"><div class="fc-zone-dot" style="background:var(--z-merah);width:${Math.max(4,mCount/44*18)}px;height:${Math.max(4,mCount/44*18)}px"></div><div class="fc-zone-dot" style="background:var(--z-kuning)"></div><div class="fc-zone-dot" style="background:var(--z-hijau)"></div></div></div>`;
-  });
-  mkChart('chartFcBar',{
-    type:'bar',
-    data:{labels:Array.from({length:13},(_,i)=>`Minggu ${i+1}`),datasets:[{label:'Total Prediksi Kasus',data:weekTotals.map(v=>Math.round(v)),backgroundColor:weekTotals.map((v,i)=>{const m=merahCounts[i];return m>=15?'rgba(230,57,70,0.8)':m>=8?'rgba(244,185,66,0.8)':'rgba(46,204,113,0.8)';}),borderWidth:0,borderRadius:4}]},
-    options:{scales:{y:{title:{display:true,text:'Total Kasus',color:'#6fa8d0',font:{size:10}}}},plugins:{legend:{display:false},tooltip:{callbacks:{label:l=>`${l.raw} kasus total`}}}}
-  });
-  mkChart('chartFcZone',{
-    type:'bar',
-    data:{labels:Array.from({length:13},(_,i)=>`W${i+1}`),datasets:[{label:'Merah',data:merahCounts,backgroundColor:'rgba(230,57,70,0.82)',stack:'z',borderWidth:0},{label:'Kuning',data:kuningCounts,backgroundColor:'rgba(244,185,66,0.82)',stack:'z',borderWidth:0},{label:'Hijau',data:hijauCounts,backgroundColor:'rgba(46,204,113,0.75)',stack:'z',borderWidth:0}]},
-    options:{scales:{y:{stacked:true,max:44,title:{display:true,text:'Jumlah Kecamatan',color:'#6fa8d0',font:{size:10}}},x:{stacked:true}},plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}}}}
-  });
-  selectFcWeek(6);
-  const topKec=KECAMATAN.map(k=>{
-    if(!FC2026[k.id]) return null;
-    const total=FC2026[k.id].reduce((s,d)=>s+(d.pred||0),0);
-    const maks=FC2026[k.id].reduce((mx,d)=>(d.pred||0)>mx.val?{wk:d.week,val:d.pred,z:d.ewars}:mx,{wk:1,val:0,z:'Hijau'});
-    return {...k,total,avg:total/13,maks};
-  }).filter(k=>k!==null).sort((a,b)=>b.total-a.total).slice(0,10);
-  const tt=document.getElementById('tbl-fc-top');
-  topKec.forEach((k,i)=>{
-    const zCls=k.maks.z==='Merah'?'m':k.maks.z==='Kuning'?'k':'h';
-    tt.innerHTML+=`<tr><td>${i+1}</td><td><strong>${k.name}</strong></td><td>${k.kab}</td><td class="mono" style="color:var(--z-merah)">${Math.round(k.total)}</td><td class="mono">${k.avg.toFixed(2)}</td><td><span class="zpill zpill-${zCls}"><span class="zdot zdot-${zCls}"></span>${k.maks.z}</span></td><td>Minggu ${k.maks.wk}</td></tr>`;
-  });
-}
-
-function selectFcWeek(w, el) {
-  document.querySelectorAll('.fc-week').forEach(e=>e.classList.remove('active'));
-  if(el) el.classList.add('active');
-  else {const els=document.querySelectorAll('.fc-week');if(els[w-1]) els[w-1].classList.add('active');}
-  document.getElementById('fc-detail-sub').textContent=`Detail Prediksi per Kecamatan - Minggu ${w} (Q1 2026)`;
-  const tbody=document.getElementById('tbl-fc-detail');
-  tbody.innerHTML='';
-  const wData=KECAMATAN.filter(k=>FC2026[k.id]&&FC2026[k.id][w-1]).map(k=>({...k,...FC2026[k.id][w-1]})).sort((a,b)=>(b.pred||0)-(a.pred||0));
-  wData.forEach((k,i)=>{
-    const vs=((k.pred/(k.base||1)-1)*100).toFixed(0);
-    const vsC=vs>0?'var(--z-merah)':'var(--z-hijau)';
-    const ze=k.ewars||'Hijau',ec=k.ec||'Hijau';
-    const zeCls=ze==='Merah'?'m':ze==='Kuning'?'k':'h';
-    const ecCls=ec==='Merah'?'m':ec==='Kuning'?'k':'h';
-    tbody.innerHTML+=`<tr><td>${i+1}</td><td><strong>${k.name}</strong></td><td class="mono" style="color:${ZCOLORS[ze]}">${(k.pred||0).toFixed(2)}</td><td><span class="zpill zpill-${zeCls}"><span class="zdot zdot-${zeCls}"></span>${ze}</span></td><td><span class="zpill zpill-${ecCls}"><span class="zdot zdot-${ecCls}"></span>${ec}</span></td><td style="color:${vsC}">${vs>0?'+':''}${vs}%</td></tr>`;
-  });
-}
-
-/* PAGE: SIMULASI */
-function initSimulasi() {
-  ['sim-kec','sim-kec-yr'].forEach(id=>{
-    const sel=document.getElementById(id);
-    if(!sel) return;
-    KECAMATAN.forEach(k=>{sel.innerHTML+=`<option value="${k.id}">${k.name} (${k.kab.replace('Jakarta ','')})</option>`;});
-  });
-  runKecSim(); runYearSim();
-}
-
-function switchSimTab(idx, el) {
-  document.querySelectorAll('.sim-tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.sim-pane').forEach(p=>p.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById(`simpane-${idx}`)?.classList.add('active');
-}
-
-function onSimWeekSlide(el) {
-  const v=parseInt(el.value);
-  el.style.setProperty('--pct',((v-1)/51*100)+'%');
-  document.getElementById('sim-wk-disp').textContent=v;
-}
-
-function runKecSim() {
-  const kecId=document.getElementById('sim-kec')?.value||KECAMATAN[0].id;
-  const year=document.getElementById('sim-year')?.value||'2026';
-  const week=parseInt(document.getElementById('sim-week')?.value||6);
-  const kec=KEC_MAP[kecId]||KECAMATAN[0];
-  const pred=getPred(kec,year,week);
-  const yr=parseInt(year);
-  const isHistorical=(yr!==2026);
-  const kasusLabel=isHistorical?'Kasus Aktual':'Prediksi Kasus';
-  const ze=zonaEWARS(pred,kec);
-  const ec=zonaEC(pred,kec);
-  document.getElementById('sim-pred-val').textContent=(pred!==null?pred.toFixed(2):'N/A');
-  document.getElementById('sim-ewars-zone').textContent=ze;
-  document.getElementById('sim-ec-zone').textContent=ec;
-  const zCol={Merah:'var(--z-merah)',Kuning:'var(--z-kuning)',Hijau:'var(--z-hijau)'};
-  document.getElementById('sim-ewars-card').style.borderColor=zCol[ze]||'var(--bord)';
-  document.getElementById('sim-ec-card').style.borderColor=zCol[ec]||'var(--bord)';
-  document.getElementById('sim-ewars-zone').style.color=zCol[ze];
-  document.getElementById('sim-ec-zone').style.color=zCol[ec];
-  document.getElementById('sim-kec-info').innerHTML=`<strong>${kec.name}</strong> · ${kec.kab}<br>P50 = ${kec.P50.toFixed(1)} · P75 = ${kec.P75.toFixed(1)}<br>EC Mean = ${kec.ecMean.toFixed(1)} ± ${kec.ecSd.toFixed(1)}<br>Tahun ${year} · Minggu ${week}`;
-  const profileData=Array.from({length:52},(_,i)=>getPred(kec,year,i+1));
-  // Rata-rata historis dari data aktual (kecamatan_annual) bukan formula
-  let histAvg=null;
-  if(window._kecamatanAnnual && window._kecamatanAnnual[kec.id]) {
-    const ann=window._kecamatanAnnual[kec.id];
-    if(ann.avg_per_week!=null) {
-      // Gunakan rata-rata mingguan aktual per kecamatan dari semua tahun
-      // Pakai seasonal pattern dari data historis_weekly jika tersedia
-      histAvg=Array.from({length:52},(_,i)=>{
-        if(window._historisWeekly) {
-          const years=Object.keys(window._historisWeekly).filter(y=>parseInt(y)<2026);
-          if(years.length>0) {
-            const vals=years.map(y=>{const arr=window._historisWeekly[y];return arr&&arr[i]!=null?arr[i]:null;}).filter(v=>v!==null);
-            if(vals.length>0) {
-              const avg=vals.reduce((s,v)=>s+v,0)/vals.length;
-              const nKec=KECAMATAN.length||44;
-              return +(avg/nKec).toFixed(2);
-            }
-          }
-        }
-        return +(ann.avg_per_week).toFixed(2);
-      });
-    }
-  }
-  const datasets=[{label:`${year} ${isHistorical?'Aktual':'Prediksi'}`,data:profileData.map(v=>v!==null?+v.toFixed(2):null),borderColor:'rgba(0,170,255,1)',backgroundColor:'rgba(0,170,255,0.1)',borderWidth:2,pointRadius:0,fill:true,tension:0.3,spanGaps:false}];
-  if(histAvg) datasets.push({label:'Rata-rata Historis (Aktual)',data:histAvg,borderColor:'rgba(244,185,66,0.7)',backgroundColor:'transparent',borderWidth:1.5,pointRadius:0,borderDash:[4,3],tension:0.3});
-  mkChart('chartSimProfile',{
-    type:'line',
-    data:{labels:Array.from({length:52},(_,i)=>`W${i+1}`),datasets},
-    options:{scales:{x:{ticks:{maxTicksLimit:13}},y:{title:{display:true,text:'Kasus per Minggu',color:'#6fa8d0',font:{size:10}}}},plugins:{legend:{position:'bottom',labels:{font:{size:10}}}}}
-  });
-}
-
-function runYearSim() {
-  const kecId=document.getElementById('sim-kec-yr')?.value||KECAMATAN[0].id;
-  const kec=KEC_MAP[kecId]||KECAMATAN[0];
-  const years=[2017,2018,2019,2020,2021,2022,2023,2024,2025,2026];
-  const palette=['#6fa8d0','#00aaff','#00d2c8','#e63946','#f4b942','#2ecc71','#8b5cf6','#f97316','#ec4899','#ff4444'];
-  mkChart('chartYearSim',{
-    type:'line',
-    data:{labels:Array.from({length:52},(_,i)=>`W${i+1}`),datasets:years.map((yr,i)=>({label:String(yr)+(yr===2026?' (Forecast)':''),data:Array.from({length:52},(_,w)=>+getPredSafe(kec,yr,w+1).toFixed(2)),borderColor:palette[i],backgroundColor:'transparent',borderWidth:yr===2026?2.5:1.2,borderDash:yr===2026?[5,3]:[],pointRadius:0,tension:0.3}))},
-    options:{scales:{x:{ticks:{maxTicksLimit:13}},y:{title:{display:true,text:'Kasus per Minggu',color:'#6fa8d0',font:{size:10}}}},plugins:{legend:{position:'right',labels:{font:{size:10},boxWidth:12,padding:5}}}}
-  });
-}
-
-/* BG CANVAS - PARTICLE NETWORK ANIMATION */
-function initBgCanvas() {
-  const canvas=document.getElementById('bg-canvas');
-  if(!canvas) return;
-  const ctx=canvas.getContext('2d');
-  let W,H;
-  const nodes=[];
-  function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
-  resize();
-  window.addEventListener('resize',resize);
-  for(let i=0;i<55;i++) {
-    nodes.push({x:Math.random()*1920,y:Math.random()*1080,vx:(Math.random()-0.5)*0.25,vy:(Math.random()-0.5)*0.25,r:Math.random()*1.8+0.8});
-  }
-  function draw(){
-    ctx.clearRect(0,0,W,H);
-    nodes.forEach(n=>{
-      n.x+=n.vx; n.y+=n.vy;
-      if(n.x<0||n.x>W) n.vx*=-1;
-      if(n.y<0||n.y>H) n.vy*=-1;
-    });
-    for(let i=0;i<nodes.length;i++) {
-      for(let j=i+1;j<nodes.length;j++) {
-        const dx=nodes[i].x-nodes[j].x,dy=nodes[i].y-nodes[j].y;
-        const dist=Math.sqrt(dx*dx+dy*dy);
-        if(dist<160){
-          ctx.beginPath();
-          ctx.strokeStyle=`rgba(0,170,255,${0.07*(1-dist/160)})`;
-          ctx.lineWidth=0.8;
-          ctx.moveTo(nodes[i].x,nodes[i].y);
-          ctx.lineTo(nodes[j].x,nodes[j].y);
-          ctx.stroke();
-        }
-      }
-    }
-    nodes.forEach(n=>{
-      ctx.beginPath();
-      ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
-      ctx.fillStyle='rgba(0,170,255,0.28)';
-      ctx.fill();
-    });
-    requestAnimationFrame(draw);
-  }
-  draw();
-}
-
-/* INIT */
-/* ASYNC DATA LOADING + INIT */
-async function loadAllData() {
-  const BASE = 'data';
-
-  const results = await Promise.allSettled([
-    fetch(`${BASE}/kecamatan_stats.json`).then(r=>r.ok?r.json():Promise.reject('kec')),
-    fetch(`${BASE}/forecast_q1_2026.json`).then(r=>r.ok?r.json():Promise.reject('fc')),
-    fetch(`${BASE}/jakarta.geojson`).then(r=>r.ok?r.json():Promise.reject('geo')),
-    fetch(`${BASE}/model_metrics.json`).then(r=>r.ok?r.json():null).catch(()=>null),
-    fetch(`${BASE}/feature_importance.json`).then(r=>r.ok?r.json():null).catch(()=>null),
-    fetch(`${BASE}/historis_weekly.json`).then(r=>r.ok?r.json():null).catch(()=>null),
-    fetch(`${BASE}/historis_kec_weekly.json`).then(r=>r.ok?r.json():null).catch(()=>null),
-    fetch(`${BASE}/q1_2026_summary.json`).then(r=>r.ok?r.json():null).catch(()=>null),
-    fetch(`${BASE}/cv_fold_results.json`).then(r=>r.ok?r.json():null).catch(()=>null),
-    fetch(`${BASE}/eda_stats.json`).then(r=>r.ok?r.json():null).catch(()=>null),
-    fetch(`${BASE}/scatter_data.json`).then(r=>r.ok?r.json():null).catch(()=>null),
-    fetch(`${BASE}/spearman_corr.json`).then(r=>r.ok?r.json():null).catch(()=>null),
-    fetch(`${BASE}/kecamatan_annual.json`).then(r=>r.ok?r.json():null).catch(()=>null),
-  ]);
-
-  const [kecRes, fcRes, geoRes, mdlRes, shapRes, histRes, histKecRes, q1Res, foldRes, edaRes, scatterRes, spearmanRes, kecAnnualRes] = results;
-
-  if(kecRes.status === 'fulfilled') {
-    KECAMATAN = kecRes.value;
-    console.log('[SIPEDA] Loaded kecamatan_stats.json:', KECAMATAN.length, 'kecamatan');
-  } else {
-    console.warn('[SIPEDA] Gagal memuat kecamatan_stats.json – pakai data demo');
-    KECAMATAN = KECAMATAN_DEMO;
-  }
-
-  if(fcRes.status === 'fulfilled') {
-    FC2026 = fcRes.value;
-    console.log('[SIPEDA] Loaded forecast_q1_2026.json');
-  } else {
-    console.warn('[SIPEDA] Gagal memuat forecast_q1_2026.json – FC2026 kosong, peta 2026 tampil No Data');
-    FC2026 = {};
-  }
-
-  if(geoRes.status === 'fulfilled') {
-    geoJsonData = geoRes.value;
-    console.log('[SIPEDA] Loaded jakarta.geojson');
-  } else {
-    console.warn('[SIPEDA] Gagal memuat jakarta.geojson – peta pakai fallback circle');
-  }
-
-  if(mdlRes.status === 'fulfilled' && mdlRes.value) {
-    window._modelMetrics = mdlRes.value;
-    MODELS.length = 0;
-    mdlRes.value.forEach(m => {
-      MODELS.push({
-        name: m.name,
-        key: m.key,  // simpan key asli dari JSON
-        R2: m.R2,
-        MAE: m.MAE,
-        RMSE: m.RMSE,
-        best: m.best
-      });
-    });
-    console.log('[SIPEDA] Loaded model_metrics.json:', MODELS.map(m=>m.key));
-  }
-
-  if(shapRes.status === 'fulfilled' && shapRes.value) {
-    window._featureImportance = shapRes.value;
-    SHAP_FEATS.length = 0;
-    shapRes.value.forEach(f => SHAP_FEATS.push({name: f.name, val: f.val}));
-    console.log('[SIPEDA] Loaded feature_importance.json');
-  }
-
-  if(histRes.status === 'fulfilled' && histRes.value) {
-    window._historisWeekly = histRes.value;
-    console.log('[SIPEDA] Loaded historis_weekly.json');
-  }
-
-  if(histKecRes.status === 'fulfilled' && histKecRes.value) {
-    window._historisKecWeekly = histKecRes.value;
-    console.log('[SIPEDA] Loaded historis_kec_weekly.json:', Object.keys(histKecRes.value).length, 'kecamatan');
-  } else {
-    console.warn('[SIPEDA] historis_kec_weekly.json tidak tersedia – peta historis mungkin tidak akurat');
-  }
-
-  if(q1Res.status === 'fulfilled' && q1Res.value) {
-    window._q1Summary = q1Res.value;
-    console.log('[SIPEDA] Loaded q1_2026_summary.json');
-  }
-
-  if(foldRes.status === 'fulfilled' && foldRes.value) {
-    window._cvFoldResults = foldRes.value;
-    console.log('[SIPEDA] Loaded cv_fold_results.json');
-  }
-
-  if(edaRes.status === 'fulfilled' && edaRes.value) {
-    window._edaStats = edaRes.value;
-    console.log('[SIPEDA] Loaded eda_stats.json');
-  }
-
-  if(scatterRes.status === 'fulfilled' && scatterRes.value) {
-    window._scatterData = scatterRes.value;
-    console.log('[SIPEDA] Loaded scatter_data.json');
-  }
-
-  if(spearmanRes.status === 'fulfilled' && spearmanRes.value) {
-    window._spearmanCorr = spearmanRes.value;
-    console.log('[SIPEDA] Loaded spearman_corr.json');
-  }
-
-  if(kecAnnualRes.status === 'fulfilled' && kecAnnualRes.value) {
-    window._kecamatanAnnual = kecAnnualRes.value;
-    console.log('[SIPEDA] Loaded kecamatan_annual.json');
-  }
-
-  KEC_MAP = {};
-  KECAMATAN.forEach(k => KEC_MAP[k.id] = k);
-
-  // Update ticker dengan data nyata setelah load
-  updateTicker();
-
-  initBgCanvas();
-  navigate('beranda');
-  setTimeout(()=>updateTabIndicator('beranda'), 50);
-}
-
-function updateTicker() {
-  const q = window._q1Summary;
-  const best = MODELS.find(m=>m.best) || MODELS[0];
-  const topFeat = SHAP_FEATS[0];
-  const totalKasus = q ? Math.round(q.total_kasus) : 2247;
-  const peakWeek = q && q.weekly ? (() => {
-    const mx = Math.max(...q.weekly.map(w=>w.merah_ewars||0));
-    const weeks = q.weekly.filter(w=>(w.merah_ewars||0)===mx).map(w=>w.week);
-    return weeks.length > 1 ? `Minggu ${weeks[0]}-${weeks[weeks.length-1]}` : `Minggu ${weeks[0]}`;
-  })() : 'Minggu 5-7';
-  const peakCount = q && q.weekly ? Math.max(...q.weekly.map(w=>w.merah_ewars||0)) : 18;
-  const tickItems = [
-    {color:'var(--c-red)', text:`Total kasus DBD Q1 2026 diprediksi: <strong style="color:var(--c-red)">${totalKasus.toLocaleString('id')} kasus</strong> - 13 minggu pertama`},
-    {color:'var(--c-blue)', text:`Data historis: 2017-2025 · <strong style="color:var(--c-blue)">${KECAMATAN.length} kecamatan</strong> DKI Jakarta · granularitas mingguan`},
-    {color:'var(--c-amber)', text:`Model terbaik: <strong style="color:var(--c-amber)">${best.name}</strong> · R²=${(best.R2||0).toFixed(2)} · MAE=${(best.MAE||0).toFixed(2)} kasus/minggu/kec`},
-    {color:'var(--z-merah)', text:`Puncak risiko Q1: <strong style="color:var(--z-merah)">${peakWeek}</strong> · ${peakCount}-${peakCount+3} kecamatan zona Merah`},
-    {color:'var(--c-green)', text:`Moran's I autokorelasi spasial DBD: <strong style="color:var(--c-green)">signifikan</strong> · klaster teridentifikasi`},
-    {color:'var(--c-teal)', text:`Fitur terpenting: <strong style="color:var(--c-teal)">${topFeat ? topFeat.name : 'kasus lag1'}</strong> · curah hujan lag1 · suhu rata`},
-    {color:'var(--c-purple)', text:`CV rolling window: <strong style="color:var(--c-purple)">3 fold</strong> · 2023 / 2024 / 2025 sebagai tahun validasi`},
-  ];
-  const inner = document.getElementById('ticker-inner');
-  if(!inner) return;
-  // Buat 2 salinan untuk loop tanpa henti
-  let html = '';
-  for(let r=0;r<2;r++) tickItems.forEach(t=>{
-    html+=`<span class="tick-item"><span class="tick-dot" style="background:${t.color}"></span>${t.text}</span>`;
-  });
-  inner.innerHTML = html;
-
-  // Sinkronkan widget "Model Terbaik" di sidebar dengan data asli yang sama
-  const sbName = document.getElementById('sb-model-name');
-  const sbR2 = document.getElementById('sb-model-r2');
-  const sbMae = document.getElementById('sb-model-mae');
-  if (sbName) sbName.textContent = best.name;
-  if (sbR2) sbR2.textContent = `R²=${(best.R2||0).toFixed(2)}`;
-  if (sbMae) sbMae.textContent = `${(best.MAE||0).toFixed(2)} kasus`;
-}
-
-// Formula fallback (tanpa real data)
-function getPredFormula(kec, year, week) {
-  const yr = parseInt(year);
-  const eff = YEAR_EFF[yr]||1.0;
-  const s = seasonal(week);
-  const noise = 0.75+0.5*seededRand(kec.id.charCodeAt(0)*week+yr*37);
-  return Math.max(0, kec.base * s * eff * noise);
-}
-
-window.addEventListener('DOMContentLoaded', () => { loadAllData(); });
-
-/* ════════════════════════════════════════════════════════════════
-   SIDEBAR LOGIC
-   ════════════════════════════════════════════════════════════════ */
-let sidebarCollapsed = false;
-
+// Sidebar Logic
 function toggleSidebar() {
   const sb = document.getElementById('sidebar');
-  sidebarCollapsed = !sidebarCollapsed;
-  sb.classList.toggle('collapsed', sidebarCollapsed);
-  document.body.classList.toggle('sb-collapsed', sidebarCollapsed);
-  const toggleIcon = document.querySelector('#sb-toggle svg');
-  if (toggleIcon) {
-    if (sidebarCollapsed) {
-      // collapsed → tampilkan hamburger (3 garis)
-      toggleIcon.innerHTML = '<line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>';
+  const main = document.getElementById('main-content');
+  const ov = document.querySelector('.sb-overlay');
+  const isMobile = window.innerWidth <= 900;
+  
+  if(isMobile) {
+    if(sb.style.transform === 'translateX(0px)') {
+        sb.style.transform = 'translateX(-100%)';
+        ov.classList.remove('visible');
     } else {
-      // expanded → tampilkan X/close
-      toggleIcon.innerHTML = '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>';
+        sb.style.transform = 'translateX(0px)';
+        ov.classList.add('visible');
+    }
+  } else {
+    sb.classList.toggle('collapsed');
+    if(sb.classList.contains('collapsed')) {
+        main.style.paddingLeft = '68px';
+    } else {
+        main.style.paddingLeft = '280px';
     }
   }
 }
 
-function openSidebarMobile() {
-  const sb = document.getElementById('sidebar');
-  const ov = document.getElementById('sb-overlay');
-  sb.classList.add('mobile-open');
-  ov.classList.add('visible');
-  document.body.style.overflow = 'hidden';
+// Handle window resize for sidebar
+window.addEventListener('resize', () => {
+    const sb = document.getElementById('sidebar');
+    const main = document.getElementById('main-content');
+    if(window.innerWidth <= 900) {
+        sb.style.transform = 'translateX(-100%)';
+        sb.classList.remove('collapsed');
+        main.style.paddingLeft = '0';
+        document.getElementById('mobile-menu-btn').style.display = 'block';
+    } else {
+        sb.style.transform = 'translateX(0)';
+        main.style.paddingLeft = sb.classList.contains('collapsed') ? '68px' : '280px';
+        document.getElementById('mobile-menu-btn').style.display = 'none';
+        document.querySelector('.sb-overlay').classList.remove('visible');
+    }
+});
+// Initial layout call
+window.dispatchEvent(new Event('resize'));
+
+// Navigation Logic
+function nav(pageId, el) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + pageId).classList.add('active');
+    
+    document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
+    el.classList.add('active');
+    
+    if(window.innerWidth <= 900) toggleSidebar();
+    
+    // Render charts on specific pages to ensure they size correctly
+    setTimeout(renderCharts, 50);
 }
 
-function closeSidebarMobile() {
-  const sb = document.getElementById('sidebar');
-  const ov = document.getElementById('sb-overlay');
-  sb.classList.remove('mobile-open');
-  ov.classList.remove('visible');
-  document.body.style.overflow = '';
+// Simulation Logic
+function simulateHash() {
+    const box = document.getElementById('hash-output');
+    box.innerHTML = "Memproses Ekstraksi CCNN...<br>Mengaplikasikan GRL...<br>Mengalikan dengan Random Projection Seed...";
+    
+    setTimeout(() => {
+        const chars = '0123456789ABCDEF';
+        let hash = '';
+        for(let i=0; i<512; i++) {
+            hash += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        // format to look cool
+        const formatted = hash.match(/.{1,32}/g).join('<br>');
+        box.innerHTML = "<span style='color:var(--c-green)'>SUCCESS: Template Generated & Secured!</span><br><br>" + formatted;
+    }, 1200);
 }
 
-// Override navigate to update sidebar items
-const _origNavigate = navigate;
-window.navigate = function(id) {
-  _origNavigate(id);
-  document.querySelectorAll('.sb-item').forEach(el => el.classList.remove('active'));
-  const st = document.getElementById('stab-' + id);
-  if (st) st.classList.add('active');
-  // close mobile sidebar
-  if (window.innerWidth <= 900) closeSidebarMobile();
-};
-
-// Update sidebar zone counts from live data
-function updateSidebarStats() {
-  if (!window._q1Summary) return;
-  const q = window._q1Summary;
-  if (q.zona_ewars) {
-    const merah = q.zona_ewars.Merah ?? 18;
-    const kuning = q.zona_ewars.Kuning ?? 12;
-    const hijau = q.zona_ewars.Hijau ?? 14;
-    const m = document.getElementById('sb-merah-cnt');
-    const k = document.getElementById('sb-kuning-cnt');
-    const h = document.getElementById('sb-hijau-cnt');
-    if (m) m.textContent = merah;
-    if (k) k.textContent = kuning;
-    if (h) h.textContent = hijau;
-
-    // Bar diisi proporsional terhadap total ketiga zona (merah+kuning+hijau),
-    // bukan terhadap jumlah kecamatan, supaya panjang bar selalu mencerminkan
-    // proporsi sebenarnya (merah+kuning+hijau = 100%)
-    const total = (merah + kuning + hijau) || 1;
-    const mBar = document.getElementById('sb-merah-bar');
-    const kBar = document.getElementById('sb-kuning-bar');
-    const hBar = document.getElementById('sb-hijau-bar');
-    if (mBar) mBar.style.width = ((merah / total) * 100) + '%';
-    if (kBar) kBar.style.width = ((kuning / total) * 100) + '%';
-    if (hBar) hBar.style.width = ((hijau / total) * 100) + '%';
-
-    // Keterangan sumber angka: ini akumulasi kecamatan x minggu sepanjang
-    // seluruh forecast Q1 2026, bukan snapshot satu minggu saja
-    const capEl = document.getElementById('sb-zona-caption');
-    if (capEl) {
-      const nKec = (KECAMATAN && KECAMATAN.length) ? KECAMATAN.length : 44;
-      const nWeek = (q.weekly && q.weekly.length) ? q.weekly.length : (Math.round(total / nKec) || 13);
-      capEl.textContent = `Akumulasi ${nKec} kecamatan x ${nWeek} minggu - Total ${total.toLocaleString('id')}`;
-    }
-  }
-}
-setTimeout(updateSidebarStats, 1500);
-
-/* ════════════════════════════════════════════════════════════════
-   🦟 MOSQUITO ANIMATION (canvas-based)
-   ════════════════════════════════════════════════════════════════ */
-(function initMosquitoes() {
-  const canvas = document.getElementById('mosquito-canvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-
-  let W, H;
-  let swatCount = 0;
-
-  function resize() {
-    W = canvas.width = window.innerWidth;
-    H = canvas.height = window.innerHeight;
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
-  // Mosquito SVG path data for drawing
-  function drawMosquito(ctx, x, y, angle, scale, alpha, flap) {
-    ctx.save();
-    ctx.translate(x, y);
-    ctx.rotate(angle);
-    ctx.scale(scale, scale);
-    ctx.globalAlpha = alpha;
-
-    const fc = document.documentElement.getAttribute('data-theme') === 'dark'
-      ? 'rgba(200,200,230,'
-      : 'rgba(60,60,80,';
-
-    // Body
-    ctx.beginPath();
-    ctx.ellipse(0, 0, 2.5, 6, 0, 0, Math.PI * 2);
-    ctx.fillStyle = fc + '0.85)';
-    ctx.fill();
-
-    // Head
-    ctx.beginPath();
-    ctx.arc(0, -7, 2.2, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Proboscis (needle)
-    ctx.beginPath();
-    ctx.moveTo(0, -9);
-    ctx.lineTo(0, -16);
-    ctx.strokeStyle = fc + '0.7)';
-    ctx.lineWidth = 0.8;
-    ctx.stroke();
-
-    // Wings (flap animation)
-    const wingFlap = Math.sin(flap * 0.4) * 0.25;
-    ctx.save();
-    ctx.rotate(-wingFlap);
-    ctx.beginPath();
-    ctx.ellipse(-7, -3, 7, 3, -0.4, 0, Math.PI * 2);
-    ctx.fillStyle = (document.documentElement.getAttribute('data-theme') === 'dark')
-      ? 'rgba(150,180,255,0.22)'
-      : 'rgba(100,150,220,0.18)';
-    ctx.fill();
-    ctx.restore();
-
-    ctx.save();
-    ctx.rotate(wingFlap);
-    ctx.beginPath();
-    ctx.ellipse(7, -3, 7, 3, 0.4, 0, Math.PI * 2);
-    ctx.fillStyle = (document.documentElement.getAttribute('data-theme') === 'dark')
-      ? 'rgba(150,180,255,0.22)'
-      : 'rgba(100,150,220,0.18)';
-    ctx.fill();
-    ctx.restore();
-
-    // Legs (3 pairs)
-    ctx.strokeStyle = fc + '0.5)';
-    ctx.lineWidth = 0.7;
-    [[-2,-1],[2,-1],[-2.5,2],[2.5,2],[-2,5],[2,5]].forEach(([lx,ly]) => {
-      ctx.beginPath();
-      ctx.moveTo(lx, ly);
-      const sign = lx < 0 ? -1 : 1;
-      ctx.quadraticCurveTo(sign*9, ly+2, sign*7, ly+6);
-      ctx.stroke();
-    });
-
-    ctx.restore();
-  }
-
-  // Mosquito objects
-  const mosquitoes = [];
-  const MAX_MOSQUITOES = 1; // cukup 1 ekor aja biar ga keliatan rame
-
-  const MARGIN = 40; // batas aman dari tepi layar
-
-  // ── Elemen-elemen yang boleh "dihinggapi" nyamuk ──
-  const LAND_SELECTOR = '.card-icon, .hstat, .zone-card-icon, .info-icon, .method-num, .hdr-btn, .sb-logo-wrap, .card-title, .tab.active';
-  function pickLandingSpot() {
-    const candidates = document.querySelectorAll(LAND_SELECTOR);
-    const visible = [];
-    candidates.forEach(el => {
-      const r = el.getBoundingClientRect();
-      if (r.width > 14 && r.height > 14 && r.top > 100 && r.bottom < window.innerHeight - 60 &&
-          r.left > 40 && r.right < window.innerWidth - 40) {
-        visible.push(r);
-      }
-    });
-    if (!visible.length) return null;
-    const r = visible[Math.floor(Math.random() * visible.length)];
-    // hinggap dekat tepi atas elemen, seakan berdiri di permukaannya
-    return { x: r.left + r.width * (0.3 + Math.random() * 0.4), y: r.top + 3 };
-  }
-
-  function randomTarget() {
-    return {
-      x: MARGIN + Math.random() * Math.max(1, W - MARGIN * 2),
-      y: 100 + Math.random() * Math.max(1, H - 200),
-    };
-  }
-
-  function spawnMosquito() {
-    // Spawn dari sisi layar secara random
-    const side = Math.floor(Math.random() * 4);
-    let sx, sy;
-    switch(side) {
-      case 0: sx = MARGIN + Math.random() * (W - MARGIN*2); sy = 120; break; // atas
-      case 1: sx = W - MARGIN; sy = 100 + Math.random() * (H - 200); break;  // kanan
-      case 2: sx = MARGIN + Math.random() * (W - MARGIN*2); sy = H - MARGIN; break; // bawah
-      default: sx = MARGIN; sy = 100 + Math.random() * (H - 200); break;      // kiri
-    }
-    const t = randomTarget();
-    mosquitoes.push({
-      x: sx, y: sy,
-      vx: 0, vy: 0,
-      angle: 0,
-      scale: 1.3 + Math.random() * 0.6,
-      alpha: 0,
-      fadeIn: true,
-      flap: 0,
-      wobble: 0,
-      wobblePhase: Math.random() * Math.PI * 2,
-      alive: true,
-      dying: false,
-      dyingFrame: 0,
-      targetX: t.x,
-      targetY: t.y,
-      pathPhase: Math.random() * Math.PI * 2,
-      pathRadius: 45 + Math.random() * 70,
-      pathSpeed: 0.01 + Math.random() * 0.009,
-      state: 'flying',       // 'flying' | 'landed'
-      approachingLand: false,
-      landingSpot: null,
-      landTimer: 0,
-    });
-  }
-
-  // Cukup 1 nyamuk, spawn sekali
-  setTimeout(() => spawnMosquito(), 2500);
-
-  function update() {
-    // Respawn kalau kurang dari max
-    if (mosquitoes.filter(m => m.alive && !m.dying).length < MAX_MOSQUITOES && Math.random() < 0.002) {
-      spawnMosquito();
-    }
-
-    for (let idx = mosquitoes.length - 1; idx >= 0; idx--) {
-      const m = mosquitoes[idx];
-      if (!m.alive) continue;
-
-      if (m.dying) {
-        m.dyingFrame++;
-        m.alpha = Math.max(0, m.alpha - 0.06);
-        m.scale += 0.05;
-        m.angle += 0.18;
-        if (m.dyingFrame > 18) mosquitoes.splice(idx, 1);
-        continue;
-      }
-
-      // ── Sedang hinggap di atas elemen: diam, cuma kibas sayap pelan ──
-      if (m.state === 'landed') {
-        m.landTimer--;
-        m.flap += 1.3; // kibas sayap pelan, kayak lagi istirahat
-        m.wobble = Math.sin(m.wobblePhase += 0.02) * 0.05;
-        if (m.fadeIn) {
-          m.alpha = Math.min(0.92, m.alpha + 0.022);
-          if (m.alpha >= 0.92) m.fadeIn = false;
-        }
-        if (m.landTimer <= 0) {
-          m.state = 'flying';
-          const t = randomTarget();
-          m.targetX = t.x;
-          m.targetY = t.y;
-          m.pathRadius = 45 + Math.random() * 70;
-        }
-        continue;
-      }
-
-      // ── Lagi terbang langsung menuju titik hinggap yang dipilih ──
-      if (m.approachingLand && m.landingSpot) {
-        const ddx = m.landingSpot.x - m.x;
-        const ddy = m.landingSpot.y - m.y;
-        const ddist = Math.sqrt(ddx * ddx + ddy * ddy);
-        if (ddist > 1) {
-          m.vx += (ddx / ddist) * 0.16;
-          m.vy += (ddy / ddist) * 0.16;
-        }
-        const spd2 = Math.sqrt(m.vx * m.vx + m.vy * m.vy);
-        const maxSpd2 = 2.0;
-        if (spd2 > maxSpd2) { m.vx = m.vx / spd2 * maxSpd2; m.vy = m.vy / spd2 * maxSpd2; }
-
-        m.x += m.vx;
-        m.y += m.vy;
-        m.angle = Math.atan2(m.vy, m.vx) + Math.PI / 2;
-        m.flap += 7 + spd2 * 6;
-        m.wobble = Math.sin(m.wobblePhase += 0.035) * 0.12;
-        if (m.fadeIn) {
-          m.alpha = Math.min(0.92, m.alpha + 0.022);
-          if (m.alpha >= 0.92) m.fadeIn = false;
-        }
-
-        if (ddist < 14) {
-          // sudah nempel di elemen — hinggap
-          m.state = 'landed';
-          m.approachingLand = false;
-          m.x = m.landingSpot.x;
-          m.y = m.landingSpot.y;
-          m.vx = 0; m.vy = 0;
-          m.angle = 0; // berdiri tegak di permukaan
-          m.landTimer = 200 + Math.random() * 220; // ±3.5-7 detik @60fps
-        }
-        continue;
-      }
-
-      // Sesekali putuskan buat hinggap di sebuah elemen
-      if (Math.random() < 0.0035) {
-        const spot = pickLandingSpot();
-        if (spot) {
-          m.landingSpot = spot;
-          m.approachingLand = true;
-        }
-      }
-
-      // Figure-8 / lemniscate path di sekitar target
-      m.pathPhase += m.pathSpeed;
-      const lx = m.targetX + m.pathRadius * Math.sin(m.pathPhase);
-      const ly = m.targetY + m.pathRadius * 0.48 * Math.sin(m.pathPhase * 2);
-
-      // Steer menuju titik path
-      const dx = lx - m.x;
-      const dy = ly - m.y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      if (dist > 1) {
-        m.vx += (dx / dist) * 0.14;
-        m.vy += (dy / dist) * 0.14;
-      }
-
-      // Speed cap — nyamuk santai, ga usah ngebut
-      const spd = Math.sqrt(m.vx * m.vx + m.vy * m.vy);
-      const maxSpd = 2.2;
-      if (spd > maxSpd) { m.vx = m.vx / spd * maxSpd; m.vy = m.vy / spd * maxSpd; }
-
-      // Sesekali ganti target
-      if (Math.random() < 0.006) {
-        const t = randomTarget();
-        m.targetX = t.x;
-        m.targetY = t.y;
-        m.pathRadius = 45 + Math.random() * 70;
-      }
-
-      // ── BATAS LAYAR: steer balik ke dalam, jangan keluar ──
-      const pad = 50;
-      if (m.x < pad)       m.vx += 0.3;
-      if (m.x > W - pad)   m.vx -= 0.3;
-      if (m.y < 100)       m.vy += 0.3; // jangan masuk header
-      if (m.y > H - pad)   m.vy -= 0.3;
-
-      m.x += m.vx;
-      m.y += m.vy;
-
-      // Hard clamp — kalau entah gimana masih keluar, teleport balik
-      m.x = Math.max(pad, Math.min(W - pad, m.x));
-      m.y = Math.max(100, Math.min(H - pad, m.y));
-
-      m.angle = Math.atan2(m.vy, m.vx) + Math.PI / 2;
-      m.flap += 7 + spd * 6;
-      m.wobble = Math.sin(m.wobblePhase += 0.035) * 0.12;
-
-      if (m.fadeIn) {
-        m.alpha = Math.min(0.92, m.alpha + 0.022);
-        if (m.alpha >= 0.92) m.fadeIn = false;
-      }
-    }
-  }
-
-  function render() {
-    ctx.clearRect(0, 0, W, H);
-    mosquitoes.forEach(m => {
-      if (!m.alive) return;
-      drawMosquito(ctx, m.x, m.y, m.angle + m.wobble, m.scale, m.alpha, m.flap);
-    });
-    requestAnimationFrame(loop);
-  }
-
-  function loop() { update(); render(); }
-  loop();
-
-  // ── SWAT: canvas pointer-events NONE, pakai document listener ──
-  function trySwat(cx, cy) {
-    for (let i = mosquitoes.length - 1; i >= 0; i--) {
-      const m = mosquitoes[i];
-      if (!m.alive || m.dying) continue;
-      const dx = cx - m.x, dy = cy - m.y;
-      if (Math.sqrt(dx * dx + dy * dy) < 30 * m.scale) {
-        m.dying = true;
-        swatCount++;
-        const sc = document.getElementById('swat-score');
-        if (sc) {
-          sc.textContent = swatCount;
-          sc.animate([{transform:'scale(1)'},{transform:'scale(1.5)'},{transform:'scale(1)'}], {duration:350, easing:'cubic-bezier(.34,1.4,.64,1)'});
-        }
+// Hex Rain effect in background
+setInterval(() => {
+    if(Math.random() > 0.8) {
         const el = document.createElement('div');
-        el.className = 'swat-effect';
-        el.textContent = ['SWAT! 👋','💥 MATI!','TEPUK! 🎉','GOTCHA!','KENA! 🦟'][Math.floor(Math.random() * 5)];
-        el.style.left = cx + 'px';
-        el.style.top = (cy - 20) + 'px';
+        el.className = 'hex-rain';
+        el.style.left = Math.random() * 100 + 'vw';
+        el.style.top = Math.random() * 100 + 'vh';
+        el.innerText = Math.random() > 0.5 ? '0' : '1';
         document.body.appendChild(el);
-        setTimeout(() => el.remove(), 750);
-        setTimeout(() => spawnMosquito(), 6000 + Math.random() * 6000);
-        return true;
-      }
+        setTimeout(() => el.remove(), 3000);
     }
-    return false;
-  }
+}, 200);
 
-  // Pasang di document, bukan di canvas — pointer-events canvas tetap none!
-  document.addEventListener('click', e => {
-    trySwat(e.clientX, e.clientY);
-  });
-  document.addEventListener('touchend', e => {
-    const t = e.changedTouches[0];
-    trySwat(t.clientX, t.clientY);
-  }, { passive: true });
-
-  // Cursor crosshair kalau hover dekat nyamuk
-  document.addEventListener('mousemove', e => {
-    // Skip kalau hover di atas elemen interaktif
-    if (e.target && e.target.closest('button,a,select,input,.sb-item,.hdr-btn,.ctrl-sel,.tab')) {
-      document.body.style.cursor = '';
-      return;
-    }
-    let near = false;
-    mosquitoes.forEach(m => {
-      if (!m.alive || m.dying) return;
-      const dx = e.clientX - m.x, dy = e.clientY - m.y;
-      if (Math.sqrt(dx * dx + dy * dy) < 32 * m.scale) near = true;
-    });
-    document.body.style.cursor = near ? 'crosshair' : '';
-  });
-})();
-
-
-</script>
-
-<script>
-setTimeout(() => {
+// Render Charts
+function renderCharts() {
     if(typeof cancelfaceData === 'undefined') return;
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
     const cBg = 'transparent';
     const cTxt = isDark ? '#94a3b8' : '#475569';
     const layout = { paper_bgcolor: cBg, plot_bgcolor: cBg, font: {color: cTxt, family:'Figtree'}, margin: {t:20, r:20, l:120, b:40} };
 
+    // --- Beranda ---
     if(document.getElementById('plt-heatmap')) {
         const pb = cancelfaceData.perbandingan_metode;
         if(pb) {
@@ -3439,9 +1726,57 @@ setTimeout(() => {
             Plotly.newPlot('plt-heatmap', [{
                 z: zData, x: ['Rank-1 Acc', 'Akurasi Usia', 'Re-identifikasi'], y: pb.map(d=>d.Metode),
                 type: 'heatmap', colorscale: 'RdBu', reversescale:true
-            }], {...layout, margin: {t:20,r:20,l:140,b:50}}, {displayModeBar: false});
+            }], {...layout, margin: {t:20,r:20,l:150,b:50}}, {displayModeBar: false});
         }
     }
+    
+    if(document.getElementById('plt-kualitas')) {
+        const kq = cancelfaceData.ketahanan_kualitas;
+        if(kq) {
+            Plotly.newPlot('plt-kualitas', [{
+                x: kq.map(d => d['Subset Kualitas']), y: kq.map(d => d['Rank 1 Accuracy']),
+                type: 'bar', marker: {color: '#0ea5e9'}
+            }], {...layout, margin: {t:20,r:20,l:40,b:40}}, {displayModeBar: false});
+        }
+    }
+
+    // --- Analisis Keamanan ---
+    if(document.getElementById('plt-recon')) {
+        const sr = cancelfaceData.serangan_rekonstruksi;
+        if(sr) {
+            Plotly.newPlot('plt-recon', [{
+                x: sr.map(d => d.Metode), y: sr.map(d => d['Cosine Similarity']),
+                type: 'bar', marker: {color: ['#f43f5e', '#f43f5e', '#10b981', '#10b981']}
+            }], {...layout, margin: {t:20,r:20,l:40,b:40}}, {displayModeBar: false});
+        }
+    }
+
+    if(document.getElementById('plt-attr')) {
+        const sa = cancelfaceData.serangan_atribut;
+        if(sa) {
+            Plotly.newPlot('plt-attr', [
+                { name: 'Gender Acc', x: sa.map(d => d.Metode), y: sa.map(d => d['Gender Accuracy']), type: 'bar', marker:{color:'#6366f1'} },
+                { name: 'Age Acc', x: sa.map(d => d.Metode), y: sa.map(d => d['Age Accuracy']), type: 'bar', marker:{color:'#eab308'} }
+            ], {...layout, barmode:'group', margin: {t:20,r:20,l:40,b:40}}, {displayModeBar: false});
+            
+            // Populate Sample Table
+            const tb = document.getElementById('tbl-sample-body');
+            if(tb) {
+                tb.innerHTML = '';
+                sa.forEach(d => {
+                    tb.innerHTML += `<tr>
+                        <td style="text-align:left; color:var(--txt);">${d.Metode}</td>
+                        <td>${d['Gender Label (Target)'] || 'N/A'}</td>
+                        <td>${d['Age Label (Target)'] || 'N/A'}</td>
+                        <td style="font-family:'JetBrains Mono';">${d['Gender Accuracy']}</td>
+                        <td style="font-family:'JetBrains Mono';">${d['Age Accuracy']}</td>
+                    </tr>`;
+                });
+            }
+        }
+    }
+
+    // --- EDA ---
     if(document.getElementById('plt-ablasi')) {
         const ab = cancelfaceData.ablasi_dimensi;
         if(ab) {
@@ -3451,16 +1786,10 @@ setTimeout(() => {
             }], {...layout, margin: {t:20,r:20,l:40,b:40}}, {displayModeBar: false});
         }
     }
-    if(document.getElementById('plt-kualitas')) {
-        const kq = cancelfaceData.ketahanan_kualitas;
-        if(kq) {
-            Plotly.newPlot('plt-kualitas', [{
-                x: kq.map(d => d['Subset Kualitas']), y: kq.map(d => d['Rank 1 Accuracy']),
-                type: 'bar', marker: {color: '#10b981'}
-            }], {...layout, margin: {t:20,r:20,l:40,b:40}}, {displayModeBar: false});
-        }
-    }
-}, 1500);
+}
+
+setTimeout(renderCharts, 500);
+
 </script>
 </body>
 </html>
