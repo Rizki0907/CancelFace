@@ -1286,23 +1286,21 @@ body.sb-collapsed .main {
 <span class="sb-icon"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9,22 9,12 15,12 15,22"></polyline></svg></span>
 <span class="sb-label">Beranda</span>
 </div>
-<div class="sb-item" data-label="Eksplorasi Data" id="stab-eda" onclick="nav('keamanan', this)">
-<span class="sb-icon"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><rect height="12" rx="1" width="4" x="3" y="9"></rect><rect height="16" rx="1" width="4" x="9" y="5"></rect><rect height="19" rx="1" width="4" x="15" y="2"></rect></svg></span>
+<div class="sb-item" data-label="Analisis Keamanan" id="stab-eda" onclick="nav('keamanan', this)">
+<span class="sb-icon"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><rect height="6" rx="1" width="6" x="9" y="9"></rect><rect height="16" rx="2" width="16" x="4" y="4"></rect><path d="M9 1v3M15 1v3M9 20v3M15 20v3M1 9h3M1 15h3M20 9h3M20 15h3"></path></svg></span>
 <span class="sb-label">Analisis Keamanan</span>
 </div>
-<div class="sb-item" data-label="Model &amp; Evaluasi" id="stab-model" onclick="nav('eda', this)">
-<span class="sb-icon"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><rect height="6" rx="1" width="6" x="9" y="9"></rect><rect height="16" rx="2" width="16" x="4" y="4"></rect><path d="M9 1v3M15 1v3M9 20v3M15 20v3M1 9h3M1 15h3M20 9h3M20 15h3"></path></svg></span>
+<div class="sb-item" data-label="Eksplorasi Data (EDA)" id="stab-model" onclick="nav('eda', this)">
+<span class="sb-icon"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><rect height="12" rx="1" width="4" x="3" y="9"></rect><rect height="16" rx="1" width="4" x="9" y="5"></rect><rect height="19" rx="1" width="4" x="15" y="2"></rect></svg></span>
 <span class="sb-label">Eksplorasi Data (EDA)</span>
 </div>
-<div class="sb-item" data-label="Peta Zonasi LIVE" id="stab-peta" onclick="nav('metodologi', this)">
-<span class="sb-icon"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><polygon points="1,6 1,22 8,18 16,22 23,18 23,2 16,6 8,2"></polygon><line x1="8" x2="8" y1="2" y2="18"></line><line x1="16" x2="16" y1="6" y2="22"></line></svg></span>
+<div class="sb-item" data-label="Metodologi" id="stab-peta" onclick="nav('metodologi', this)">
+<span class="sb-icon"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg></span>
 <span class="sb-label">Metodologi</span>
-<span class="sb-star">Live</span>
 </div>
-<div class="sb-item" data-label="Forecast 2026 Q1" id="stab-forecast" onclick="nav('simulasi', this)">
-<span class="sb-icon"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><polyline points="23,6 13,16 8,11 1,18"></polyline><polyline points="17,6 23,6 23,12"></polyline></svg></span>
+<div class="sb-item" data-label="Simulasi" id="stab-forecast" onclick="nav('simulasi', this)">
+<span class="sb-icon"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></span>
 <span class="sb-label">Simulasi</span>
-<span class="sb-badge">Q1</span>
 </div>
 
 
@@ -1376,10 +1374,10 @@ body.sb-collapsed .main {
 <nav class="tabbar" id="tabbar">
 <div class="tab-indicator" id="tab-indicator"></div>
 <div class="tab active" id="tab-beranda" onclick="nav('beranda', this)"><span class="tab-icon"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" style="display:inline-block;vertical-align:middle;flex-shrink:0" viewbox="0 0 24 24" width="16"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9,22 9,12 15,12 15,22"></polyline></svg></span><span>Beranda</span></div>
-<div class="tab" id="tab-eda" onclick="nav('keamanan', this)"><span class="tab-icon"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" style="display:inline-block;vertical-align:middle;flex-shrink:0" viewbox="0 0 24 24" width="16"><rect height="12" rx="1" width="4" x="3" y="9"></rect><rect height="16" rx="1" width="4" x="9" y="5"></rect><rect height="19" rx="1" width="4" x="15" y="2"></rect></svg></span><span>Eksplorasi Data</span></div>
-<div class="tab" id="tab-model" onclick="nav('eda', this)"><span class="tab-icon"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" style="display:inline-block;vertical-align:middle;flex-shrink:0" viewbox="0 0 24 24" width="16"><rect height="6" rx="1" width="6" x="9" y="9"></rect><rect height="16" rx="2" width="16" x="4" y="4"></rect><path d="M9 1v3M15 1v3M9 20v3M15 20v3M1 9h3M1 15h3M20 9h3M20 15h3"></path></svg></span><span>Model dan Evaluasi</span></div>
-<div class="tab" id="tab-peta" onclick="nav('metodologi', this)"><span class="tab-icon"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" style="display:inline-block;vertical-align:middle;flex-shrink:0" viewbox="0 0 24 24" width="16"><polygon points="1,6 1,22 8,18 16,22 23,18 23,2 16,6 8,2"></polygon><line x1="8" x2="8" y1="2" y2="18"></line><line x1="16" x2="16" y1="6" y2="22"></line></svg></span><span>Peta Zonasi</span><span class="tab-star">Live</span></div>
-<div class="tab" id="tab-forecast" onclick="nav('simulasi', this)"><span class="tab-icon"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" style="display:inline-block;vertical-align:middle;flex-shrink:0" viewbox="0 0 24 24" width="16"><polyline points="23,6 13,16 8,11 1,18"></polyline><polyline points="17,6 23,6 23,12"></polyline></svg></span><span>Forecast 2026</span><span class="tab-badge">Q1</span></div>
+<div class="tab" id="tab-eda" onclick="nav('keamanan', this)"><span class="tab-icon"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" style="display:inline-block;vertical-align:middle;flex-shrink:0" viewbox="0 0 24 24" width="16"><rect height="6" rx="1" width="6" x="9" y="9"></rect><rect height="16" rx="2" width="16" x="4" y="4"></rect><path d="M9 1v3M15 1v3M9 20v3M15 20v3M1 9h3M1 15h3M20 9h3M20 15h3"></path></svg></span><span>Analisis Keamanan</span></div>
+<div class="tab" id="tab-model" onclick="nav('eda', this)"><span class="tab-icon"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" style="display:inline-block;vertical-align:middle;flex-shrink:0" viewbox="0 0 24 24" width="16"><rect height="12" rx="1" width="4" x="3" y="9"></rect><rect height="16" rx="1" width="4" x="9" y="5"></rect><rect height="19" rx="1" width="4" x="15" y="2"></rect></svg></span><span>Eksplorasi Data (EDA)</span></div>
+<div class="tab" id="tab-peta" onclick="nav('metodologi', this)"><span class="tab-icon"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" style="display:inline-block;vertical-align:middle;flex-shrink:0" viewbox="0 0 24 24" width="16"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg></span><span>Metodologi</span></div>
+<div class="tab" id="tab-forecast" onclick="nav('simulasi', this)"><span class="tab-icon"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" style="display:inline-block;vertical-align:middle;flex-shrink:0" viewbox="0 0 24 24" width="16"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></span><span>Simulasi</span></div>
 
 
 </nav>
