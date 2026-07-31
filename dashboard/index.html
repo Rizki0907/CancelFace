@@ -1405,7 +1405,17 @@ body.sb-collapsed .main {
 
 </div>
 </div>
-<div aria-hidden="true" class="hero-deco"><div class="cf-shield-container">🛡️<div class="cf-scanner"></div></div></div>
+<div aria-hidden="true" class="hero-deco">
+    <div class="cf-shield-container" style="font-size:initial;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--c-blue)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" style="width:150px; height:150px; opacity:0.4; position:absolute;">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--c-green)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:65px; height:65px; position:absolute; z-index:2; background:rgba(15, 23, 42, 0.7); border-radius:50%; padding:14px; backdrop-filter:blur(4px); border:1px solid rgba(16,185,129,0.3); box-shadow:0 0 25px rgba(16,185,129,0.2);">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+        <div class="cf-scanner"></div>
+    </div>
+</div>
 
 </div> <!-- close hero-inner -->
 </div> <!-- close hero mb24 -->
@@ -1581,16 +1591,35 @@ function renderCharts() {
     const cBg = 'transparent';
     const cTxt = isDark ? '#94a3b8' : '#475569';
     const layout = { paper_bgcolor: cBg, plot_bgcolor: cBg, font: {color: cTxt, family:'Figtree'}, margin: {t:20, r:20, l:120, b:40}, autosize:true };
-    const layoutHeat = { paper_bgcolor: cBg, plot_bgcolor: cBg, font: {color: cTxt, family:'Figtree'}, margin: {t:20, r:20, l:150, b:50}, autosize:true };
-    const layoutBar = { paper_bgcolor: cBg, plot_bgcolor: cBg, font: {color: cTxt, family:'Figtree'}, margin: {t:40, r:20, l:40, b:40}, autosize:true };
+    const layoutHeat = { 
+        paper_bgcolor: cBg, plot_bgcolor: cBg, font: {color: cTxt, family:'Figtree'}, 
+        margin: {t:30, r:20, l:150, b:80}, autosize:true,
+        xaxis: { tickangle: -25 },
+        yaxis: { tickfont: { weight: 'bold' } }
+    };
+    const layoutBar = { paper_bgcolor: cBg, plot_bgcolor: cBg, font: {color: cTxt, family:'Figtree'}, margin: {t:40, r:20, l:50, b:50}, autosize:true };
 
     if(document.getElementById('plt-heatmap')) {
         const pb = cancelfaceData.perbandingan_metode;
         if(pb) {
-            const zData = pb.map(d => [d['Rank 1 Accuracy'], d['Akurasi Tebakan Kelompok Usia'], d['Tingkat Keberhasilan Reidentifikasi']]);
+            const zData = pb.map(d => [
+                d['Rank 1 Accuracy'],
+                d['Rank 5 Accuracy'],
+                d['Akurasi Tebakan Jenis Kelamin'],
+                d['Akurasi Tebakan Kelompok Usia'],
+                d['Rata Rata Kemiripan Kosinus'],
+                d['Tingkat Keberhasilan Reidentifikasi']
+            ]);
             Plotly.newPlot('plt-heatmap', [{
-                z: zData, x: ['Rank-1 Acc', 'Akurasi Usia', 'Re-identifikasi'], y: pb.map(d=>d.Metode),
-                type: 'heatmap', colorscale: 'RdBu', reversescale:true
+                z: zData, 
+                x: ['Rank-1 Acc', 'Rank-5 Acc', 'Gender Acc', 'Age Acc', 'Cosine Sim', 'Re-ID'], 
+                y: pb.map(d=>d.Metode),
+                type: 'heatmap', 
+                colorscale: [[0, '#0ea5e9'], [0.5, '#1e293b'], [1, '#f43f5e']], // CancelFace color theme
+                hoverongaps: false,
+                hovertemplate: 'Metode: <b>%{y}</b><br>Metrik: %{x}<br>Nilai: <b>%{z:.4f}</b><extra></extra>',
+                showscale: true,
+                colorbar: { thickness: 15, len: 0.8, outlinecolor: 'rgba(0,0,0,0)' }
             }], layoutHeat, {displayModeBar: false, responsive:true});
         }
     }
@@ -1599,9 +1628,17 @@ function renderCharts() {
         const kq = cancelfaceData.ketahanan_kualitas;
         if(kq) {
             Plotly.newPlot('plt-kualitas', [{
-                x: kq.map(d => d['Tingkat Kualitas']), y: kq.map(d => d['Rank 1 Accuracy']),
-                type: 'bar', marker: {color: '#0ea5e9'}
-            }], layoutBar, {displayModeBar: false, responsive:true});
+                x: kq.map(d => d['Tingkat Kualitas']), 
+                y: kq.map(d => d['Rank 1 Accuracy']),
+                type: 'bar', 
+                marker: {
+                    color: kq.map(d => d['Rank 1 Accuracy']),
+                    colorscale: [[0, '#f43f5e'], [0.5, '#eab308'], [1, '#10b981']],
+                    showscale: false,
+                    line: { width: 0 }
+                },
+                hovertemplate: 'Luas BBox: <b>%{x} px²</b><br>Rank-1 Acc: <b>%{y:.4f}</b><extra></extra>'
+            }], {...layoutBar, xaxis:{title:'Luas Bounding Box (px²)'}, yaxis:{title:'Rank-1 Accuracy'}}, {displayModeBar: false, responsive:true});
         }
     }
 
