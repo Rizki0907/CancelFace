@@ -1257,7 +1257,7 @@ body.sb-collapsed .main {
 .sim-btn { background:linear-gradient(135deg, var(--c-blue), var(--c-purple)); color:white; border:none; padding:12px 24px; border-radius:8px; font-size:14px; font-weight:bold; cursor:pointer; box-shadow:0 4px 15px rgba(14,165,233,0.4); transition:transform 0.2s; margin:10px; }
 .sim-btn:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(14,165,233,0.6); }
 </style>
-<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script><script src="data.js?v=5"></script></head>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script><script src="data.js?v=6"></script></head>
 <body>
 
 <canvas id="mosquito-canvas"></canvas>
@@ -1629,9 +1629,9 @@ body.sb-collapsed .main {
     <div class="card card-flex-col mb24">
         <div class="card-title">Distribusi per Subset Data</div>
         <div class="card-subtitle">Jumlah Citra dan Identitas Unik per partisi (Training Set / Gallery / Probe)</div>
-        <div style="display:flex; flex-direction:row; gap:16px; margin-top:15px; min-height:280px;">
-            <div id="plt-eda-subset-img" style="flex:1; min-height:260px;"></div>
-            <div id="plt-eda-subset-id" style="flex:1; min-height:260px;"></div>
+        <div style="display:flex; flex-direction:row; gap:16px; margin-top:15px;">
+            <div id="plt-eda-subset-img" style="flex:1; height:320px;"></div>
+            <div id="plt-eda-subset-id" style="flex:1; height:320px;"></div>
         </div>
         <div style="background:var(--bg2); padding:16px; border-radius:6px; border-left:3px solid var(--c-purple); margin-top:15px;">
             <div style="font-size:13px; font-weight:bold; color:var(--txt); margin-bottom:6px;">Analisis Partisi Dataset (100k Citra)</div>
@@ -1646,7 +1646,7 @@ body.sb-collapsed .main {
         <div id="plt-eda-camera" style="min-height:300px; margin-top:15px;"></div>
         <div style="background:var(--bg2); padding:16px; border-radius:6px; border-left:3px solid var(--c-purple); margin-top:15px;">
             <div style="font-size:13px; font-weight:bold; color:var(--txt); margin-bottom:6px;">Bias Distribusi Kamera (Top 15 + Lainnya)</div>
-            <div style="font-size:13px; color:var(--txt2); line-height:1.5;">Distribusi sangat timpang (<em>imbalanced</em>) — beberapa kamera mendominasi rekaman jauh lebih banyak. Kategori <b>"Lainnya"</b> masih menjadi yang terbesar, mengindikasikan ratusan kamera minoritas yang masing-masing merekam sangat sedikit. Hal ini menantang model untuk belajar dari data yang sangat tidak seimbang.</div>
+            <div style="font-size:13px; color:var(--txt2); line-height:1.5;">Distribusi sangat ekstrem — <b>cam1 (~38k) dan cam2 (~36k)</b> mendominasi hampir seluruh dataset, diikuti cam3 (16k) dan cam4 (4k). Selebihnya, ratusan kamera lain masing-masing merekam hanya <b>1–100 citra</b> (Median = 1.0, IQR = 0.0). Ketimpangan ekstrem ini menjadi tantangan besar bagi model untuk belajar secara adil.</div>
         </div>
     </div>
 
@@ -1654,10 +1654,10 @@ body.sb-collapsed .main {
     <div class="card card-flex-col mb24">
         <div class="card-title">Distribusi Ketajaman, Dimensi Piksel, dan Kecerahan Citra</div>
         <div class="card-subtitle">Analisis kualitas 1500 sampel acak — seberapa buram dan gelap citra CCTV ini?</div>
-        <div style="display:flex; flex-direction:row; gap:12px; margin-top:15px; min-height:280px;">
-            <div id="plt-eda-laplacian" style="flex:1; min-height:260px;"></div>
-            <div id="plt-eda-width" style="flex:1; min-height:260px;"></div>
-            <div id="plt-eda-brightness" style="flex:1; min-height:260px;"></div>
+        <div style="display:flex; flex-direction:row; gap:12px; margin-top:15px;">
+            <div id="plt-eda-laplacian" style="flex:1; height:300px;"></div>
+            <div id="plt-eda-width" style="flex:1; height:300px;"></div>
+            <div id="plt-eda-brightness" style="flex:1; height:300px;"></div>
         </div>
         <div style="background:var(--bg2); padding:16px; border-radius:6px; border-left:3px solid var(--c-purple); margin-top:15px;">
             <div style="font-size:13px; font-weight:bold; color:var(--txt); margin-bottom:6px;">Ketajaman (Laplacian Var), Lebar Piksel, dan Kecerahan</div>
@@ -1892,7 +1892,7 @@ function renderCharts() {
                 marker: {color: subColors},
                 hovertemplate: '<b>%{x}</b><br>%{y:,} Citra<extra></extra>'
             }], {
-                ...lBase,
+                ...lBase, height: 320,
                 title: {text: 'Jumlah Citra per Subset Data', font:{size:12}},
                 xaxis: {title: 'Subset Data', tickangle: -15},
                 yaxis: {title: 'Jumlah Citra'}
@@ -1906,7 +1906,7 @@ function renderCharts() {
                 marker: {color: subColors},
                 hovertemplate: '<b>%{x}</b><br>%{y:,} Identitas<extra></extra>'
             }], {
-                ...lBase,
+                ...lBase, height: 320,
                 title: {text: 'Jumlah Identitas Unik per Subset Data', font:{size:12}},
                 xaxis: {title: 'Subset Data', tickangle: -15},
                 yaxis: {title: 'Jumlah Identitas Unik'}
@@ -1938,7 +1938,7 @@ function renderCharts() {
     if(document.getElementById('plt-eda-laplacian')) {
         const ql = cancelfaceData.eda_quality;
         if(ql) {
-            const hLayout = {...layoutBar, margin:{t:40, r:15, l:50, b:50}};
+            const hLayout = {...layoutBar, margin:{t:40, r:15, l:50, b:50}, height: 300};
             Plotly.newPlot('plt-eda-laplacian', [{
                 x: ql.map(d => d.laplacian),
                 type: 'histogram',

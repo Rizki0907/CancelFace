@@ -247,68 +247,68 @@ const cancelfaceData = {
   ],
   "eda_camera": [
     {
-      "camera": "Cam_001",
-      "count": 8240
+      "camera": "cam1",
+      "count": 38300
     },
     {
-      "camera": "Cam_002",
-      "count": 7120
+      "camera": "cam2",
+      "count": 35900
     },
     {
-      "camera": "Cam_003",
-      "count": 6010
+      "camera": "cam3",
+      "count": 15900
     },
     {
-      "camera": "Cam_004",
-      "count": 5380
+      "camera": "cam4",
+      "count": 3950
     },
     {
-      "camera": "Cam_005",
-      "count": 4920
+      "camera": "cam5",
+      "count": 110
     },
     {
-      "camera": "Cam_006",
-      "count": 4200
+      "camera": "cam13",
+      "count": 60
     },
     {
-      "camera": "Cam_007",
-      "count": 3850
+      "camera": "cam11",
+      "count": 55
     },
     {
-      "camera": "Cam_008",
-      "count": 3420
+      "camera": "cam12",
+      "count": 50
     },
     {
-      "camera": "Cam_009",
-      "count": 2980
+      "camera": "cam14",
+      "count": 50
     },
     {
-      "camera": "Cam_010",
-      "count": 2600
+      "camera": "cam8",
+      "count": 45
     },
     {
-      "camera": "Cam_011",
-      "count": 2190
+      "camera": "cam6",
+      "count": 40
     },
     {
-      "camera": "Cam_012",
-      "count": 1920
+      "camera": "cam9",
+      "count": 35
     },
     {
-      "camera": "Cam_013",
-      "count": 1640
+      "camera": "cam10",
+      "count": 30
     },
     {
-      "camera": "Cam_014",
-      "count": 1390
+      "camera": "13",
+      "count": 25
     },
     {
-      "camera": "Cam_015",
-      "count": 1100
+      "camera": "19",
+      "count": 20
     },
     {
       "camera": "Lainnya",
-      "count": 33040
+      "count": 5500
     }
   ],
   "eda_quality": [
@@ -7814,7 +7814,7 @@ const cancelfaceData = {
     }
   ],
   "eda_camera_stats": {
-    "median": 3210.0,
-    "iqr": 3870.0
+    "median": 1.0,
+    "iqr": 0.0
   }
 };
