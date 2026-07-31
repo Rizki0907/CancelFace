@@ -1,16 +1,17 @@
 <!DOCTYPE html>
-<html lang="id" data-theme="dark">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>CancelFace - Secure Face Biometrics</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800;900&family=Figtree:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
-<script src="data.js"></script>
-<style>
 
+<html data-theme="light" lang="id">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1.0" name="viewport"/>
+<title>CancelFace - Secure Face Biometrics</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800;900&amp;family=Figtree:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" rel="stylesheet"/>
+
+
+<style>
 :root {
   /* SIPEDA design system — light first, indigo/crimson dual brand, multi-accent data cards */
   --bg:#f3f4fa;--bg1:#ffffff;--bg2:#ffffff;--bg3:#f0f1f7;--bg4:#e7e9f1;
@@ -1248,372 +1249,625 @@ body.sb-collapsed .main {
 #tab-indicator { display: none !important; }
 
 
-/* CANCELFACE CUSTOM CSS */
-.cf-shield-container {
-    font-size: 140px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    animation: shield-pulse 3s ease-in-out infinite;
-    position: relative;
-    height: 100%;
-}
-@keyframes shield-pulse {
-    0%, 100% { transform: scale(1) translateY(0); filter: drop-shadow(0 0 20px rgba(14,165,233,0.3)); }
-    50% { transform: scale(1.05) translateY(-10px); filter: drop-shadow(0 0 40px rgba(14,165,233,0.6)); }
-}
-.cf-scanner {
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 4px;
-    background: #0ea5e9;
-    box-shadow: 0 0 15px #0ea5e9;
-    animation: scan 2s linear infinite;
-    opacity: 0.7;
-    border-radius: 50%;
-}
-@keyframes scan {
-    0% { top: 10%; opacity: 0; }
-    10% { opacity: 1; }
-    90% { opacity: 1; }
-    100% { top: 90%; opacity: 0; }
-}
-.hex-rain {
-    position: absolute;
-    color: var(--c-blue);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    font-weight: bold;
-    opacity: 0;
-    pointer-events: none;
-    animation: rain 3s linear infinite;
-}
-@keyframes rain {
-    0% { transform: translateY(-20px); opacity: 0; }
-    20% { opacity: 0.5; }
-    80% { opacity: 0.5; }
-    100% { transform: translateY(100px); opacity: 0; }
-}
-
-.sim-box {
-    background: var(--bg2);
-    border: 1px solid var(--bord);
-    border-radius: 12px;
-    padding: 20px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 14px;
-    color: var(--txt);
-    min-height: 150px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    word-break: break-all;
-    box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
-}
-.sim-btn {
-    background: linear-gradient(135deg, var(--c-blue), var(--c-purple));
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(14,165,233,0.4);
-    transition: transform 0.2s;
-}
-.sim-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(14,165,233,0.6);
-}
-.page { display: none; }
-.page.active { display: block; animation: pg-in .45s cubic-bezier(.16,1,.3,1); }
-
+.cf-shield-container { font-size:140px; display:flex; align-items:center; justify-content:center; animation:shield-pulse 3s ease-in-out infinite; height:100%; position:relative; }
+@keyframes shield-pulse { 0%,100%{transform:scale(1) translateY(0); filter:drop-shadow(0 0 20px rgba(14,165,233,0.3));} 50%{transform:scale(1.05) translateY(-10px); filter:drop-shadow(0 0 40px rgba(14,165,233,0.6));} }
+.cf-scanner { position:absolute; top:0; left:0; right:0; height:4px; background:#0ea5e9; box-shadow:0 0 15px #0ea5e9; animation:scan 2s linear infinite; opacity:0.7; border-radius:50%; }
+@keyframes scan { 0%{top:10%; opacity:0;} 10%{opacity:1;} 90%{opacity:1;} 100%{top:90%; opacity:0;} }
+.sim-box { background:var(--bg2); border:1px solid var(--bord); border-radius:12px; padding:20px; font-family:'JetBrains Mono', monospace; font-size:14px; color:var(--txt); min-height:150px; display:flex; align-items:center; justify-content:center; text-align:center; word-break:break-all; box-shadow:inset 0 0 20px rgba(0,0,0,0.1); }
+.sim-btn { background:linear-gradient(135deg, var(--c-blue), var(--c-purple)); color:white; border:none; padding:12px 24px; border-radius:8px; font-size:14px; font-weight:bold; cursor:pointer; box-shadow:0 4px 15px rgba(14,165,233,0.4); transition:transform 0.2s; margin:10px; }
+.sim-btn:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(14,165,233,0.6); }
 </style>
-</head>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script><script src="data.js"></script></head>
 <body>
-<canvas id="bg-canvas"></canvas>
-<div class="sb-overlay" onclick="toggleSidebar()"></div>
 
-<!-- SIDEBAR -->
-<div class="sidebar" id="sidebar">
-  <div class="sb-header">
-    <button class="hdr-btn" onclick="toggleSidebar()" style="border:none; box-shadow:none; background:transparent;">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
-    </button>
-    <a href="#" class="sb-logo-wrap">
-      <div class="logo-text"><span class="si" style="color:var(--c-blue)">Cancel</span><span class="pe" style="color:var(--c-red)">Face</span></div>
-    </a>
-  </div>
-  <div class="sb-menu">
-    <div class="sb-item active" onclick="nav('beranda', this)">
-      <div class="sb-icon">🏠</div><div class="sb-label">Beranda</div>
-    </div>
-    <div class="sb-item" onclick="nav('keamanan', this)">
-      <div class="sb-icon">🛡️</div><div class="sb-label">Analisis Keamanan</div>
-    </div>
-    <div class="sb-item" onclick="nav('eda', this)">
-      <div class="sb-icon">📊</div><div class="sb-label">Eksplorasi Data (EDA)</div>
-    </div>
-    <div class="sb-item" onclick="nav('metodologi', this)">
-      <div class="sb-icon">📜</div><div class="sb-label">Metodologi</div>
-    </div>
-    <div class="sb-item" onclick="nav('simulasi', this)">
-      <div class="sb-icon">💻</div><div class="sb-label">Simulasi</div>
-    </div>
-  </div>
-  
-  <!-- Sidebar Status Box -->
-  <div style="padding:15px; margin-top:auto;">
-    <div class="sb-status">
-        <div class="sb-status-title">Proteksi: Aktif</div>
-        <div class="sb-status-sub">Enkripsi Wajah Berjalan Normal</div>
-    </div>
-    <div class="sb-zone-card">
-        <div class="sb-zone-title">METRIK KEAMANAN</div>
-        <div class="sb-zone-sub">Evaluasi Performa & Privasi</div>
-        <div class="sb-z-item"><div class="zdot zdot-m"></div><div>Rank-1 Acc</div><div class="sb-z-val">34.5%</div></div>
-        <div class="sb-z-item"><div class="zdot zdot-k"></div><div>Usia Attacker</div><div class="sb-z-val">47.0%</div></div>
-        <div class="sb-z-item"><div class="zdot zdot-h"></div><div>Re-identifikasi</div><div class="sb-z-val">0.00%</div></div>
-    </div>
-  </div>
-  <div class="sb-foot">
-    <div class="sb-live"><div class="sb-live-dot"></div>SECURE</div>
-    <div class="sb-ver">CancelFace v1.0</div>
-  </div>
+<canvas id="mosquito-canvas"></canvas>
+<div class="sb-overlay" id="sb-overlay" onclick="closeSidebarMobile()"></div>
+<aside class="sidebar" id="sidebar">
+<!-- Sidebar header -->
+<div class="sb-header">
+<button aria-label="Toggle sidebar" class="sb-toggle" id="sb-toggle" onclick="toggleSidebar()">
+<svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.3" viewbox="0 0 24 24" width="15"><line x1="3" x2="21" y1="6" y2="6"></line><line x1="3" x2="21" y1="12" y2="12"></line><line x1="3" x2="21" y1="18" y2="18"></line></svg>
+</button>
+<div class="sb-logo-wrap" onclick="navigate('beranda')">
+<svg class="logo-svg" height="28" viewbox="0 0 34 34" width="28">
+<defs><radialgradient cx="50%" cy="50%" id="slg1" r="50%"><stop offset="0%" stop-color="#a78bfa" stop-opacity="0.9"></stop><stop offset="100%" stop-color="#22d3ee" stop-opacity="0.7"></stop></radialgradient></defs>
+<circle cx="17" cy="17" fill="rgba(167,139,250,0.08)" r="16" stroke="rgba(167,139,250,0.4)" stroke-width="1.2"></circle>
+<path d="M17 6 Q22 12 22 17 Q22 22 17 26 Q12 22 12 17 Q12 12 17 6Z" fill="url(#slg1)" opacity="0.9"></path>
+<circle cx="17" cy="19" fill="#ff4d6d" opacity="0.9" r="3.5"></circle>
+<line opacity="0.7" stroke="#ff4d6d" stroke-linecap="round" stroke-width="1.2" x1="12" x2="8" y1="17" y2="14"></line>
+<line opacity="0.7" stroke="#ff4d6d" stroke-linecap="round" stroke-width="1.2" x1="22" x2="26" y1="17" y2="14"></line>
+</svg>
+<span class="sb-logo-text"><span class="si" style="color:var(--c-blue)">Cancel</span><span class="pe" style="color:var(--c-red)">Face</span></span>
 </div>
-
-<!-- HEADER -->
+</div>
+<!-- Navigation -->
+<nav class="sb-nav">
+<div class="sb-item active" data-label="Beranda" id="stab-beranda" onclick="nav('beranda', this)">
+<span class="sb-icon"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9,22 9,12 15,12 15,22"></polyline></svg></span>
+<span class="sb-label">Beranda</span>
+</div>
+<div class="sb-item" data-label="Eksplorasi Data" id="stab-eda" onclick="nav('keamanan', this)">
+<span class="sb-icon"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><rect height="12" rx="1" width="4" x="3" y="9"></rect><rect height="16" rx="1" width="4" x="9" y="5"></rect><rect height="19" rx="1" width="4" x="15" y="2"></rect></svg></span>
+<span class="sb-label">Analisis Keamanan</span>
+</div>
+<div class="sb-item" data-label="Model &amp; Evaluasi" id="stab-model" onclick="nav('eda', this)">
+<span class="sb-icon"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><rect height="6" rx="1" width="6" x="9" y="9"></rect><rect height="16" rx="2" width="16" x="4" y="4"></rect><path d="M9 1v3M15 1v3M9 20v3M15 20v3M1 9h3M1 15h3M20 9h3M20 15h3"></path></svg></span>
+<span class="sb-label">Eksplorasi Data (EDA)</span>
+</div>
+<div class="sb-item" data-label="Peta Zonasi LIVE" id="stab-peta" onclick="nav('metodologi', this)">
+<span class="sb-icon"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><polygon points="1,6 1,22 8,18 16,22 23,18 23,2 16,6 8,2"></polygon><line x1="8" x2="8" y1="2" y2="18"></line><line x1="16" x2="16" y1="6" y2="22"></line></svg></span>
+<span class="sb-label">Metodologi</span>
+<span class="sb-star">Live</span>
+</div>
+<div class="sb-item" data-label="Forecast 2026 Q1" id="stab-forecast" onclick="nav('simulasi', this)">
+<span class="sb-icon"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><polyline points="23,6 13,16 8,11 1,18"></polyline><polyline points="17,6 23,6 23,12"></polyline></svg></span>
+<span class="sb-label">Simulasi</span>
+<span class="sb-badge">Q1</span>
+</div>
+<div class="sb-item" data-label="Simulasi Skenario" id="stab-simulasi" onclick="navigate('simulasi')">
+<span class="sb-icon"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="M9 3h6m-5 0v6l-5 9a1 1 0 0 0 .9 1.5h10.2A1 1 0 0 0 21 18l-5-9V3"></path><path d="M6 17h12"></path></svg></span>
+<span class="sb-label">Simulasi</span>
+</div>
+<div class="sb-item" data-label="Metodologi" id="stab-metodologi" onclick="navigate('metodologi')">
+<span class="sb-icon"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><circle cx="12" cy="12" r="10"></circle><line x1="12" x2="12" y1="8" y2="8"></line><line x1="12" x2="12" y1="12" y2="16"></line></svg></span>
+<span class="sb-label">Metodologi</span>
+</div>
+</nav>
+<div class="sb-divider"></div>
+<!-- Sidebar widgets -->
+<div class="sb-widgets">
+<!-- Alert widget -->
+<div class="sb-alert">
+<div class="sb-alert-dot"></div>
+<div>
+<div class="sb-alert-text">Status: Risiko Tinggi</div>
+<div class="sb-alert-sub">Forecast Q1 2026 aktif</div>
+</div>
+</div>
+<!-- Zona Stats -->
+<div class="sb-widget">
+<div class="sb-w-title">Zona Kecamatan · Total</div>
+<div class="sb-w-caption" id="sb-zona-caption">Akumulasi seluruh kecamatan &amp; minggu, forecast Q1 2026</div>
+<div class="sb-stat-row">
+<span class="sb-stat-label">🔴 Merah (&gt;P75)</span>
+<span class="sb-stat-val" id="sb-merah-cnt" style="color:var(--z-merah)">18</span>
+</div>
+<div class="sb-ring">
+<div class="sb-ring-bar"><div class="sb-ring-fill" id="sb-merah-bar" style="width:41%;background:var(--z-merah)"></div></div>
+</div>
+<div class="sb-stat-row" style="margin-top:8px">
+<span class="sb-stat-label">🟡 Kuning</span>
+<span class="sb-stat-val" id="sb-kuning-cnt" style="color:var(--z-kuning)">12</span>
+</div>
+<div class="sb-ring">
+<div class="sb-ring-bar"><div class="sb-ring-fill" id="sb-kuning-bar" style="width:27%;background:var(--z-kuning)"></div></div>
+</div>
+<div class="sb-stat-row" style="margin-top:8px">
+<span class="sb-stat-label">🟢 Hijau</span>
+<span class="sb-stat-val" id="sb-hijau-cnt" style="color:var(--z-hijau)">14</span>
+</div>
+<div class="sb-ring">
+<div class="sb-ring-bar"><div class="sb-ring-fill" id="sb-hijau-bar" style="width:32%;background:var(--z-hijau)"></div></div>
+</div>
+</div>
+<!-- Model perf -->
+<div class="sb-widget">
+<div class="sb-w-title">Model Terbaik</div>
+<div class="sb-stat-row">
+<span class="sb-stat-label" id="sb-model-name">LightGBM</span>
+<span class="sb-stat-val" id="sb-model-r2" style="color:var(--c-blue)">R²=0.77</span>
+</div>
+<div class="sb-stat-row">
+<span class="sb-stat-label">MAE</span>
+<span class="sb-stat-val" id="sb-model-mae">2.95 kasus</span>
+</div>
+<div class="sb-stat-row">
+<span class="sb-stat-label">Data periode</span>
+<span class="sb-stat-val">2017–2025</span>
+</div>
+</div>
+<!-- Swat score -->
+<div class="sb-widget">
+<div class="sb-w-title">🦟 Nyamuk Tertepuk</div>
+<div style="text-align:center;padding:4px 0">
+<div id="swat-score" style="font-size:28px;font-weight:900;font-family:'Sora',sans-serif;color:var(--c-red)">0</div>
+<div style="font-size:10px;color:var(--txt3);margin-top:2px">Klik nyamuk yang terbang!</div>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<div class="sb-footer">
+<div class="sb-footer-live"><div class="live-dot" style="background:var(--c-green);width:6px;height:6px"></div>LIVE</div>
+<span class="sb-footer-text">SIPEDA v1.0 · DKI Jakarta</span>
+</div>
+</aside>
 <header class="header">
-  <button class="hdr-btn" onclick="toggleSidebar()" style="display:none;" id="mobile-menu-btn">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
-  </button>
-  <div class="header-logo" style="margin-left: 56px;">
-    <div class="logo-text"><span class="si" style="color:var(--c-blue)">Cancel</span><span class="pe" style="color:var(--c-red)">Face</span></div>
-  </div>
-  <div class="header-divider"></div>
-  <div class="header-sub">Protokol Biometrik Wajah Cancelable · ISO/IEC 24745 Compliant</div>
-  <div class="header-spacer"></div>
-  <div class="live-pill"><div class="live-dot"></div><span>Status Sistem: SECURE</span></div>
-  <div class="hdr-btns">
-    <button class="hdr-btn" onclick="toggleTheme()" title="Ganti Tema">🌓</button>
-  </div>
-</header>
-
-<!-- TICKER -->
-<div class="ticker">
-  <div class="ticker-label">LATEST METRICS</div>
-  <div class="ticker-track">
-    <div class="ticker-inner">
-      <div class="tick-item"><div class="tick-dot" style="color:var(--c-blue)"></div>Akurasi Gender Attacker: 57.14% (Aman)</div>
-      <div class="tick-item"><div class="tick-dot" style="color:var(--c-purple)"></div>Re-identifikasi Lintas CCTV: Mustahil (0.00%)</div>
-      <div class="tick-item"><div class="tick-dot" style="color:var(--c-green)"></div>Standar Keamanan: ISO/IEC 24745 Lulus</div>
-      <div class="tick-item"><div class="tick-dot" style="color:var(--c-red)"></div>Rank-1 Accuracy: 34.5% (Kompetitif)</div>
-      
-      <div class="tick-item"><div class="tick-dot" style="color:var(--c-blue)"></div>Akurasi Gender Attacker: 57.14% (Aman)</div>
-      <div class="tick-item"><div class="tick-dot" style="color:var(--c-purple)"></div>Re-identifikasi Lintas CCTV: Mustahil (0.00%)</div>
-      <div class="tick-item"><div class="tick-dot" style="color:var(--c-green)"></div>Standar Keamanan: ISO/IEC 24745 Lulus</div>
-      <div class="tick-item"><div class="tick-dot" style="color:var(--c-red)"></div>Rank-1 Accuracy: 34.5% (Kompetitif)</div>
-    </div>
-  </div>
+<div class="header-logo" onclick="navigate('beranda')">
+<svg class="logo-svg" viewbox="0 0 34 34">
+<defs><radialgradient cx="50%" cy="50%" id="lg1" r="50%"><stop offset="0%" stop-color="#a78bfa" stop-opacity="0.9"></stop><stop offset="100%" stop-color="#22d3ee" stop-opacity="0.7"></stop></radialgradient></defs>
+<circle cx="17" cy="17" fill="rgba(167,139,250,0.08)" r="16" stroke="rgba(167,139,250,0.4)" stroke-width="1.2"></circle>
+<path d="M17 6 Q22 12 22 17 Q22 22 17 26 Q12 22 12 17 Q12 12 17 6Z" fill="url(#lg1)" opacity="0.9"></path>
+<circle cx="17" cy="19" fill="#ff4d6d" opacity="0.9" r="3.5"></circle>
+<line opacity="0.7" stroke="#ff4d6d" stroke-linecap="round" stroke-width="1.2" x1="12" x2="8" y1="17" y2="14"></line>
+<line opacity="0.7" stroke="#ff4d6d" stroke-linecap="round" stroke-width="1.2" x1="22" x2="26" y1="17" y2="14"></line>
+</svg>
+<span class="logo-text"><span class="si" style="color:var(--c-blue)">Cancel</span><span class="pe" style="color:var(--c-red)">Face</span></span>
 </div>
-
-<!-- MAIN CONTENT -->
-<main class="main" style="padding-left: 280px; transition: padding 0.38s cubic-bezier(.16,1,.3,1);" id="main-content">
-    
-    <!-- MENU 1: BERANDA -->
-    <div id="page-beranda" class="page active">
-        <!-- Hero Section -->
-        <div class="hero mb24" style="background:var(--card); border:1px solid var(--bord); border-radius:var(--radius-card); padding:24px; box-shadow:var(--shadow-card);">
-            <div class="hero-inner" style="display:grid; grid-template-columns:1fr 240px; gap:20px;">
-                <div>
-                    <div class="hero-eyebrow">Sistem Keamanan Biometrik · Cancelable Face 2026</div>
-                    <div class="hero-title">Proteksi Wajah.<br>Privasi Aman.<br>Presisi Tinggi.</div>
-                    <div class="hero-desc">CancelFace membangun protokol perlindungan data biometrik wajah berbasis Cancelable Biometrics. Sistem memastikan identitas tidak dapat direkonstruksi (Non-invertible) dan aman digunakan pada pengawasan CCTV massal tanpa mengorbankan privasi.</div>
-                    <div class="hero-stats">
-                        <div class="hstat"><div class="hstat-val">34.5%</div><div class="hstat-label">RANK-1 ACCURACY</div></div>
-                        <div class="hstat"><div class="hstat-val">47.0%</div><div class="hstat-label">AKURASI USIA</div></div>
-                        <div class="hstat"><div class="hstat-val">0.11</div><div class="hstat-label">COS-SIM REKONSTRUKSI</div></div>
-                        <div class="hstat"><div class="hstat-val">0.00%</div><div class="hstat-label">RE-IDENTIFIKASI</div></div>
-                    </div>
-                </div>
-                <div class="cf-shield-container">
-                    🛡️
-                    <div class="cf-scanner"></div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="g2 mb24">
-            <div class="card card-flex-col">
-                <div class="sec-head">
-                    <div class="sec-title"><div class="sec-title-line"></div>Heatmap Evaluasi (Utility vs Privacy)</div>
-                </div>
-                <div id="plt-heatmap" class="ch-fill"></div>
-            </div>
-            <div class="card card-flex-col">
-                <div class="sec-head">
-                    <div class="sec-title"><div class="sec-title-line"></div>Ketahanan Resolusi Wajah (BBox Area)</div>
-                </div>
-                <div id="plt-kualitas" class="ch-fill"></div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- MENU 2: ANALISIS KEAMANAN -->
-    <div id="page-keamanan" class="page">
-        <div class="sec-head mb24">
-            <div class="sec-title"><div class="sec-title-line"></div>Analisis Keamanan & Privasi</div>
-            <div class="sec-sub">Evaluasi serangan rekonstruksi dan tebakan atribut pada template CancelFace.</div>
-        </div>
-        <div class="g2 mb24">
-            <div class="card card-flex-col">
-                <div class="card-title">Serangan Rekonstruksi Wajah</div>
-                <div class="card-subtitle">Cosine Similarity antara Wajah Asli dan Template Curian</div>
-                <div id="plt-recon" class="ch-fill"></div>
-            </div>
-            <div class="card card-flex-col">
-                <div class="card-title">Serangan Penebakan Atribut</div>
-                <div class="card-subtitle">Akurasi klasifikasi Umur & Gender dari Template Curian</div>
-                <div id="plt-attr" class="ch-fill"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- MENU 3: EDA -->
-    <div id="page-eda" class="page">
-        <div class="sec-head mb24">
-            <div class="sec-title"><div class="sec-title-line"></div>Eksplorasi Data (EDA)</div>
-            <div class="sec-sub">Visualisasi distribusi data, reduksi dimensi (T-SNE), dan pengaruh parameter.</div>
-        </div>
-        
-        <div class="g-7-3 mb24">
-            <div class="card card-flex-col">
-                <div class="card-title">Ablasi Dimensi Template</div>
-                <div class="card-subtitle">Pengaruh panjang dimensi (D) terhadap Rank-1 Accuracy</div>
-                <div id="plt-ablasi" class="ch-fill"></div>
-            </div>
-            <div class="card">
-                <div class="card-title">Interpretasi T-SNE</div>
-                <div class="card-subtitle">Sebaran Fitur Template (CancelFace vs Base)</div>
-                <p style="font-size:12.5px; color:var(--txt2); line-height:1.7;">
-                    Teknik t-SNE (t-Distributed Stochastic Neighbor Embedding) digunakan untuk mereduksi dimensi fitur menjadi 2D/3D. <br><br>
-                    <strong>Base Model:</strong> Membentuk cluster ketat berdasar identitas, yang berarti rawan pelacakan.<br><br>
-                    <strong>CancelFace:</strong> Cluster identitas dihancurkan secara spasial karena proses proyeksi acak, sehingga identitas tidak dapat dilacak secara visual, mengamankan privasi secara ekstrem.
-                </p>
-                <div class="card-trend mt-4" style="color:var(--c-green);">T-SNE Privacy Test: PASSED</div>
-            </div>
-        </div>
-        
-        <div class="card mb24">
-            <div class="card-title">Sample Data (Serangan Atribut)</div>
-            <div class="card-subtitle">Cuplikan data eksperimen prediksi usia dan gender.</div>
-            <div class="tbl-wrap tbl-scroll" style="margin-top:10px;">
-                <table class="stat-table" style="width:100%; text-align:left;">
-                    <thead style="background:var(--bg3);">
-                        <tr>
-                            <th>Metode</th>
-                            <th>Gender Target</th>
-                            <th>Age Target</th>
-                            <th>Gender Pred (Acc)</th>
-                            <th>Age Pred (Acc)</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tbl-sample-body">
-                        <!-- Populated by JS -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <!-- MENU 4: METODOLOGI -->
-    <div id="page-metodologi" class="page">
-        <div class="sec-head mb24">
-            <div class="sec-title"><div class="sec-title-line"></div>Metodologi & Standar Keamanan</div>
-            <div class="sec-sub">Kepatuhan protokol CancelFace terhadap standar internasional ISO/IEC 24745.</div>
-        </div>
-        
-        <div class="g2 mb24">
-            <div class="card">
-                <div class="card-title">Kepatuhan ISO/IEC 24745</div>
-                <div class="card-subtitle">Standar Perlindungan Informasi Biometrik</div>
-                
-                <div class="method-step">
-                    <div class="method-num" style="background:var(--c-green)">1</div>
-                    <div>
-                        <div class="method-title">Non-invertibility</div>
-                        <div class="method-desc">Sangat sulit secara komputasi untuk merekonstruksi sampel wajah asli dari referensi biometrik (template). CancelFace memutus korelasi geometrik secara acak.</div>
-                        <div class="method-tag">Status: LULUS</div>
-                    </div>
-                </div>
-                
-                <div class="method-step">
-                    <div class="method-num" style="background:var(--c-green)">2</div>
-                    <div>
-                        <div class="method-title">Revocability</div>
-                        <div class="method-title" style="font-size:11px; font-weight:normal; margin-bottom:5px;">(Renewability)</div>
-                        <div class="method-desc">Template yang bocor dapat dicabut dan diganti dengan template baru yang tidak memiliki kesamaan dengan template lama, menggunakan *seed* acak yang berbeda.</div>
-                        <div class="method-tag">Status: LULUS</div>
-                    </div>
-                </div>
-                
-                <div class="method-step">
-                    <div class="method-num" style="background:var(--c-green)">3</div>
-                    <div>
-                        <div class="method-title">Unlinkability</div>
-                        <div class="method-desc">Dua template yang dihasilkan dari individu yang sama pada sistem yang berbeda tidak dapat dihubungkan (di-*link*) satu sama lain. Melindungi dari *cross-matching*.</div>
-                        <div class="method-tag">Status: LULUS</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="card">
-                <div class="card-title">Arsitektur GRL & R-LSH</div>
-                <div class="card-subtitle">Gradient Reversal Layer & Random Locality Sensitive Hashing</div>
-                <div style="padding: 20px; background:var(--bg3); border-radius:12px; margin-top:20px; text-align:center;">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Neural_network_example.svg/400px-Neural_network_example.svg.png" style="width:100%; max-width:300px; opacity:0.7; mix-blend-mode:luminosity;" alt="NN Architecture">
-                </div>
-                <p style="font-size:12.5px; color:var(--txt2); line-height:1.7; margin-top:20px;">
-                    <strong>1. GRL (Gradient Reversal Layer):</strong> Diterapkan selama pelatihan untuk mengelabui klasifikator atribut (Umur/Gender). Bobot model diperbarui secara berlawanan untuk membuang informasi sensitif.<br><br>
-                    <strong>2. LSH Projection:</strong> Fitur wajah matriks dimensi tinggi dikalikan dengan matriks proyeksi acak yang bergantung pada kunci (Seed). Hasilnya kemudian di-binarization menjadi deret bit yang *cancelable*.
-                </p>
-                <div class="formula-block">
-                    <span class="fhl">T</span> = sign(<span class="fval">W</span> * <span class="fval">X</span> + <span class="fval">B</span>)
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- MENU 5: SIMULASI -->
-    <div id="page-simulasi" class="page">
-        <div class="sec-head mb24">
-            <div class="sec-title"><div class="sec-title-line"></div>Simulasi Sistem (Enkripsi Template)</div>
-            <div class="sec-sub">Demonstrasi interaktif pengacakan wajah menjadi template biometrik.</div>
-        </div>
-        
-        <div class="card" style="text-align:center; padding: 40px 20px;">
-            <div style="font-size:40px; margin-bottom:20px;">👤 ➔ 🔐</div>
-            <div class="card-title mb16" style="font-size:20px;">Simulasi Ekstraksi Fitur CancelFace</div>
-            <p style="color:var(--txt2); max-width:500px; margin:0 auto 30px auto; line-height:1.6;">
+<div class="header-divider"></div>
+<span class="header-sub">Protokol Biometrik Wajah Cancelable · ISO/IEC 24745 Compliant</span>
+<div class="header-spacer"></div>
+<div class="live-pill"><div class="live-dot"></div><span>Status Sistem: SECURE</span></div>
+<button aria-label="Open sidebar" class="hdr-sb-toggle hdr-btn" onclick="openSidebarMobile()"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.3" style="display:inline-block;vertical-align:middle;flex-shrink:0" viewbox="0 0 24 24" width="16"><line x1="3" x2="21" y1="6" y2="6"></line><line x1="3" x2="21" y1="12" y2="12"></line><line x1="3" x2="21" y1="18" y2="18"></line></svg></button><div class="hdr-btns">
+<button class="hdr-btn" id="theme-btn" onclick="toggleTheme()"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" style="display:inline-block;vertical-align:middle;flex-shrink:0" viewbox="0 0 24 24" width="16"><circle cx="12" cy="12" r="5"></circle><line x1="12" x2="12" y1="1" y2="3"></line><line x1="12" x2="12" y1="21" y2="23"></line><line x1="4.22" x2="5.64" y1="4.22" y2="5.64"></line><line x1="18.36" x2="19.78" y1="18.36" y2="19.78"></line><line x1="1" x2="3" y1="12" y2="12"></line><line x1="21" x2="23" y1="12" y2="12"></line><line x1="4.22" x2="5.64" y1="19.78" y2="18.36"></line><line x1="18.36" x2="19.78" y1="5.64" y2="4.22"></line></svg></button>
+<button class="hdr-btn" onclick="navigate('metodologi')"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" style="display:inline-block;vertical-align:middle;flex-shrink:0" viewbox="0 0 24 24" width="16"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" x2="12.01" y1="17" y2="17"></line></svg></button>
+</div>
+</header>
+<nav class="tabbar" id="tabbar">
+<div class="tab-indicator" id="tab-indicator"></div>
+<div class="tab active" id="tab-beranda" onclick="navigate('beranda')">Beranda</div>
+<div class="tab" id="tab-eda" onclick="navigate('eda')">Analisis Keamanan</div>
+<div class="tab" id="tab-model" onclick="navigate('model')">Eksplorasi Data (EDA)</div>
+<div class="tab" id="tab-peta" onclick="navigate('peta')">Metodologi</div>
+<div class="tab" id="tab-forecast" onclick="navigate('forecast')">Simulasi</div>
+<div class="tab" id="tab-simulasi" onclick="navigate('simulasi')"><span class="tab-icon"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" style="display:inline-block;vertical-align:middle;flex-shrink:0" viewbox="0 0 24 24" width="16"><path d="M9 3h6m-5 0v6l-5 9a1 1 0 0 0 .9 1.5h10.2A1 1 0 0 0 21 18l-5-9V3"></path><path d="M6 17h12"></path></svg></span><span>Simulasi</span></div>
+<div class="tab" id="tab-metodologi" onclick="navigate('metodologi')"><span class="tab-icon"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" style="display:inline-block;vertical-align:middle;flex-shrink:0" viewbox="0 0 24 24" width="16"><circle cx="12" cy="12" r="10"></circle><line x1="12" x2="12" y1="8" y2="8"></line><line x1="12" x2="12" y1="12" y2="16"></line></svg></span><span>Metodologi</span></div>
+</nav>
+<div class="ticker">
+<div class="ticker-label">LATEST METRICS</div>
+<div class="ticker-track">
+<div class="ticker-inner" id="ticker-inner"><div class="tick-item"><div class="tick-dot" style="color:var(--c-blue)"></div>Akurasi Gender Attacker: 57.14% (Aman)</div><div class="tick-item"><div class="tick-dot" style="color:var(--c-blue)"></div>Re-identifikasi Lintas CCTV: Mustahil (0.00%)</div><div class="tick-item"><div class="tick-dot" style="color:var(--c-blue)"></div>Standar Keamanan: ISO/IEC 24745 Lulus</div><div class="tick-item"><div class="tick-dot" style="color:var(--c-blue)"></div>Rank-1 Accuracy: 34.5% (Kompetitif)</div><div class="tick-item"><div class="tick-dot" style="color:var(--c-blue)"></div>Akurasi Gender Attacker: 57.14% (Aman)</div><div class="tick-item"><div class="tick-dot" style="color:var(--c-blue)"></div>Re-identifikasi Lintas CCTV: Mustahil (0.00%)</div><div class="tick-item"><div class="tick-dot" style="color:var(--c-blue)"></div>Standar Keamanan: ISO/IEC 24745 Lulus</div><div class="tick-item"><div class="tick-dot" style="color:var(--c-blue)"></div>Rank-1 Accuracy: 34.5% (Kompetitif)</div></div>
+</div>
+</div>
+<div class="main">
+<!-- PAGE: BERANDA -->
+<div class="page active" id="page-beranda">
+<div class="hero mb24">
+<div class="hero-glow1"></div><div class="hero-glow2"></div>
+<div class="hero-inner">
+<div>
+<div class="hero-eyebrow"><span>Sistem Keamanan Biometrik · Cancelable Face 2026</span></div>
+<h1 class="hero-title">Proteksi Wajah.<br/>Privasi Aman.<br/>Presisi Tinggi.</h1>
+<p class="hero-desc">CancelFace membangun protokol perlindungan data biometrik wajah berbasis Cancelable Biometrics. Sistem memastikan identitas tidak dapat direkonstruksi (Non-invertible) dan aman digunakan pada pengawasan CCTV massal tanpa mengorbankan privasi.</p>
+<div class="hero-stats">
+<div class="hstat"><div class="hstat-val" data-counter="44">34.5%</div><div class="hstat-label">RANK-1 ACCURACY</div></div>
+<div class="hstat"><div class="hstat-val" data-counter="9">47.0%</div><div class="hstat-label">AKURASI USIA</div></div>
+<div class="hstat"><div class="hstat-val" data-counter="5">0.11</div><div class="hstat-label">COS-SIM REKONSTRUKSI</div></div>
+<div class="hstat"><div class="hstat-val" data-counter="13">0.00%</div><div class="hstat-label">RE-IDENTIFIKASI</div></div>
+<div class="hstat"><div class="hstat-val">LULUS</div><div class="hstat-label">ISO 24745</div></div>
+</div>
+</div>
+<div aria-hidden="true" class="hero-deco"><div class="cf-shield-container">🛡️<div class="cf-scanner"></div></div></div>
+<div class="hero-chart">
+<div class="hero-chart-title">Distribusi Zona Q1 2026 Minggu 6</div>
+<div class="ch-200" style="position:relative"><canvas id="heroDonut"></canvas><div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;display:flex;align-items:center;justify-content:center;"><svg fill="none" style="width:54px;height:54px;opacity:0.85" viewbox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+<ellipse cx="40" cy="45" fill="rgba(230,57,70,0.7)" rx="9" ry="15"></ellipse>
+<ellipse cx="40" cy="28" fill="rgba(230,57,70,0.7)" rx="7" ry="8"></ellipse>
+<line stroke="rgba(230,57,70,0.8)" stroke-width="2.5" x1="40" x2="40" y1="20" y2="10"></line>
+<line stroke="rgba(230,57,70,0.8)" stroke-width="2.5" x1="40" x2="35" y1="10" y2="5"></line>
+<line stroke="rgba(230,57,70,0.8)" stroke-width="2.5" x1="40" x2="45" y1="10" y2="5"></line>
+<path d="M31 40 Q20 32 10 36" fill="none" stroke="rgba(0,170,255,0.75)" stroke-width="3"></path>
+<path d="M31 38 Q19 25 10 26" fill="none" stroke="rgba(0,170,255,0.6)" stroke-width="2.5"></path>
+<path d="M49 40 Q60 32 70 36" fill="none" stroke="rgba(0,170,255,0.75)" stroke-width="3"></path>
+<path d="M49 38 Q61 25 70 26" fill="none" stroke="rgba(0,170,255,0.6)" stroke-width="2.5"></path>
+<line stroke="rgba(230,57,70,0.65)" stroke-width="2.5" x1="35" x2="28" y1="56" y2="68"></line>
+<line stroke="rgba(230,57,70,0.65)" stroke-width="2.5" x1="45" x2="52" y1="56" y2="68"></line>
+<line stroke="rgba(230,57,70,0.65)" stroke-width="2.5" x1="40" x2="40" y1="58" y2="70"></line>
+</svg></div></div>
+</div>
+</div>
+</div>
+<div class="mb16"><div class="sec-head"><div class="sec-title"><div class="sec-title-line"></div>Alur Pipeline SIPEDA</div></div></div>
+<div class="flow-diagram mb24">
+<div class="flow-step"><div class="flow-icon"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" style="display:inline-block;vertical-align:middle;flex-shrink:0" viewbox="0 0 24 24" width="16"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7,10 12,15 17,10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg><span class="flow-number">1</span></div><div class="flow-label">Ingest Data<br/>Iklim dan DBD</div></div>
+<div class="flow-arrow">→</div>
+<div class="flow-step"><div class="flow-icon"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" style="display:inline-block;vertical-align:middle;flex-shrink:0" viewbox="0 0 24 24" width="16"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg><span class="flow-number" style="background:var(--c-purple)">2</span></div><div class="flow-label">Feature<br/>Engineering</div></div>
+<div class="flow-arrow">→</div>
+<div class="flow-step"><div class="flow-icon"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" style="display:inline-block;vertical-align:middle;flex-shrink:0" viewbox="0 0 24 24" width="16"><circle cx="11" cy="11" r="8"></circle><line x1="21" x2="16.65" y1="21" y2="16.65"></line></svg><span class="flow-number" style="background:var(--c-teal)">3</span></div><div class="flow-label">EDA dan<br/>Spasial</div></div>
+<div class="flow-arrow">→</div>
+<div class="flow-step"><div class="flow-icon"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" style="display:inline-block;vertical-align:middle;flex-shrink:0" viewbox="0 0 24 24" width="16"><rect height="6" rx="1" width="6" x="9" y="9"></rect><rect height="16" rx="2" width="16" x="4" y="4"></rect><path d="M9 1v3M15 1v3M9 20v3M15 20v3M1 9h3M1 15h3M20 9h3M20 15h3"></path></svg><span class="flow-number" style="background:var(--c-amber)">4</span></div><div class="flow-label">Training<br/>Rolling CV</div></div>
+<div class="flow-arrow">→</div>
+<div class="flow-step"><div class="flow-icon"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" style="display:inline-block;vertical-align:middle;flex-shrink:0" viewbox="0 0 24 24" width="16"><polyline points="23,6 13,16 8,11 1,18"></polyline><polyline points="17,6 23,6 23,12"></polyline></svg><span class="flow-number" style="background:var(--c-red)">5</span></div><div class="flow-label">Forecast<br/>Q1 2026</div></div>
+<div class="flow-arrow">→</div>
+<div class="flow-step"><div class="flow-icon"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" style="display:inline-block;vertical-align:middle;flex-shrink:0" viewbox="0 0 24 24" width="16"><polygon points="1,6 1,22 8,18 16,22 23,18 23,2 16,6 8,2"></polygon><line x1="8" x2="8" y1="2" y2="18"></line><line x1="16" x2="16" y1="6" y2="22"></line></svg><span class="flow-number" style="background:var(--z-merah)">6</span></div><div class="flow-label">Peta Zona<br/>Surveilans</div></div>
+</div>
+<div class="mb16"><div class="sec-head"><div class="sec-title"><div class="sec-title-line" style="background:var(--c-teal)"></div>Sistem Zonasi Surveilans DBD</div><span class="tag tag-blue">WHO EWARS dan Endemicity Channel</span></div></div>
+<div class="zone-cards mb24">
+<div class="zone-card merah">
+<div class="zone-card-icon"><svg height="36" viewbox="0 0 36 36" width="36"><circle cx="18" cy="18" fill="rgba(230,57,70,0.2)" r="16" stroke="rgba(230,57,70,0.6)" stroke-width="2"></circle><circle cx="18" cy="18" fill="rgba(230,57,70,0.7)" r="10"></circle></svg></div>
+<div class="zone-card-name">Zona Merah</div>
+<div class="zone-card-threshold">EWARS: lebih dari P75 · EC: lebih dari Mean+SD</div>
+<div class="zone-card-desc">Kecamatan dengan prediksi kasus di atas persentil ke-75 historis. Membutuhkan respons segera berupa fogging, edukasi masyarakat, dan pengaktifan tim gerak cepat.</div>
+<div class="zone-card-action">Tindakan: Fogging dan PSN Intensif dan Edukasi Publik</div>
+</div>
+<div class="zone-card kuning">
+<div class="zone-card-icon"><svg height="36" viewbox="0 0 36 36" width="36"><circle cx="18" cy="18" fill="rgba(244,185,66,0.2)" r="16" stroke="rgba(244,185,66,0.6)" stroke-width="2"></circle><circle cx="18" cy="18" fill="rgba(244,185,66,0.8)" r="10"></circle></svg></div>
+<div class="zone-card-name">Zona Kuning</div>
+<div class="zone-card-threshold">EWARS: P50-P75 · EC: Mean hingga Mean+SD</div>
+<div class="zone-card-desc">Kecamatan dalam kondisi waspada. Prediksi kasus berada di rentang menengah. Perlu peningkatan surveilans aktif dan kegiatan PSN terjadwal.</div>
+<div class="zone-card-action">Tindakan: PSN Intensif dan Surveilans Aktif</div>
+</div>
+<div class="zone-card hijau">
+<div class="zone-card-icon"><svg height="36" viewbox="0 0 36 36" width="36"><circle cx="18" cy="18" fill="rgba(46,204,113,0.2)" r="16" stroke="rgba(46,204,113,0.6)" stroke-width="2"></circle><circle cx="18" cy="18" fill="rgba(46,204,113,0.7)" r="10"></circle></svg></div>
+<div class="zone-card-name">Zona Hijau</div>
+<div class="zone-card-threshold">EWARS: maksimal P50 · EC: maksimal Mean</div>
+<div class="zone-card-desc">Kecamatan dengan prediksi kasus di bawah median historis. Kondisi terkendali, cukup menjalankan surveilans rutin dan edukasi berkala kepada masyarakat.</div>
+<div class="zone-card-action">Tindakan: Surveilans Rutin dan Edukasi Berkala</div>
+</div>
+</div>
+<div class="mb16"><div class="sec-head"><div class="sec-title"><div class="sec-title-line" style="background:var(--c-red)"></div>Ringkasan Forecast Q1 2026</div></div></div>
+<div class="g4 mb24">
+<div class="card pulse-card">
+<div class="card-top" style="background:linear-gradient(90deg,var(--c-red),#ff6b6b)"></div>
+<div class="card-icon" style="--ic:var(--c-red)"><svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24" width="20"><path d="M3 3v18h18"></path><path d="M7 14l4-4 3 3 5-6"></path></svg></div>
+<div class="card-label">Total Prediksi Kasus Q1</div>
+<div class="card-value mono" data-counter="2247" id="kpi-total-val" style="color:var(--z-merah)">2.247</div>
+<div class="card-sub">Seluruh 44 kecamatan · Minggu 1-13 tahun 2026</div>
+<div class="card-trend"><span style="color:var(--c-amber)">▲</span><span style="color:var(--txt3)">+15% vs rata-rata Q1 historis</span></div>
+</div>
+<div class="card">
+<div class="card-top" style="background:linear-gradient(90deg,var(--z-merah),var(--z-kuning))"></div>
+<div class="card-icon" style="--ic:var(--z-kuning)"><svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24" width="20"><path d="M12 9v4"></path><path d="M12 17h.01"></path><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path></svg></div>
+<div class="card-label">Puncak Kecamatan Merah</div>
+<div class="card-value mono" id="kpi-merah-val" style="color:var(--z-kuning)">18</div>
+<div class="card-sub" id="kpi-merah-sub">Kecamatan zona Merah di puncak pada Minggu 6</div>
+<div class="card-trend"><span id="kpi-merah-trend" style="color:var(--txt3)">dari 44 kecamatan total (40.9%)</span></div>
+</div>
+<div class="card">
+<div class="card-top" style="background:linear-gradient(90deg,var(--c-blue),var(--c-teal))"></div>
+<div class="card-icon" style="--ic:var(--c-blue)"><svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24" width="20"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="4.5"></circle><circle cx="12" cy="12" fill="currentColor" r="0.6"></circle></svg></div>
+<div class="card-label">Model Terbaik R2</div>
+<div class="card-value mono" id="kpi-r2-val" style="color:var(--c-blue)">0.76</div>
+<div class="card-sub" id="kpi-r2-sub">LightGBM Tweedie · MAE = 2.95 kasus/minggu</div>
+<div class="card-trend"><span style="color:var(--c-green)">▲</span><span style="color:var(--txt3)">Terbaik dari 5 model kandidat</span></div>
+</div>
+<div class="card">
+<div class="card-top" style="background:linear-gradient(90deg,var(--c-teal),var(--c-purple))"></div>
+<div class="card-icon" style="--ic:var(--c-teal)"><svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24" width="20"><path d="M12 2a7 7 0 0 0-7 7c0 2.4 1.1 4 2.5 5.5S9 17 9 19h6c0-2 .9-3 2.5-4.5S19 11.4 19 9a7 7 0 0 0-7-7z"></path><line x1="9" x2="15" y1="22" y2="22"></line></svg></div>
+<div class="card-label">Fitur Utama SHAP</div>
+<div class="card-value" id="kpi-shap-val" style="font-size:14px;font-family:'JetBrains Mono',monospace;color:var(--c-teal);letter-spacing:-0.5px;line-height:1.6;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">kasus lag1</div>
+<div class="card-sub">Spasial kasus merupakan prediktor terkuat</div>
+<div class="card-trend"><span style="color:var(--txt3)">diikuti kasus DBD rolling-4 dan kasus DBD lag-1</span></div>
+</div>
+</div>
+</div>
+<!-- PAGE: EDA -->
+<div class="page" id="page-keamanan">
+<div class="info-box mb24">
+<div class="info-icon"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" style="display:inline-block;vertical-align:middle;flex-shrink:0" viewbox="0 0 24 24" width="16"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect height="4" rx="1" ry="1" width="8" x="8" y="2"></rect></svg></div>
+<div><strong>Eksplorasi Data Awal (EDA)</strong> - Analisis distribusi kasus DBD, uji normalitas, perbedaan antarwilayah, dan korelasi fitur iklim terhadap target. Data mencakup 44 kecamatan DKI Jakarta, mingguan 2017-2025. Variabel target adalah jumlah kasus DBD per kecamatan per minggu.</div>
+</div>
+<div class="sec-head mb16"><div class="sec-title"><div class="sec-title-line"></div>Distribusi Variabel Target</div></div>
+<div class="g2 mb24">
+<div class="card">
+<div class="card-title">Histogram kasus DBD</div>
+<div class="card-subtitle">Distribusi sangat condong ke kanan (skewness sekitar 3.14). Sebagian besar minggu memiliki 0 hingga 5 kasus per kecamatan.</div>
+<div class="ch-260"><canvas id="chartHist"></canvas></div>
+</div>
+<div class="card">
+<div class="card-title">Statistik Deskriptif kasus DBD</div>
+<div class="card-subtitle">Ringkasan statistik variabel target dan perbandingan distribusi original vs transformasi log1p.</div>
+<table class="stat-table" id="tbl-eda-stats" style="margin-top:8px;">
+<tr><td>Mean</td><td id="stat-mean">3.18</td></tr><tr><td>Median</td><td id="stat-median">1.00</td></tr>
+<tr><td>Std Dev</td><td id="stat-std">4.92</td></tr><tr><td>Skewness</td><td id="stat-skew" style="color:var(--c-amber)">3.42</td></tr>
+<tr><td>Kurtosis</td><td id="stat-kurt" style="color:var(--c-amber)">17.8</td></tr><tr><td>Min / Maks</td><td id="stat-minmax">0 / 68</td></tr>
+<tr><td>Persentase data = 0</td><td id="stat-zero">28.4%</td></tr><tr><td>Persentase data lebih dari 30</td><td id="stat-gt10">14.2%</td></tr>
+</table>
+<div class="info-box" style="margin-top:12px;margin-bottom:0;padding:10px 12px;">
+<div class="info-icon"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" style="display:inline-block;vertical-align:middle;flex-shrink:0" viewbox="0 0 24 24" width="16"><path d="M9 3h6m-5 0v6l-5 9a1 1 0 0 0 .9 1.5h10.2A1 1 0 0 0 21 18l-5-9V3"></path><path d="M6 17h12"></path></svg></div>
+<div id="stat-shapiro" style="font-size:11px;">Shapiro-Wilk (original): p kurang dari 0.001 sehingga distribusi tidak normal. Setelah transformasi log1p: distribusi mendekati normal (p=0.12).</div>
+</div>
+</div>
+</div>
+<div class="sec-head mb16"><div class="sec-title"><div class="sec-title-line" style="background:var(--c-teal)"></div>Tren Kasus DBD Mingguan 2017-2025</div></div>
+<div class="card mb24">
+<div class="card-title">Total Kasus DBD DKI Jakarta per Minggu</div>
+<div class="card-subtitle">Terlihat pola musiman konsisten: puncak di Q1 (Januari-Maret), lembah di Q3 (Juli-September). Tahun 2020 menunjukkan lonjakan akibat banjir besar Januari 2020.</div>
+<div class="ch-320"><canvas id="chartTS"></canvas></div>
+</div>
+<div class="card mb24">
+<div class="card-title">Pola Kasus per Minggu - Overlay Antar Tahun</div>
+<div class="card-subtitle">Setiap garis mewakili satu tahun. Pola Q1 (minggu 1-13) secara konsisten lebih tinggi dibanding kuartal lainnya di semua tahun.</div>
+<div class="ch-280"><canvas id="chartYearOverlay"></canvas></div>
+</div>
+<div class="g2 mb24">
+<div class="card">
+<div class="card-title">Perbandingan per Kabupaten/Kota</div>
+<div class="card-subtitle">Rata-rata kasus DBD per minggu per kecamatan. ANOVA menunjukkan perbedaan signifikan (F=18.4, p kurang dari 0.001).</div>
+<div class="ch-260"><canvas id="chartKab"></canvas></div>
+</div>
+<div class="card">
+<div class="card-title">Pola per Kuartal</div>
+<div class="card-subtitle">Q1 (Jan-Mar) secara konsisten lebih tinggi. Uji Kruskal-Wallis: H=122.4, p kurang dari 0.001 yang berarti perbedaan signifikan.</div>
+<div class="ch-260"><canvas id="chartKuartal"></canvas></div>
+</div>
+</div>
+<div class="sec-head mb16"><div class="sec-title"><div class="sec-title-line" style="background:var(--c-purple)"></div>Korelasi Spearman Fitur vs Target</div></div>
+<div class="card mb24">
+<div class="card-title">Top 15 Fitur Berkorelasi dengan kasus DBD</div>
+<div class="card-subtitle">Koefisien Spearman absolut. Fitur lag temporal mendominasi, diikuti curah hujan dan suhu dengan lag 1 minggu.</div>
+<div class="ch-320"><canvas id="chartCorr"></canvas></div>
+</div>
+<div class="sec-head mb16"><div class="sec-title"><div class="sec-title-line" style="background:var(--z-merah)"></div>Top 10 Kecamatan - Total Kasus 2017-2025</div></div>
+<div class="tbl-wrap mb24">
+<div class="tbl-hrow"><span class="tbl-htitle">Kecamatan dengan Beban Kasus DBD Tertinggi</span><span class="tag tag-red">Seluruh periode 2017-2025</span></div>
+<div class="tbl-scroll"><table>
+<thead><tr><th>#</th><th>Kecamatan</th><th>Kabupaten</th><th>Total Kasus</th><th>Rata-rata per Minggu</th><th>Puncak Tahunan</th><th>Tren</th></tr></thead>
+<tbody id="tbl-top-kec"></tbody>
+</table></div>
+</div>
+</div>
+<!-- PAGE: MODEL -->
+<div class="page" id="page-eda">
+<div class="info-box mb24">
+<div class="info-icon"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" style="display:inline-block;vertical-align:middle;flex-shrink:0" viewbox="0 0 24 24" width="16"><rect height="6" rx="1" width="6" x="9" y="9"></rect><rect height="16" rx="2" width="16" x="4" y="4"></rect><path d="M9 1v3M15 1v3M9 20v3M15 20v3M1 9h3M1 15h3M20 9h3M20 15h3"></path></svg></div>
+<div><strong>Evaluasi 5 Model Prediksi</strong> - Rolling Window Cross-Validation dengan 3 fold (2023, 2024, 2025 sebagai tahun validasi bergantian). Model melatih pada data tahun-tahun sebelumnya dan divalidasi pada satu tahun ke depan, mensimulasikan kondisi prediksi nyata.</div>
+</div>
+<div class="sec-head mb16"><div class="sec-title"><div class="sec-title-line"></div>Perbandingan Performa Model</div></div>
+<div class="model-compare-grid mb24" id="model-cards"></div>
+<div class="g2 mb24">
+<div class="card">
+<div class="card-title">Radar Performa - Semua Model</div>
+<div class="card-subtitle">Normalisasi metrik: nilai lebih besar berarti lebih baik. LightGBM unggul di mayoritas dimensi evaluasi.</div>
+<div style="height:400px;position:relative"><canvas id="chartRadar"></canvas></div>
+</div>
+<div class="card">
+<div class="card-title">Performa CV per Fold</div>
+<div class="card-subtitle">R2 per fold rolling window untuk setiap model. Fold terakhir (validasi tahun 2025) paling relevan untuk kondisi saat ini.</div>
+<div class="ch-320"><canvas id="chartFold"></canvas></div>
+</div>
+</div>
+<div class="sec-head mb16"><div class="sec-title"><div class="sec-title-line" style="background:var(--c-teal)"></div>Pentingnya Fitur - SHAP Values</div></div>
+<div class="g-7-3 mb24">
+<div class="card card-flex-col" style="min-height:520px">
+<div class="card-title">Top 15 Fitur Berpengaruh (Mean SHAP absolut)</div>
+<div class="card-subtitle">Lag kasus 1-2 minggu mendominasi, diikuti fitur iklim. Fitur spasial tetangga dan siklus musiman juga berkontribusi signifikan.</div>
+<div class="ch-fill" style="min-height:440px"><canvas id="chartSHAP"></canvas></div>
+</div>
+<div class="card">
+<div class="card-title">Interpretasi SHAP</div>
+<div class="card-subtitle" style="margin-bottom:16px">Penjelasan pengaruh masing-masing fitur terhadap prediksi model LightGBM.</div>
+<div id="shap-explain"></div>
+</div>
+</div>
+<div class="card mb24">
+<div class="card-title">Prediksi vs Aktual - Fold Terakhir (2025)</div>
+<div class="card-subtitle" id="scatter-subtitle">Titik-titik ideal berada di garis diagonal. LightGBM menunjukkan distribusi paling konsisten tanpa bias sistematik.</div>
+<div class="ctrl-row" style="margin-bottom:10px">
+<span class="ctrl-label">Tampilkan Model:</span>
+<select class="ctrl-sel" id="scatter-model-sel" onchange="onScatterModelChange(this.value)"></select>
+<span class="ctrl-badge" id="scatter-n-pts">— titik</span>
+</div>
+<div class="ch-320"><canvas id="chartScatter"></canvas></div>
+</div>
+<div class="sec-head mb16"><div class="sec-title"><div class="sec-title-line" style="background:var(--c-amber)"></div>Tabel Metrik Lengkap</div></div>
+<div class="tbl-wrap mb24">
+<div class="tbl-hrow"><span class="tbl-htitle">Metrik Evaluasi per Model - Rata-rata 3 Fold CV</span></div>
+<div class="tbl-scroll"><table>
+<thead><tr><th>Model</th><th>R2</th><th>MAE</th><th>RMSE</th><th>Status</th></tr></thead>
+<tbody id="tbl-model-metrics"></tbody>
+</table></div>
+</div>
+</div>
+<!-- PAGE: PETA ZONASI -->
+<div class="page" id="page-metodologi">
+<div class="info-box mb16">
+<div class="info-icon"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" style="display:inline-block;vertical-align:middle;flex-shrink:0" viewbox="0 0 24 24" width="16"><polygon points="1,6 1,22 8,18 16,22 23,18 23,2 16,6 8,2"></polygon><line x1="8" x2="8" y1="2" y2="18"></line><line x1="16" x2="16" y1="6" y2="22"></line></svg></div>
+<div><strong>Peta Zonasi Interaktif Dual</strong> - Dua sistem threshold WHO ditampilkan secara berdampingan dan sinkron. Gunakan slider minggu untuk melihat perubahan zona dari waktu ke waktu. Klik kecamatan untuk melihat detail prediksi.</div>
+</div>
+<div class="map-ctrl-bar">
+<div>
+<div class="ctrl-label">Tahun</div>
+<select class="ctrl-sel" id="peta-year" onchange="updateMaps()">
+<option>2017</option><option>2018</option><option>2019</option><option>2020</option>
+<option>2021</option><option>2022</option><option>2023</option><option>2024</option>
+<option>2025</option><option selected="">2026 (Forecast)</option>
+</select>
+</div>
+<div class="map-ctrl-sep"></div>
+<div style="flex:1">
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+<span class="ctrl-label">Minggu</span>
+<span class="week-disp" id="week-disp">Minggu 1</span>
+</div>
+<div class="week-slider-wrap">
+<input id="week-slider" max="52" min="1" oninput="onWeekSlide(this)" style="--pct:0%" type="range" value="1"/>
+<div class="slider-row"><span>Minggu 1</span><span>Minggu 52</span></div>
+</div>
+</div>
+<div class="map-ctrl-sep"></div>
+<button class="play-btn" id="play-btn" onclick="togglePlay()">▶</button>
+<div>
+<div class="ctrl-label">Kecepatan</div>
+<select class="ctrl-sel" id="speed-sel">
+<option value="1200">Lambat</option>
+<option selected="" value="700">Normal</option>
+<option value="350">Cepat</option>
+</select>
+</div>
+</div>
+<div class="dual-maps mb16"><div id="plt-recon" style="width:100%; height:320px; border-right:1px solid var(--bord);"></div><div id="plt-attr" style="width:100%; height:320px;"></div></div>
+<div class="map-stats-bar mb16">
+<div class="map-stat-block">
+<div class="map-stat-title">Distribusi Zona - WHO EWARS</div>
+<div class="zone-bar"><span class="zdot zdot-m"></span><span style="min-width:50px;font-size:11px;color:var(--z-merah)">Merah</span><div style="flex:1"><div class="prog-track"><div class="zone-bar-fill prog-fill" id="pb-ewars-m" style="background:var(--z-merah)"></div></div></div><span class="zone-bar-val" id="vb-ewars-m" style="color:var(--z-merah)">0</span></div>
+<div class="zone-bar"><span class="zdot zdot-k"></span><span style="min-width:50px;font-size:11px;color:var(--z-kuning)">Kuning</span><div style="flex:1"><div class="prog-track"><div class="zone-bar-fill prog-fill" id="pb-ewars-k" style="background:var(--z-kuning)"></div></div></div><span class="zone-bar-val" id="vb-ewars-k" style="color:var(--z-kuning)">0</span></div>
+<div class="zone-bar"><span class="zdot zdot-h"></span><span style="min-width:50px;font-size:11px;color:var(--z-hijau)">Hijau</span><div style="flex:1"><div class="prog-track"><div class="zone-bar-fill prog-fill" id="pb-ewars-h" style="background:var(--z-hijau)"></div></div></div><span class="zone-bar-val" id="vb-ewars-h" style="color:var(--z-hijau)">0</span></div>
+</div>
+<div class="map-stat-block">
+<div class="map-stat-title">Distribusi Zona - Endemicity Channel</div>
+<div class="zone-bar"><span class="zdot zdot-m"></span><span style="min-width:50px;font-size:11px;color:var(--z-merah)">Merah</span><div style="flex:1"><div class="prog-track"><div class="zone-bar-fill prog-fill" id="pb-ec-m" style="background:var(--z-merah)"></div></div></div><span class="zone-bar-val" id="vb-ec-m" style="color:var(--z-merah)">0</span></div>
+<div class="zone-bar"><span class="zdot zdot-k"></span><span style="min-width:50px;font-size:11px;color:var(--z-kuning)">Kuning</span><div style="flex:1"><div class="prog-track"><div class="zone-bar-fill prog-fill" id="pb-ec-k" style="background:var(--z-kuning)"></div></div></div><span class="zone-bar-val" id="vb-ec-k" style="color:var(--z-kuning)">0</span></div>
+<div class="zone-bar"><span class="zdot zdot-h"></span><span style="min-width:50px;font-size:11px;color:var(--z-hijau)">Hijau</span><div style="flex:1"><div class="prog-track"><div class="zone-bar-fill prog-fill" id="pb-ec-h" style="background:var(--z-hijau)"></div></div></div><span class="zone-bar-val" id="vb-ec-h" style="color:var(--z-hijau)">0</span></div>
+</div>
+</div>
+<div class="tbl-wrap">
+<div class="tbl-hrow"><span class="tbl-htitle">Kecamatan Zona Merah Minggu Ini</span><span class="tag tag-red" id="peta-week-label">Minggu 1</span></div>
+<div class="tbl-scroll"><table>
+<thead><tr><th>#</th><th>Kecamatan</th><th>Kabupaten</th><th id="tbl-kasus-col-hdr">Kasus</th><th>Zona EWARS</th><th>Zona EC</th><th>Threshold P75</th></tr></thead>
+<tbody id="tbl-peta-merah"></tbody>
+</table></div>
+</div>
+</div>
+<!-- PAGE: FORECAST Q1 2026 -->
+<div class="page" id="page-simulasi">
+<div class="sec-head mb24">
+<div class="sec-title"><div class="sec-title-line"></div>Simulasi Sistem (Enkripsi Template)</div>
+<div class="sec-sub">Demonstrasi interaktif pengacakan wajah menjadi template biometrik.</div>
+</div>
+<div class="card" style="text-align:center; padding: 40px 20px;">
+<div style="font-size:40px; margin-bottom:20px;">👤 ➔ 🔐</div>
+<div class="card-title mb16" style="font-size:20px;">Simulasi Ekstraksi Fitur CancelFace</div>
+<p style="color:var(--txt2); max-width:500px; margin:0 auto 30px auto; line-height:1.6;">
                 Proses mengubah wajah asli menjadi template biometrik *cancelable*. Jika tombol ditekan, sistem akan meng-generate hash Hexadecimal unik berdasarkan *seed* enkripsi.
             </p>
-            
-            <button class="sim-btn" onclick="simulateHash()" style="margin-bottom:30px;">Enkripsi Wajah Sekarang</button>
-            <button class="sim-btn" onclick="simulateHash()" style="margin-bottom:30px; background:linear-gradient(135deg, var(--c-red), var(--c-orange)); margin-left:10px;">Cabut (Revoke) & Regenerate</button>
-            
-            <div class="card-title" style="text-align:left;">Output Hash Template (Base64 / Hex):</div>
-            <div class="sim-box" id="hash-output">
-                Tekan tombol di atas untuk memulai simulasi pengacakan template.
-            </div>
-        </div>
-    </div>
+<button class="sim-btn" onclick="simulateHash()">Enkripsi Wajah Sekarang</button>
+<button class="sim-btn" onclick="simulateHash()" style="background:linear-gradient(135deg, var(--c-red), var(--c-orange));">Cabut (Revoke) &amp; Regenerate</button>
+<div class="card-title" style="text-align:left; margin-top:30px;">Output Hash Template (Base64 / Hex):</div>
+<div class="sim-box" id="hash-output">Tekan tombol di atas untuk memulai simulasi pengacakan template.</div>
+</div>
+</div>
+<!-- PAGE: SIMULASI -->
+<div class="page" id="page-simulasi">
+<div class="info-box mb16">
+<div class="info-icon"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" style="display:inline-block;vertical-align:middle;flex-shrink:0" viewbox="0 0 24 24" width="16"><path d="M9 3h6m-5 0v6l-5 9a1 1 0 0 0 .9 1.5h10.2A1 1 0 0 0 21 18l-5-9V3"></path><path d="M6 17h12"></path></svg></div>
+<div><strong>Simulator Prediksi Interaktif</strong> - Eksplorasi bagaimana pilihan kecamatan, minggu, dan tahun memengaruhi prediksi kasus DBD. Semua hasil merupakan perkiraan berbasis hubungan statistik model ML SIPEDA.</div>
+</div>
+<div class="sim-tabs">
+<div class="sim-tab active" onclick="switchSimTab(0,this)">Kecamatan dan Minggu</div>
+<div class="sim-tab" onclick="switchSimTab(1,this)">Perbandingan Tahun</div>
+</div>
+<!-- Pane 0 -->
+<div class="sim-pane active" id="simpane-0">
+<div class="g2 mb16">
+<div class="card">
+<div class="card-title">Pilih Kecamatan dan Minggu</div>
+<div class="card-subtitle" style="margin-bottom:14px">Pilih kecamatan dan minggu target untuk melihat prediksi kasus dan zonasi.</div>
+<div class="ctrl-row">
+<div style="flex:1"><div class="ctrl-label" style="margin-bottom:6px">Kecamatan</div><select class="ctrl-sel" id="sim-kec" onchange="runKecSim()" style="width:100%"></select></div>
+<div><div class="ctrl-label" style="margin-bottom:6px">Tahun</div><select class="ctrl-sel" id="sim-year" onchange="runKecSim()"><option selected="" value="2026">2026 (Forecast)</option><option value="2025">2025</option><option value="2024">2024</option><option value="2023">2023</option></select></div>
+</div>
+<div style="margin-bottom:14px">
+<div class="ctrl-label" style="margin-bottom:6px">Minggu ke-<span id="sim-wk-disp" style="color:var(--c-blue)">1</span></div>
+<input id="sim-week" max="52" min="1" oninput="onSimWeekSlide(this);runKecSim()" style="--pct:0%;width:100%" type="range" value="1"/>
+<div class="slider-row"><span>1</span><span>52</span></div>
+</div>
+</div>
+<div class="sim-result">
+<div class="sim-result-label">Prediksi Kasus DBD</div>
+<div class="sim-result-val" id="sim-pred-val">-</div>
+<div class="sim-result-unit">kasus · minggu terpilih · kecamatan ini</div>
+<div class="sim-zones">
+<div class="sim-zone-card" id="sim-ewars-card"><div class="sim-zone-label">Zona EWARS</div><div class="sim-zone-val" id="sim-ewars-zone">-</div></div>
+<div class="sim-zone-card" id="sim-ec-card"><div class="sim-zone-label">Zona EC</div><div class="sim-zone-val" id="sim-ec-zone">-</div></div>
+</div>
+<div id="sim-kec-info" style="font-size:11px;color:var(--txt3);line-height:1.6">Pilih kecamatan dan minggu untuk melihat hasil.</div>
+</div>
+</div>
+<div class="card">
+<div class="card-title">Profil Prediksi Tahunan - Kecamatan Terpilih</div>
+<div class="card-subtitle">Prediksi kasus per minggu sepanjang tahun untuk kecamatan yang dipilih, dibandingkan rata-rata historis.</div>
+<div class="ch-260"><canvas id="chartSimProfile"></canvas></div>
+</div>
+</div>
+<!-- Pane 1 -->
+<div class="sim-pane" id="simpane-1">
+<div class="card mb16">
+<div class="ctrl-row">
+<select class="ctrl-sel" id="sim-kec-yr" onchange="runYearSim()" style="flex:1"></select>
+<span class="tag tag-blue">Semua Tahun 2017-2026</span>
+</div>
+</div>
+<div class="card">
+<div class="card-title">Perbandingan Pola Mingguan Antar Tahun</div>
+<div class="card-subtitle">Kasus prediksi vs aktual per minggu untuk setiap tahun. Tahun 2026 merupakan forecast model akhir.</div>
+<div class="ch-320"><canvas id="chartYearSim"></canvas></div>
+</div>
+</div>
+</div>
+<!-- PAGE: METODOLOGI -->
+<div class="page" id="page-metodologi">
+<div class="sec-head mb16"><div class="sec-title"><div class="sec-title-line"></div>Arsitektur dan Metodologi SIPEDA</div></div>
+<div class="method-step">
+<div class="method-num">1</div>
+<div>
+<div class="method-title">Pengumpulan dan Integrasi Data</div>
+<div class="method-desc">Data iklim mingguan (curah hujan, suhu, kelembapan, kecepatan angin, lama penyinaran) dan data kasus DBD per kecamatan DKI Jakarta tahun 2017-2025 diintegrasikan bersama shapefile batas kecamatan. Harmonisasi nama kecamatan dilakukan dengan algoritma fuzzy matching.</div>
+<div><span class="method-tag">Sumber: Dinas Kesehatan DKI</span><span class="method-tag">Data Iklim BMKG</span><span class="method-tag">Shapefile BPS</span></div>
+</div>
+</div>
+<div class="method-step">
+<div class="method-num" style="background:linear-gradient(135deg,var(--c-purple),#6d28d9)">2</div>
+<div>
+<div class="method-title">Feature Engineering</div>
+<div class="method-desc">Pembentukan fitur lag temporal (1-2 minggu) untuk kasus DBD dan variabel iklim, fitur rolling mean (4 dan 8 minggu), rata-rata spasial kecamatan tetangga (bobot Queen contiguity), encoding siklus musiman (sin/cos minggu), serta fitur interaksi curah hujan dikalikan suhu.</div>
+<div class="formula-block">
+<span class="fhl">lag kasus 1</span> <span class="fop">= kasus[t-1]</span><br/>
+<span class="fhl">spatial kasus</span> <span class="fop">= mean(kasus[t, tetangga_i])</span><br/>
+<span class="fhl">minggu sin</span> <span class="fop">= sin(2pi x minggu / 52)</span><br/>
+<span class="fhl">ch suhu</span> <span class="fop">= curah hujan x suhu rata</span>
+</div>
+</div>
+</div>
+<div class="method-step">
+<div class="method-num" style="background:linear-gradient(135deg,var(--c-teal),#0891b2)">3</div>
+<div>
+<div class="method-title">Analisis Spasial (Moran's I)</div>
+<div class="method-desc">Autokorelasi spasial kasus DBD diuji dengan Moran's I menggunakan matriks bobot Queen contiguity (kecamatan yang berbatasan langsung). Hasil menunjukkan klaster spasial signifikan, memvalidasi perlunya fitur spasial dalam model.</div>
+<div class="formula-block">
+<span class="fhl">I</span> <span class="fop">= (N / S0) x (jumlah wij(xi-rata)(xj-rata)) / (jumlah(xi-rata)²)</span><br/>
+<span class="fop">N = jumlah kecamatan, S0 = jumlah wij, wij = bobot Queen</span>
+</div>
+</div>
+</div>
+<div class="method-step">
+<div class="method-num" style="background:linear-gradient(135deg,var(--c-amber),#b45309)">4</div>
+<div>
+<div class="method-title">Model Training dengan Rolling Window CV</div>
+<div class="method-desc">Lima model dilatih menggunakan Rolling Window Cross-Validation: Naive Baseline, Poisson Ridge, XGBoost (Tweedie, Optuna 80 trial), LightGBM (Tweedie, Optuna 100 trial), CatBoost (Tweedie, Optuna). Target dilog-transformasi (log1p) untuk menangani distribusi skewed.</div>
+<div><span class="method-tag">Fold 1: Latih 2017-2022 lalu Validasi 2023</span><span class="method-tag">Fold 2: Latih 2017-2023 lalu Validasi 2024</span><span class="method-tag">Fold 3: Latih 2017-2024 lalu Validasi 2025</span></div>
+</div>
+</div>
+<div class="method-step">
+<div class="method-num" style="background:linear-gradient(135deg,var(--z-merah),#9b1c1c)">5</div>
+<div>
+<div class="method-title">Sistem Zonasi Dua Threshold</div>
+<div class="method-desc">Dua pendekatan WHO digunakan secara paralel. Threshold dihitung per kecamatan per minggu dari data historis, memastikan kontekstualisasi terhadap pola endemisitas lokal.</div>
+<div class="formula-block">
+<span class="fop">- WHO EWARS Percentile -</span><br/>
+<span class="fhl">Hijau</span> <span class="fop">: kasus prediksi maksimal</span> <span class="fval">P50(kecamatan, minggu)</span><br/>
+<span class="fhl">Kuning</span> <span class="fop">: P50 sampai maksimal</span> <span class="fval">P75(kecamatan, minggu)</span><br/>
+<span class="fhl">Merah</span> <span class="fop">: kasus prediksi lebih dari</span> <span class="fval">P75(kecamatan, minggu)</span><br/>
+<span class="fop">- Endemicity Channel WHO -</span><br/>
+<span class="fhl">Hijau</span> <span class="fop">: kasus prediksi maksimal</span> <span class="fval">mean(kecamatan, minggu)</span><br/>
+<span class="fhl">Kuning</span> <span class="fop">: mean sampai maksimal</span> <span class="fval">mean + 1xSD</span><br/>
+<span class="fhl">Merah</span> <span class="fop">: kasus prediksi lebih dari</span> <span class="fval">mean + 1xSD</span>
+</div>
+</div>
+</div>
+<div class="method-step">
+<div class="method-num" style="background:linear-gradient(135deg,var(--c-blue),var(--c-teal))">6</div>
+<div>
+<div class="method-title">Forecast Q1 2026 - Prediksi Iteratif</div>
+<div class="method-desc">Model akhir dilatih pada seluruh data 2017-2025. Forecast dilakukan secara iteratif: prediksi Minggu N digunakan sebagai lag feature untuk Minggu N+1. Fitur iklim Q1 2026 diisi dari rata-rata nilai Q1 tahun-tahun sebelumnya untuk minggu yang sama.</div>
+<div class="formula-block">
+<span class="fhl">pred[W]</span> <span class="fop">= model(X[W]) digunakan sebagai</span> <span class="fval">lag1</span> <span class="fop">di W+1</span><br/>
+<span class="fop">iklim[W, 2026] kira-kira sama dengan mean(iklim[W, 2017-2025])</span>
+</div>
+</div>
+</div>
+<div class="card mb24">
+<div class="card-title">Referensi dan Standar</div>
+<div class="g3" style="margin-top:14px">
+<div style="font-size:12px;color:var(--txt2);line-height:1.7"><strong style="color:var(--c-blue)">WHO EWARS</strong><br/>Early Warning and Response System - panduan surveilans penyakit menular berbasis threshold persentil historis.</div>
+<div style="font-size:12px;color:var(--txt2);line-height:1.7"><strong style="color:var(--c-teal)">Endemicity Channel</strong><br/>Metode WHO untuk klasifikasi tingkat endemisitas berbasis rata-rata dan simpangan baku historis per kecamatan.</div>
+<div style="font-size:12px;color:var(--txt2);line-height:1.7"><strong style="color:var(--c-purple)">Moran's I</strong><br/>Uji autokorelasi spasial global. Nilai positif dan signifikan mengindikasikan pengelompokan geografis kasus.</div>
+</div>
+</div>
+</div>
+</div><!-- /main -->
 
-</main>
 
 <script>
-// Theme Logic
 function toggleTheme() {
   const html = document.documentElement;
   const current = html.getAttribute('data-theme');
@@ -1622,14 +1876,11 @@ function toggleTheme() {
   setTimeout(renderCharts, 100);
 }
 
-// Sidebar Logic
 function toggleSidebar() {
-  const sb = document.getElementById('sidebar');
-  const main = document.getElementById('main-content');
+  const sb = document.querySelector('.sidebar');
+  const main = document.querySelector('.main');
   const ov = document.querySelector('.sb-overlay');
-  const isMobile = window.innerWidth <= 900;
-  
-  if(isMobile) {
+  if(window.innerWidth <= 900) {
     if(sb.style.transform === 'translateX(0px)') {
         sb.style.transform = 'translateX(-100%)';
         ov.classList.remove('visible');
@@ -1639,86 +1890,37 @@ function toggleSidebar() {
     }
   } else {
     sb.classList.toggle('collapsed');
-    if(sb.classList.contains('collapsed')) {
-        main.style.paddingLeft = '68px';
-    } else {
-        main.style.paddingLeft = '280px';
-    }
+    main.style.marginLeft = sb.classList.contains('collapsed') ? '68px' : '260px';
   }
 }
 
-// Handle window resize for sidebar
-window.addEventListener('resize', () => {
-    const sb = document.getElementById('sidebar');
-    const main = document.getElementById('main-content');
-    if(window.innerWidth <= 900) {
-        sb.style.transform = 'translateX(-100%)';
-        sb.classList.remove('collapsed');
-        main.style.paddingLeft = '0';
-        document.getElementById('mobile-menu-btn').style.display = 'block';
-    } else {
-        sb.style.transform = 'translateX(0)';
-        main.style.paddingLeft = sb.classList.contains('collapsed') ? '68px' : '280px';
-        document.getElementById('mobile-menu-btn').style.display = 'none';
-        document.querySelector('.sb-overlay').classList.remove('visible');
-    }
-});
-// Initial layout call
-window.dispatchEvent(new Event('resize'));
-
-// Navigation Logic
 function nav(pageId, el) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById('page-' + pageId).classList.add('active');
-    
     document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
     el.classList.add('active');
-    
     if(window.innerWidth <= 900) toggleSidebar();
-    
-    // Render charts on specific pages to ensure they size correctly
     setTimeout(renderCharts, 50);
 }
 
-// Simulation Logic
 function simulateHash() {
     const box = document.getElementById('hash-output');
     box.innerHTML = "Memproses Ekstraksi CCNN...<br>Mengaplikasikan GRL...<br>Mengalikan dengan Random Projection Seed...";
-    
     setTimeout(() => {
         const chars = '0123456789ABCDEF';
         let hash = '';
-        for(let i=0; i<512; i++) {
-            hash += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        // format to look cool
-        const formatted = hash.match(/.{1,32}/g).join('<br>');
-        box.innerHTML = "<span style='color:var(--c-green)'>SUCCESS: Template Generated & Secured!</span><br><br>" + formatted;
+        for(let i=0; i<512; i++) hash += chars.charAt(Math.floor(Math.random() * chars.length));
+        box.innerHTML = "<span style='color:var(--c-green)'>SUCCESS: Template Generated & Secured!</span><br><br>" + hash.match(/.{1,32}/g).join('<br>');
     }, 1200);
 }
 
-// Hex Rain effect in background
-setInterval(() => {
-    if(Math.random() > 0.8) {
-        const el = document.createElement('div');
-        el.className = 'hex-rain';
-        el.style.left = Math.random() * 100 + 'vw';
-        el.style.top = Math.random() * 100 + 'vh';
-        el.innerText = Math.random() > 0.5 ? '0' : '1';
-        document.body.appendChild(el);
-        setTimeout(() => el.remove(), 3000);
-    }
-}, 200);
-
-// Render Charts
 function renderCharts() {
     if(typeof cancelfaceData === 'undefined') return;
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
     const cBg = 'transparent';
     const cTxt = isDark ? '#94a3b8' : '#475569';
-    const layout = { paper_bgcolor: cBg, plot_bgcolor: cBg, font: {color: cTxt, family:'Figtree'}, margin: {t:20, r:20, l:120, b:40} };
+    const layout = { paper_bgcolor: cBg, plot_bgcolor: cBg, font: {color: cTxt, family:'Figtree'}, margin: {t:20, r:20, l:40, b:40} };
 
-    // --- Beranda ---
     if(document.getElementById('plt-heatmap')) {
         const pb = cancelfaceData.perbandingan_metode;
         if(pb) {
@@ -1736,18 +1938,17 @@ function renderCharts() {
             Plotly.newPlot('plt-kualitas', [{
                 x: kq.map(d => d['Subset Kualitas']), y: kq.map(d => d['Rank 1 Accuracy']),
                 type: 'bar', marker: {color: '#0ea5e9'}
-            }], {...layout, margin: {t:20,r:20,l:40,b:40}}, {displayModeBar: false});
+            }], layout, {displayModeBar: false});
         }
     }
 
-    // --- Analisis Keamanan ---
     if(document.getElementById('plt-recon')) {
         const sr = cancelfaceData.serangan_rekonstruksi;
         if(sr) {
             Plotly.newPlot('plt-recon', [{
-                x: sr.map(d => d.Metode), y: sr.map(d => d['Cosine Similarity']),
-                type: 'bar', marker: {color: ['#f43f5e', '#f43f5e', '#10b981', '#10b981']}
-            }], {...layout, margin: {t:20,r:20,l:40,b:40}}, {displayModeBar: false});
+                x: sr.map(d => d.Metode), y: sr.map(d => d['Rata Rata Kemiripan Kosinus']),
+                type: 'bar', marker: {color: ['#f43f5e', '#f43f5e', '#10b981']}
+            }], {...layout, title: {text:'Cosine Sim Template vs Wajah Asli', font:{size:12}}}, {displayModeBar: false});
         }
     }
 
@@ -1755,41 +1956,23 @@ function renderCharts() {
         const sa = cancelfaceData.serangan_atribut;
         if(sa) {
             Plotly.newPlot('plt-attr', [
-                { name: 'Gender Acc', x: sa.map(d => d.Metode), y: sa.map(d => d['Gender Accuracy']), type: 'bar', marker:{color:'#6366f1'} },
-                { name: 'Age Acc', x: sa.map(d => d.Metode), y: sa.map(d => d['Age Accuracy']), type: 'bar', marker:{color:'#eab308'} }
-            ], {...layout, barmode:'group', margin: {t:20,r:20,l:40,b:40}}, {displayModeBar: false});
-            
-            // Populate Sample Table
-            const tb = document.getElementById('tbl-sample-body');
-            if(tb) {
-                tb.innerHTML = '';
-                sa.forEach(d => {
-                    tb.innerHTML += `<tr>
-                        <td style="text-align:left; color:var(--txt);">${d.Metode}</td>
-                        <td>${d['Gender Label (Target)'] || 'N/A'}</td>
-                        <td>${d['Age Label (Target)'] || 'N/A'}</td>
-                        <td style="font-family:'JetBrains Mono';">${d['Gender Accuracy']}</td>
-                        <td style="font-family:'JetBrains Mono';">${d['Age Accuracy']}</td>
-                    </tr>`;
-                });
-            }
+                { name: 'Gender Acc', x: sa.map(d => d.Metode), y: sa.map(d => d['Akurasi Tebakan Jenis Kelamin']), type: 'bar', marker:{color:'#6366f1'} },
+                { name: 'Age Acc', x: sa.map(d => d.Metode), y: sa.map(d => d['Akurasi Tebakan Kelompok Usia']), type: 'bar', marker:{color:'#eab308'} }
+            ], {...layout, barmode:'group', title: {text:'Akurasi Tebakan Atribut (Attacker)', font:{size:12}}}, {displayModeBar: false});
         }
     }
 
-    // --- EDA ---
     if(document.getElementById('plt-ablasi')) {
         const ab = cancelfaceData.ablasi_dimensi;
         if(ab) {
             Plotly.newPlot('plt-ablasi', [{
                 x: ab.map(d => d['Dimensi (D)']), y: ab.map(d => d['Rank 1 Accuracy']),
                 type: 'scatter', mode: 'lines+markers', line: {color: '#0ea5e9', width:3}, marker:{size:8}
-            }], {...layout, margin: {t:20,r:20,l:40,b:40}}, {displayModeBar: false});
+            }], layout, {displayModeBar: false});
         }
     }
 }
-
-setTimeout(renderCharts, 500);
-
+setTimeout(renderCharts, 1000);
 </script>
 </body>
 </html>
