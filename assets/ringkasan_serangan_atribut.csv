@@ -1,0 +1,4 @@
+Metode,Akurasi Tebakan Jenis Kelamin,Akurasi Tebakan Kelompok Usia
+Random Projection,0.6555555555555556,0.5790123456790124
+BioHashing,0.6580246913580247,0.5635802469135802
+Metode Usulan,0.5666666666666667,0.43950617283950616

@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>CancelFace - Secure Face Biometrics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800;900&family=Figtree:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<script src="data.js"></script>
+<style>
+:root {
+  /* CancelFace design system — Light Mode */
+  --bg:#f4f6f9;--bg1:#ffffff;--bg2:#ffffff;--bg3:#e2e8f0;--bg4:#cbd5e1;
+  --bord:#e2e8f0;--bord2:#cbd5e1;
+  --txt:#0f172a;--txt2:#475569;--txt3:#64748b;
+  --card:#ffffff;
+
+  --c-blue:#0284c7; /* Main Blue */
+  --c-red:#e11d48;  /* Threat Red */
+  --c-green:#16a34a; /* Secure Green */
+  --c-amber:#d97706; /* Warning */
+  --c-teal:#0d9488;
+  --c-purple:#7c3aed;
+  
+  --shadow-xs:0 1px 2px rgba(15,23,42,0.05);
+  --shadow-card:0 4px 6px -1px rgba(15,23,42,0.1), 0 2px 4px -2px rgba(15,23,42,0.1);
+  --shadow-card-hover:0 10px 15px -3px rgba(15,23,42,0.1), 0 4px 6px -4px rgba(15,23,42,0.1);
+  --radius-card:16px;
+}
+[data-theme="dark"] {
+  /* CancelFace design system — Dark Mode (Cyber Security) */
+  --bg:#020617;--bg1:#0f172a;--bg2:#1e293b;--bg3:#334155;--bg4:#475569;
+  --bord:#1e293b;--bord2:#334155;
+  --txt:#f8fafc;--txt2:#94a3b8;--txt3:#64748b;
+  --card:rgba(15,23,42,0.95);
+
+  --c-blue:#38bdf8; /* Neon Cyan */
+  --c-red:#fb7185;  /* Neon Crimson */
+  --c-green:#4ade80; /* Neon Green */
+  --c-amber:#fbbf24;
+  --c-teal:#2dd4bf;
+  --c-purple:#a78bfa;
+
+  --shadow-xs:0 1px 2px rgba(0,0,0,0.5);
+  --shadow-card:0 0 0 1px rgba(255,255,255,0.05) inset,0 4px 6px -1px rgba(0,0,0,0.5);
+  --shadow-card-hover:0 0 0 1px rgba(56,189,248,0.3) inset,0 10px 15px -3px rgba(0,0,0,0.6),0 0 20px rgba(56,189,248,0.15);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Figtree',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s;font-size:14px;}
+*,*::before,*::after{transition:background-color .2s ease,border-color .2s ease,color .2s ease,box-shadow .3s cubic-bezier(.4,0,.2,1),transform .3s cubic-bezier(.34,1.4,.64,1);}
+
+::selection{background:var(--c-blue);color:#fff;}
+::-webkit-scrollbar{width:8px;height:8px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--bord2);border-radius:10px;}
+::-webkit-scrollbar-thumb:hover{background:var(--c-blue);}
+
+/* HEADER */
+.header{position:fixed;top:0;left:0;right:0;height:60px;z-index:100;display:flex;align-items:center;gap:16px;padding:0 24px;background:rgba(255,255,255,0.85);border-bottom:1px solid var(--bord);backdrop-filter:blur(12px);}
+[data-theme="dark"] .header{background:rgba(2,6,23,0.85);}
+.header-logo{display:flex;align-items:center;gap:12px;text-decoration:none;cursor:pointer;}
+.logo-icon{font-size:24px;}
+.logo-text{font-family:'Sora',sans-serif;font-size:18px;font-weight:900;letter-spacing:-0.5px;}
+.logo-text .cn{color:var(--c-blue);}.logo-text .fa{color:var(--c-red);}.logo-text .ce{color:var(--txt);}
+.header-sub{font-size:12px;color:var(--txt3);font-weight:600;}
+.header-spacer{flex:1;}
+.hdr-btn{width:36px;height:36px;border-radius:10px;border:1px solid var(--bord);background:var(--bg2);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--txt2);font-size:14px;}
+.hdr-btn:hover{background:var(--c-blue);color:#fff;border-color:var(--c-blue);}
+
+/* TAB BAR */
+.tabbar{position:fixed;top:60px;left:0;right:0;height:50px;z-index:99;background:rgba(255,255,255,0.9);border-bottom:1px solid var(--bord);backdrop-filter:blur(12px);display:flex;align-items:center;padding:7px 24px;gap:8px;}
+[data-theme="dark"] .tabbar{background:rgba(15,23,42,0.85);}
+.tab{padding:8px 16px;border-radius:8px;font-size:13px;font-weight:700;color:var(--txt2);cursor:pointer;border:1px solid transparent;}
+.tab.active{background:var(--c-blue);color:#020617;border-color:var(--c-blue);}
+[data-theme="light"] .tab.active{color:#fff;}
+.tab:hover:not(.active){background:var(--bg3);color:var(--txt);}
+
+/* MAIN */
+.main{margin-top:110px;padding:24px;max-width:1400px;margin-left:auto;margin-right:auto;}
+.page{display:none; animation:pg-in .4s cubic-bezier(.16,1,.3,1);}
+.page.active{display:block;}
+@keyframes pg-in{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+/* GRIDS */
+.g1{display:grid;gap:20px;}.g2{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
+@media(max-width:1024px){.g4,.g3{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:768px){.g4,.g3,.g2{grid-template-columns:1fr;}}
+
+/* CARDS */
+.card{--accent:var(--c-blue);background:var(--card);border:1px solid var(--bord);border-radius:var(--radius-card);padding:24px;position:relative;overflow:hidden;box-shadow:var(--shadow-card);}
+.card-top{position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),transparent);}
+.card:hover{border-color:var(--bord2);transform:translateY(-4px);box-shadow:var(--shadow-card-hover);}
+.card-label{font-size:12px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;}
+.card-value{font-family:'Sora',sans-serif;font-size:32px;font-weight:800;letter-spacing:-1px;margin-bottom:4px;color:var(--txt);}
+.card-sub{font-size:13px;color:var(--txt2);line-height:1.5;}
+.card-title{font-family:'Sora',sans-serif;font-size:16px;font-weight:800;margin-bottom:16px;color:var(--txt);}
+
+/* ACCENTS */
+.a-blue{--accent:var(--c-blue);}
+.a-red{--accent:var(--c-red);}
+.a-green{--accent:var(--c-green);}
+.a-amber{--accent:var(--c-amber);}
+.a-purple{--accent:var(--c-purple);}
+
+/* TABLES */
+.tbl-wrap{background:var(--card);border:1px solid var(--bord);border-radius:var(--radius-card);overflow-x:auto;}
+table{width:100%;border-collapse:collapse;}
+th{background:var(--bg2);color:var(--txt2);font-size:12px;font-weight:700;text-transform:uppercase;padding:12px 16px;text-align:left;border-bottom:1px solid var(--bord);}
+td{padding:12px 16px;font-size:14px;color:var(--txt);border-bottom:1px solid var(--bord);}
+tr:last-child td{border-bottom:none;}
+.tbl-wrap tr:hover td{background:var(--bg2);}
+
+/* SIMULATION TAB */
+.sim-container { display:flex; gap:20px; align-items:center; justify-content:center; padding: 40px 0; flex-wrap:wrap;}
+.sim-box { background:var(--bg2); border:1px dashed var(--bord2); border-radius:12px; padding:24px; width:250px; text-align:center; position:relative;}
+.sim-box img { width:120px; height:120px; object-fit:cover; border-radius:50%; margin-bottom:16px; border:3px solid var(--bord); }
+.sim-arrow { font-size:24px; color:var(--c-blue); }
+.sim-code { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--c-teal); word-break:break-all; background:var(--bg); padding:10px; border-radius:8px; height:120px; overflow:hidden;}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-logo">
+    <div class="logo-icon">🛡️</div>
+    <div class="logo-text"><span class="cn">Cancel</span><span class="fa">Face</span></div>
+  </div>
+  <div class="header-divider" style="width:1px;height:24px;background:var(--bord);margin:0 12px;"></div>
+  <div class="header-sub">Protokol Biometrik Wajah Cancelable untuk CCTV Presisi & Privat</div>
+  <div class="header-spacer"></div>
+  <button class="hdr-btn" id="themeToggle" title="Toggle Theme">🌙</button>
+</header>
+
+<div class="tabbar">
+  <div class="tab active" data-target="pg-overview">Overview</div>
+  <div class="tab" data-target="pg-eval">Evaluasi & Metrik</div>
+  <div class="tab" data-target="pg-sim">Simulasi Interaktif</div>
+</div>
+
+<main class="main">
+  <!-- OVERVIEW PAGE -->
+  <div id="pg-overview" class="page active">
+    <div class="g3" style="margin-bottom:24px;">
+      <div class="card a-blue">
+        <div class="card-top"></div>
+        <div class="card-label">Rank-1 Accuracy (Metode Usulan)</div>
+        <div class="card-value" id="val-rank1">--%</div>
+        <div class="card-sub">Lebih unggul dari Random Projection dan sangat kompetitif untuk CCTV *low-res*.</div>
+      </div>
+      <div class="card a-red">
+        <div class="card-top"></div>
+        <div class="card-label">Akurasi Usia Penyerang</div>
+        <div class="card-sub" style="color:var(--c-red); font-weight:700; margin-bottom:8px;">Terendah = Terbaik (Privasi Aman)</div>
+        <div class="card-value" id="val-age">--%</div>
+        <div class="card-sub">Gradient Reversal Layer sukses menyembunyikan atribut demografi wajah.</div>
+      </div>
+      <div class="card a-green">
+        <div class="card-top"></div>
+        <div class="card-label">Tingkat Reidentifikasi</div>
+        <div class="card-value" id="val-reid">0.00%</div>
+        <div class="card-sub">Pencocokan silang (Cross-matching) antar database berbeda sepenuhnya mustahil.</div>
+      </div>
+    </div>
+
+    <div class="g2">
+      <div class="card a-purple">
+        <div class="card-top"></div>
+        <div class="card-title">Matriks Kepatuhan ISO/IEC 24745</div>
+        <div class="tbl-wrap">
+          <table id="tbl-iso">
+            <thead>
+              <tr><th>Kriteria Keamanan</th><th>Random Projection</th><th>BioHashing</th><th>Metode Usulan</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card a-amber">
+        <div class="card-top"></div>
+        <div class="card-title">Perbandingan Keseluruhan Metode (Heatmap)</div>
+        <div id="plt-heatmap" style="height:350px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EVALUATION PAGE -->
+  <div id="pg-eval" class="page">
+    <div class="g2" style="margin-bottom:24px;">
+      <div class="card a-blue">
+        <div class="card-top"></div>
+        <div class="card-title">Ablasi Dimensi Template</div>
+        <div class="card-sub" style="margin-bottom:12px;">Pengaruh ukuran dimensi output (D) terhadap Akurasi Rank-1.</div>
+        <div id="plt-ablasi" style="height:300px;"></div>
+      </div>
+      <div class="card a-teal">
+        <div class="card-top"></div>
+        <div class="card-title">Ketahanan terhadap Kualitas Gambar (BBox Area)</div>
+        <div class="card-sub" style="margin-bottom:12px;">Evaluasi sistem pada resolusi wajah Rendah, Sedang, dan Tinggi.</div>
+        <div id="plt-kualitas" style="height:300px;"></div>
+      </div>
+    </div>
+    <div class="card a-red">
+        <div class="card-top"></div>
+        <div class="card-title">Ketahanan Terhadap Serangan Rekonstruksi & Atribut</div>
+        <div class="g2">
+            <div class="tbl-wrap">
+              <table id="tbl-recon">
+                <thead>
+                  <tr><th>Metode</th><th>Cos-Sim Rekonstruksi</th><th>MSE Rekonstruksi</th></tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+            <div class="tbl-wrap">
+              <table id="tbl-attr">
+                <thead>
+                  <tr><th>Metode</th><th>Akurasi Gender (Adv)</th><th>Akurasi Usia (Adv)</th></tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <!-- SIMULATION PAGE -->
+  <div id="pg-sim" class="page">
+    <div class="card a-blue">
+      <div class="card-top"></div>
+      <div class="card-title" style="text-align:center;">Simulasi Transformasi Wajah (Cancelable Biometrics)</div>
+      <div class="card-sub" style="text-align:center; max-width:600px; margin:0 auto;">
+        Sistem tidak pernah menyimpan foto wajah asli. Setiap wajah yang terdeteksi pada CCTV langsung diubah ke dalam bentuk "Template Terproteksi" yang unik untuk lokasi tersebut.
+      </div>
+      
+      <div class="sim-container">
+        <!-- Input -->
+        <div class="sim-box">
+          <img src="https://ui-avatars.com/api/?name=Suspect&background=0D8ABC&color=fff&size=128" alt="Wajah Asli">
+          <div style="font-weight:700; color:var(--txt);">Wajah Pelaku (CCTV)</div>
+          <div style="font-size:12px; color:var(--txt3);">Raw Biometric Data</div>
+        </div>
+        
+        <div class="sim-arrow">➔</div>
+        
+        <!-- Feature Extraction & Transformation -->
+        <div class="sim-box" style="border-color:var(--c-blue);">
+          <div style="font-size:40px; margin-bottom:16px;">⚙️</div>
+          <div style="font-weight:700; color:var(--txt);">Proposed Transform Net</div>
+          <div style="font-size:12px; color:var(--txt3); margin-top:8px;">+ Seed Kunci Rahasia Lokasi A</div>
+          <button id="btn-generate" style="margin-top:16px; padding:8px 16px; background:var(--c-blue); color:#fff; border:none; border-radius:8px; cursor:pointer; font-weight:700;">Simulasikan Proses</button>
+        </div>
+
+        <div class="sim-arrow">➔</div>
+
+        <!-- Output Template -->
+        <div class="sim-box" style="border-color:var(--c-green);">
+          <div class="sim-code" id="sim-output">
+            (Menunggu input...)
+          </div>
+          <div style="font-weight:700; color:var(--c-green); margin-top:16px;">Template Terproteksi</div>
+          <div style="font-size:12px; color:var(--txt3);">Aman & Non-invertible</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+// --- THEME TOGGLE ---
+const themeBtn = document.getElementById('themeToggle');
+const htmlEl = document.documentElement;
+themeBtn.addEventListener('click', () => {
+  const isDark = htmlEl.getAttribute('data-theme') === 'dark';
+  htmlEl.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  themeBtn.textContent = isDark ? '☀️' : '🌙';
+  setTimeout(renderCharts, 100); // Re-render charts for theme update
+});
+
+// --- TAB NAVIGATION ---
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', (e) => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    e.currentTarget.classList.add('active');
+    document.getElementById(e.currentTarget.dataset.target).classList.add('active');
+    
+    // Trigger resize on window to fix plotly rendering if hidden
+    window.dispatchEvent(new Event('resize'));
+  });
+});
+
+// --- DATA POPULATION ---
+function populateData() {
+    if(typeof cancelfaceData === 'undefined') {
+        console.error("Data not loaded!");
+        return;
+    }
+    
+    const pb = cancelfaceData.perbandingan_metode;
+    
+    // Fill Highlight Cards
+    const usulan = pb.find(d => d.Metode === "Metode Usulan");
+    if(usulan) {
+        document.getElementById('val-rank1').textContent = (usulan['Rank 1 Accuracy'] * 100).toFixed(1) + "%";
+        document.getElementById('val-age').textContent = (usulan['Akurasi Tebakan Kelompok Usia'] * 100).toFixed(1) + "%";
+        document.getElementById('val-reid').textContent = (usulan['Tingkat Keberhasilan Reidentifikasi'] * 100).toFixed(2) + "%";
+    }
+
+    // Fill ISO Table
+    const tblIso = document.querySelector('#tbl-iso tbody');
+    tblIso.innerHTML = '';
+    const isoData = cancelfaceData.iso_24745;
+    
+    // Transpose ISO data to rows: Kriteria, RP, BH, Usulan
+    const criteria = Object.keys(isoData[0]).filter(k => k !== 'Metode');
+    criteria.forEach(crit => {
+        const rp = isoData.find(d => d.Metode === "Random Projection")[crit];
+        const bh = isoData.find(d => d.Metode === "BioHashing")[crit];
+        const us = isoData.find(d => d.Metode === "Metode Usulan")[crit];
+        
+        const formatIcon = (val) => val == 1 ? '<span style="color:var(--c-green)">✔ (Ya)</span>' : (val == 0 ? '<span style="color:var(--c-red)">✖ (Tidak)</span>' : val);
+        
+        tblIso.innerHTML += `<tr>
+            <td style="font-weight:600">${crit}</td>
+            <td>${formatIcon(rp)}</td>
+            <td>${formatIcon(bh)}</td>
+            <td>${formatIcon(us)}</td>
+        </tr>`;
+    });
+
+    // Fill Rekonstruksi & Atribut tables
+    const tblRecon = document.querySelector('#tbl-recon tbody');
+    tblRecon.innerHTML = '';
+    cancelfaceData.serangan_rekonstruksi.forEach(d => {
+        tblRecon.innerHTML += `<tr>
+            <td style="font-weight:600">${d.Metode}</td>
+            <td>${d['Rata Rata Kemiripan Kosinus'].toFixed(4)}</td>
+            <td>${d['Rata Rata MSE'].toFixed(4)}</td>
+        </tr>`;
+    });
+
+    const tblAttr = document.querySelector('#tbl-attr tbody');
+    tblAttr.innerHTML = '';
+    cancelfaceData.serangan_atribut.forEach(d => {
+        tblAttr.innerHTML += `<tr>
+            <td style="font-weight:600">${d.Metode}</td>
+            <td>${(d['Akurasi Tebakan Jenis Kelamin'] * 100).toFixed(2)}%</td>
+            <td>${(d['Akurasi Tebakan Kelompok Usia'] * 100).toFixed(2)}%</td>
+        </tr>`;
+    });
+}
+
+// --- PLOTLY CHARTS ---
+function getThemeColors() {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    return {
+        bg: 'transparent',
+        text: isDark ? '#f8fafc' : '#0f172a',
+        grid: isDark ? '#334155' : '#e2e8f0'
+    };
+}
+
+function renderCharts() {
+    if(typeof cancelfaceData === 'undefined') return;
+    
+    const colors = getThemeColors();
+    const layoutBase = {
+        paper_bgcolor: colors.bg,
+        plot_bgcolor: colors.bg,
+        font: { color: colors.text, family: 'Figtree' },
+        margin: { t: 30, r: 20, b: 50, l: 50 }
+    };
+
+    // 1. Heatmap
+    const pb = cancelfaceData.perbandingan_metode;
+    const methods = pb.map(d => d.Metode);
+    const metrics = ['Rank 1 Accuracy', 'Akurasi Tebakan Kelompok Usia', 'Tingkat Keberhasilan Reidentifikasi'];
+    const zData = methods.map(m => {
+        const row = pb.find(d => d.Metode === m);
+        return metrics.map(met => row[met]);
+    });
+
+    Plotly.newPlot('plt-heatmap', [{
+        z: zData,
+        x: ['Rank-1 (Tinggi=Baik)', 'Akurasi Usia (Rendah=Baik)', 'Re-Identifikasi (Rendah=Baik)'],
+        y: methods,
+        type: 'heatmap',
+        colorscale: 'RdBu',
+        reversescale: true
+    }], {
+        ...layoutBase,
+        xaxis: { tickangle: -15 }
+    }, {displayModeBar: false});
+
+    // 2. Ablasi Dimensi
+    const ab = cancelfaceData.ablasi_dimensi;
+    Plotly.newPlot('plt-ablasi', [{
+        x: ab.map(d => d['Dimensi (D)']),
+        y: ab.map(d => d['Rank 1 Accuracy']),
+        type: 'scatter',
+        mode: 'lines+markers',
+        line: { color: '#0284c7', width: 3 },
+        marker: { size: 8 }
+    }], {
+        ...layoutBase,
+        xaxis: { title: 'Dimensi Template (D)', gridcolor: colors.grid },
+        yaxis: { title: 'Rank 1 Accuracy', gridcolor: colors.grid }
+    }, {displayModeBar: false});
+
+    // 3. Ketahanan Kualitas
+    const kq = cancelfaceData.ketahanan_kualitas;
+    Plotly.newPlot('plt-kualitas', [{
+        x: kq.map(d => d['Subset Kualitas']),
+        y: kq.map(d => d['Rank 1 Accuracy']),
+        type: 'bar',
+        marker: { color: '#0d9488' }
+    }], {
+        ...layoutBase,
+        xaxis: { title: 'Kualitas Gambar', gridcolor: colors.grid },
+        yaxis: { title: 'Rank 1 Accuracy', gridcolor: colors.grid }
+    }, {displayModeBar: false});
+}
+
+// --- SIMULATION LOGIC ---
+document.getElementById('btn-generate').addEventListener('click', () => {
+    const outBox = document.getElementById('sim-output');
+    outBox.textContent = "Ekstraksi fitur...
+";
+    
+    setTimeout(() => {
+        outBox.textContent += "Menerapkan Gradient Reversal...
+";
+        setTimeout(() => {
+            // Generate random hex template
+            let template = "";
+            for(let i=0; i<8; i++) {
+                template += Math.random().toString(16).substr(2, 8).toUpperCase() + " ";
+                if(i==3) template += "
+";
+            }
+            outBox.textContent = "TEMPLATE GENERATED:
+" + template;
+        }, 600);
+    }, 400);
+});
+
+// INIT
+window.onload = () => {
+    populateData();
+    renderCharts();
+};
+</script>
+
+</body>
+</html>

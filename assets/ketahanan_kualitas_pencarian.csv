@@ -1,0 +1,10 @@
+Metode,Tingkat Kualitas,Rank 1 Accuracy,Jumlah Sampel
+BioHashing,Resolusi Rendah,0.165,5000
+BioHashing,Resolusi Sedang,0.2344,5000
+BioHashing,Resolusi Tinggi,0.2546,5000
+Metode Usulan,Resolusi Rendah,0.3032,5000
+Metode Usulan,Resolusi Sedang,0.3694,5000
+Metode Usulan,Resolusi Tinggi,0.3492,5000
+Random Projection,Resolusi Rendah,0.2506,5000
+Random Projection,Resolusi Sedang,0.3334,5000
+Random Projection,Resolusi Tinggi,0.3502,5000
