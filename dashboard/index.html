@@ -1257,7 +1257,7 @@ body.sb-collapsed .main {
 .sim-btn { background:linear-gradient(135deg, var(--c-blue), var(--c-purple)); color:white; border:none; padding:12px 24px; border-radius:8px; font-size:14px; font-weight:bold; cursor:pointer; box-shadow:0 4px 15px rgba(14,165,233,0.4); transition:transform 0.2s; margin:10px; }
 .sim-btn:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(14,165,233,0.6); }
 </style>
-<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script><script src="data.js?v=4"></script></head>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script><script src="data.js?v=5"></script></head>
 <body>
 
 <canvas id="mosquito-canvas"></canvas>
@@ -1622,45 +1622,49 @@ body.sb-collapsed .main {
         </div>
     </div>
 
-    <!-- 3. Distribusi Dataset -->
-    <div class="sec-title mb16" style="margin-top:10px;"><div class="sec-title-line"></div>Statistik & Distribusi Data</div>
-    <div class="g2 mb24">
-        <div class="card card-flex-col">
-            <div class="ch-fill" id="plt-eda-subset" style="min-height:280px; margin-bottom:15px; border-radius:6px;"></div>
-            <div style="background:var(--bg2); padding:16px; border-radius:6px; border-left:3px solid var(--c-purple);">
-                <div style="font-size:13px; font-weight:bold; color:var(--txt); margin-bottom:6px;">Distribusi Partisi Subset (100k Citra)</div>
-                <div style="font-size:13px; color:var(--txt2); line-height:1.5;">Sesuai dengan protokol evaluasi keamanan, dataset sebesar 100.000 citra dibagi secara ketat menjadi <b>Training Set (50k)</b>, <b>Gallery (15k)</b>, <b>Mated Probe (15k)</b>, dan <b>Unmated Probe (20k)</b>. Partisi <i>Unmated</i> dirancang sangat besar untuk menguji ketahanan ekstrem sistem terhadap serangan identitas palsu (*False Acceptance*).</div>
-            </div>
+    <!-- 3. Distribusi Dataset - match notebook EDA exactly -->
+    <div class="sec-title mb16" style="margin-top:10px;"><div class="sec-title-line"></div>Statistik &amp; Distribusi Data</div>
+
+    <!-- Cell 14: 2 subplots bersebelahan: Jumlah Citra + Identitas Unik per Subset -->
+    <div class="card card-flex-col mb24">
+        <div class="card-title">Distribusi per Subset Data</div>
+        <div class="card-subtitle">Jumlah Citra dan Identitas Unik per partisi (Training Set / Gallery / Probe)</div>
+        <div style="display:flex; flex-direction:row; gap:16px; margin-top:15px; min-height:280px;">
+            <div id="plt-eda-subset-img" style="flex:1; min-height:260px;"></div>
+            <div id="plt-eda-subset-id" style="flex:1; min-height:260px;"></div>
         </div>
-        <div class="card card-flex-col">
-            <div style="display:flex; flex-direction:row; gap:10px; margin-bottom:15px;">
-                <div class="ch-fill" id="plt-eda-subset-img" style="min-height:240px; width:50%;"></div>
-                <div class="ch-fill" id="plt-eda-subset-id" style="min-height:240px; width:50%;"></div>
-            </div>
-            <div style="background:var(--bg2); padding:16px; border-radius:6px; border-left:3px solid var(--c-purple);">
-                <div style="font-size:13px; font-weight:bold; color:var(--txt); margin-bottom:6px;">Distribusi Partisi Subset (100k Citra)</div>
-                <div style="font-size:13px; color:var(--txt2); line-height:1.5;">Sesuai dengan protokol evaluasi keamanan, dataset sebesar 100.000 citra dibagi secara ketat menjadi <b>Training Set (50k)</b>, <b>Gallery (15k)</b>, <b>Mated Probe (15k)</b>, dan <b>Unmated Probe (20k)</b>. Partisi <i>Unmated</i> dirancang sangat besar untuk menguji ketahanan ekstrem sistem terhadap serangan identitas palsu (*False Acceptance*).</div>
-            </div>
-        </div>
-        <div class="card card-flex-col">
-            <div class="ch-fill" id="plt-eda-camera" style="min-height:240px; margin-bottom:15px; border-radius:6px;"></div>
-            <div style="background:var(--bg2); padding:16px; border-radius:6px; border-left:3px solid var(--c-purple);">
-                <div style="font-size:13px; font-weight:bold; color:var(--txt); margin-bottom:6px;">Bias Distribusi Kamera (Top 15 vs Lainnya)</div>
-                <div style="font-size:13px; color:var(--txt2); line-height:1.5;">Distribusi sampel sangat timpang (<em>imbalanced</em>) dengan didominasi oleh beberapa kamera utama, namun tetap memiliki ekor panjang (<em>long tail</em>) kategori 'Lainnya'. Ini mencerminkan realitas surveilans nyata yang menantang model identifikasi.</div>
-            </div>
-        </div>
-        <div class="card card-flex-col" style="grid-column: 1 / -1; max-width:850px; margin:0 auto;">
-            <div style="display:flex; flex-direction:row; gap:10px; flex-wrap:wrap; margin-bottom:15px;">
-                <div class="ch-fill" id="plt-eda-qual-hist1" style="min-height:250px; flex:1; min-width:200px;"></div>
-                <div class="ch-fill" id="plt-eda-qual-hist2" style="min-height:250px; flex:1; min-width:200px;"></div>
-                <div class="ch-fill" id="plt-eda-qual-scatter" style="min-height:250px; flex:1.5; min-width:300px;"></div>
-            </div>
-            <div style="background:var(--bg2); padding:16px; border-radius:6px; border-left:3px solid var(--c-purple);">
-                <div style="font-size:13px; font-weight:bold; color:var(--txt); margin-bottom:6px;">Ketajaman (Laplacian Var) & Kecerahan Citra</div>
-                <div style="font-size:13px; color:var(--txt2); line-height:1.5;">Distribusi histogram sangat condong (<em>skewed</em>) membuktikan bahwa sebagian besar citra jauh di bawah standar ketajaman (*sharpness*) yang layak. Scatter plot menunjukkan tidak ada korelasi linier, sehingga model harus menghadapi variasi buram ekstrem secara serentak di semua rentang pencahayaan.</div>
-            </div>
+        <div style="background:var(--bg2); padding:16px; border-radius:6px; border-left:3px solid var(--c-purple); margin-top:15px;">
+            <div style="font-size:13px; font-weight:bold; color:var(--txt); margin-bottom:6px;">Analisis Partisi Dataset (100k Citra)</div>
+            <div style="font-size:13px; color:var(--txt2); line-height:1.5;">Dataset 100.000 citra dibagi secara ketat menjadi <b>Training Set (50k)</b>, <b>Gallery (15k)</b>, <b>Mated Probe (15k)</b>, dan <b>Unmated Probe (20k)</b>. Perhatikan bahwa jumlah <em>identitas unik</em> pada setiap subset hampir setara (~5258), menunjukkan distribusi yang merata dan adil.</div>
         </div>
     </div>
+
+    <!-- Cell 16: 1 bar chart: Top 15 Kamera + Lainnya -->
+    <div class="card card-flex-col mb24">
+        <div class="card-title">Distribusi Kamera Pengawas CCTV (Top 15 + Lainnya)</div>
+        <div class="card-subtitle">Kamera mana yang paling dominan? Distribusi sangat imbalanced!</div>
+        <div id="plt-eda-camera" style="min-height:300px; margin-top:15px;"></div>
+        <div style="background:var(--bg2); padding:16px; border-radius:6px; border-left:3px solid var(--c-purple); margin-top:15px;">
+            <div style="font-size:13px; font-weight:bold; color:var(--txt); margin-bottom:6px;">Bias Distribusi Kamera (Top 15 + Lainnya)</div>
+            <div style="font-size:13px; color:var(--txt2); line-height:1.5;">Distribusi sangat timpang (<em>imbalanced</em>) — beberapa kamera mendominasi rekaman jauh lebih banyak. Kategori <b>"Lainnya"</b> masih menjadi yang terbesar, mengindikasikan ratusan kamera minoritas yang masing-masing merekam sangat sedikit. Hal ini menantang model untuk belajar dari data yang sangat tidak seimbang.</div>
+        </div>
+    </div>
+
+    <!-- Cell 18: 3 histplot bersebelahan: Laplacian, Width Piksel, Brightness -->
+    <div class="card card-flex-col mb24">
+        <div class="card-title">Distribusi Ketajaman, Dimensi Piksel, dan Kecerahan Citra</div>
+        <div class="card-subtitle">Analisis kualitas 1500 sampel acak — seberapa buram dan gelap citra CCTV ini?</div>
+        <div style="display:flex; flex-direction:row; gap:12px; margin-top:15px; min-height:280px;">
+            <div id="plt-eda-laplacian" style="flex:1; min-height:260px;"></div>
+            <div id="plt-eda-width" style="flex:1; min-height:260px;"></div>
+            <div id="plt-eda-brightness" style="flex:1; min-height:260px;"></div>
+        </div>
+        <div style="background:var(--bg2); padding:16px; border-radius:6px; border-left:3px solid var(--c-purple); margin-top:15px;">
+            <div style="font-size:13px; font-weight:bold; color:var(--txt); margin-bottom:6px;">Ketajaman (Laplacian Var), Lebar Piksel, dan Kecerahan</div>
+            <div style="font-size:13px; color:var(--txt2); line-height:1.5;">Ketiga distribusi sangat <em>right-skewed</em>: mayoritas citra memiliki ketajaman rendah (blurry), dimensi kecil (20–80px), dan kecerahan rendah. Ini adalah tantangan utama CCTV yang mendorong kebutuhan arsitektur CCNN khusus pada CancelFace.</div>
+        </div>
+    </div>
+
 
     <!-- 4. Re-organisasi Evaluasi Fitur -->
     <div class="sec-title mb16" style="margin-top:20px;"><div class="sec-title-line"></div>Eksplorasi Ruang Fitur & Dimensi</div>
@@ -1874,68 +1878,102 @@ function renderCharts() {
         }
     }
 
-    if(document.getElementById('plt-eda-subset')) {
-        const sub = cancelfaceData.eda_subset;
-        if(sub) {
-            Plotly.newPlot('plt-eda-subset', [{
-                values: sub.map(d => d.count),
-                labels: sub.map(d => d.split),
-                type: 'pie',
-                hole: 0.5,
-                marker: {colors: ['#0ea5e9', '#6366f1']},
-                textinfo: 'label+percent',
-                hovertemplate: '<b>%{label}</b><br>%{value} Sampel<extra></extra>'
-            }], {...layout, margin:{t:10, b:10, l:10, r:10}}, {displayModeBar: false, responsive:true});
-        }
-    }
-
     if(document.getElementById('plt-eda-subset-img')) {
         const sub_img = cancelfaceData.eda_subset_img;
         const sub_id = cancelfaceData.eda_subset_id;
-        const colorMap = ['#f43f5e', '#0ea5e9', '#6366f1', '#eab308'];
+        const subColors = ['#0ea5e9', '#6366f1', '#f43f5e', '#eab308']; // Gallery, MatedProbe, Training, Unmated
+        const lBase = {...layoutBar, margin:{t:35, r:15, l:50, b:50}};
+
         if(sub_img) {
             Plotly.newPlot('plt-eda-subset-img', [{
-                x: sub_img.map(d => d.split), y: sub_img.map(d => d.count),
-                type: 'bar', marker: {color: colorMap}
-            }], {...layoutBar, margin:{t:30, r:10, l:40, b:40}, xaxis:{tickangle:-15, tickfont:{size:9}}, title:{text:'Jumlah Citra', font:{size:11}}}, {displayModeBar: false, responsive:true});
+                x: sub_img.map(d => d.subset),
+                y: sub_img.map(d => d.count),
+                type: 'bar',
+                marker: {color: subColors},
+                hovertemplate: '<b>%{x}</b><br>%{y:,} Citra<extra></extra>'
+            }], {
+                ...lBase,
+                title: {text: 'Jumlah Citra per Subset Data', font:{size:12}},
+                xaxis: {title: 'Subset Data', tickangle: -15},
+                yaxis: {title: 'Jumlah Citra'}
+            }, {displayModeBar: false, responsive: true});
         }
         if(sub_id) {
             Plotly.newPlot('plt-eda-subset-id', [{
-                x: sub_id.map(d => d.split), y: sub_id.map(d => d.count),
-                type: 'bar', marker: {color: colorMap}
-            }], {...layoutBar, margin:{t:30, r:10, l:40, b:40}, xaxis:{tickangle:-15, tickfont:{size:9}}, title:{text:'Identitas Unik', font:{size:11}}}, {displayModeBar: false, responsive:true});
+                x: sub_id.map(d => d.subset),
+                y: sub_id.map(d => d.count),
+                type: 'bar',
+                marker: {color: subColors},
+                hovertemplate: '<b>%{x}</b><br>%{y:,} Identitas<extra></extra>'
+            }], {
+                ...lBase,
+                title: {text: 'Jumlah Identitas Unik per Subset Data', font:{size:12}},
+                xaxis: {title: 'Subset Data', tickangle: -15},
+                yaxis: {title: 'Jumlah Identitas Unik'}
+            }, {displayModeBar: false, responsive: true});
         }
     }
 
     if(document.getElementById('plt-eda-camera')) {
         const cam = cancelfaceData.eda_camera;
         if(cam) {
-            const colors = cam.map(d => d.camera === 'Lainnya' ? '#f43f5e' : '#0ea5e9');
+            const stats = cancelfaceData.eda_camera_stats;
+            const title = stats ? `Distribusi Citra per Kamera (Top 15 + Lainnya | Median: ${stats.median}, IQR: ${stats.iqr})` : 'Distribusi Citra per Kamera (Top 15 + Lainnya)';
             Plotly.newPlot('plt-eda-camera', [{
-                x: cam.map(d => d.camera), y: cam.map(d => d.count),
-                type: 'bar', marker: {color: colors},
-                hovertemplate: '%{x}<br>%{y} Sampel<extra></extra>'
-            }], {...layoutBar, margin:{t:30, r:10, l:40, b:60}, xaxis:{tickangle:-45, tickfont:{size:9}}, title:{text:'Distribusi Kamera', font:{size:12}}}, {displayModeBar: false, responsive:true});
+                x: cam.map(d => d.camera),
+                y: cam.map(d => d.count),
+                type: 'bar',
+                marker: {color: cam.map(d => d.camera === 'Lainnya' ? '#f43f5e' : '#64748b')},
+                hovertemplate: '<b>%{x}</b><br>%{y:,} Citra<extra></extra>'
+            }], {
+                ...layoutBar,
+                margin: {t:50, r:15, l:55, b:70},
+                title: {text: title, font:{size:11}},
+                xaxis: {title: 'ID Kamera Pengawas', tickangle: -45, tickfont:{size:9}},
+                yaxis: {title: 'Jumlah Citra'}
+            }, {displayModeBar: false, responsive: true});
         }
     }
 
-    if(document.getElementById('plt-eda-qual-hist1')) {
+    if(document.getElementById('plt-eda-laplacian')) {
         const ql = cancelfaceData.eda_quality;
         if(ql) {
-            Plotly.newPlot('plt-eda-qual-hist1', [{
-                x: ql.map(d => d.laplacian), type: 'histogram', marker: {color: '#8b5cf6'}
-            }], {...layoutBar, margin:{t:30, r:10, l:30, b:40}, title:{text:'Distribusi Ketajaman', font:{size:11}}}, {displayModeBar: false, responsive:true});
-            
-            Plotly.newPlot('plt-eda-qual-hist2', [{
-                x: ql.map(d => d.brightness), type: 'histogram', marker: {color: '#eab308'}
-            }], {...layoutBar, margin:{t:30, r:10, l:30, b:40}, title:{text:'Distribusi Kecerahan', font:{size:11}}}, {displayModeBar: false, responsive:true});
-            
-            Plotly.newPlot('plt-eda-qual-scatter', [{
-                x: ql.map(d => d.laplacian), y: ql.map(d => d.brightness),
-                mode: 'markers', type: 'scatter',
-                marker: {size: 6, color: '#0ea5e9', opacity: 0.6},
-                hovertemplate: 'Ketajaman: %{x}<br>Kecerahan: %{y}<extra></extra>'
-            }], {...layoutBar, margin:{t:30, r:20, l:40, b:40}, xaxis:{title:'Laplacian Var'}, yaxis:{title:'Brightness'}, title:{text:'Sebaran Kualitas', font:{size:11}}}, {displayModeBar: false, responsive:true});
+            const hLayout = {...layoutBar, margin:{t:40, r:15, l:50, b:50}};
+            Plotly.newPlot('plt-eda-laplacian', [{
+                x: ql.map(d => d.laplacian),
+                type: 'histogram',
+                nbinsx: 40,
+                marker: {color: '#f43f5e', opacity: 0.8}
+            }], {
+                ...hLayout,
+                title: {text: 'Distribusi Ketajaman (Laplacian)', font:{size:11}},
+                xaxis: {title: 'Varians Laplacian'},
+                yaxis: {title: 'Frekuensi'}
+            }, {displayModeBar: false, responsive: true});
+
+            Plotly.newPlot('plt-eda-width', [{
+                x: ql.map(d => d.width),
+                type: 'histogram',
+                nbinsx: 40,
+                marker: {color: '#0ea5e9', opacity: 0.8}
+            }], {
+                ...hLayout,
+                title: {text: 'Distribusi Lebar Citra Piksel', font:{size:11}},
+                xaxis: {title: 'Lebar Piksel'},
+                yaxis: {title: 'Frekuensi'}
+            }, {displayModeBar: false, responsive: true});
+
+            Plotly.newPlot('plt-eda-brightness', [{
+                x: ql.map(d => d.brightness),
+                type: 'histogram',
+                nbinsx: 40,
+                marker: {color: '#10b981', opacity: 0.8}
+            }], {
+                ...hLayout,
+                title: {text: 'Distribusi Kecerahan Citra', font:{size:11}},
+                xaxis: {title: 'Rata-Rata Intensitas'},
+                yaxis: {title: 'Frekuensi'}
+            }, {displayModeBar: false, responsive: true});
         }
     }
 }
