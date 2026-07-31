@@ -1,4 +1,9 @@
-<!DOCTYPE html>
+import os
+
+OUTPUT_FILE = r"d:\Data Science\Lomba\GEMASTIK\CancelFace\dashboard\index.html"
+
+# Extract the base CSS variables and styles from SIPEDA, but modify colors for Cyber-Security
+html_content = """<!DOCTYPE html>
 <html lang="id" data-theme="dark">
 <head>
 <meta charset="UTF-8">
@@ -456,4 +461,9 @@ window.onload = () => {
 };
 </script>
 </body>
-</html>
+</html>"""
+
+with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
+    f.write(html_content)
+
+print("Selesai generate CancelFace Dashboard!")
