@@ -48,19 +48,19 @@
   --radius-card:20px;
 }
 [data-theme="dark"] {
-  --bg:#0a0b10;--bg1:#101218;--bg2:#161922;--bg3:#1d212c;--bg4:#272c39;
-  --bord:#262b38;--bord2:#3b4252;
-  --txt:#f2f3f8;--txt2:#9da1ae;--txt3:#666b79;
-  --card:rgba(22,25,34,0.95);
+  --bg:#050510;--bg1:#0b0b18;--bg2:#111224;--bg3:#181932;--bg4:#212344;
+  --bord:#262a4a;--bord2:#353b66;
+  --txt:#f2f5ff;--txt2:#9da5ce;--txt3:#6a7199;
+  --card:rgba(14,14,28,0.92);
 
-  --c-blue:#38bdf8;--c-red:#ff5c79;--c-green:#22c55e;--c-amber:#fbbf24;
-  --c-teal:#22d3ee;--c-purple:#a78bfa;--c-orange:#ff8b5d;
-  --c-coral:#ff7d99;--c-lime:#a3e635;--c-rose:#fb7185;--c-indigo:#818cf8;--c-yellow:#fde047;
-  --z-merah:#ef4444;--z-kuning:#fbbf24;--z-hijau:#22c55e;
+  --c-blue:#00f0ff;--c-red:#ff003c;--c-green:#39ff14;--c-amber:#fce205;
+  --c-teal:#00ffff;--c-purple:#b026ff;--c-orange:#ff7a00;
+  --c-coral:#ff0055;--c-lime:#ccff00;--c-rose:#ff007f;--c-indigo:#7000ff;--c-yellow:#fcee0a;
+  --z-merah:#ff003c;--z-kuning:#fce205;--z-hijau:#39ff14;
 
-  --glow-b:0 0 32px rgba(110,100,255,0.32);
-  --glow-r:0 0 32px rgba(255,92,121,0.3);
-  --glow-g:0 0 24px rgba(34,197,94,0.28);
+  --glow-b:0 0 32px rgba(0,240,255,0.4);
+  --glow-r:0 0 32px rgba(255,0,60,0.4);
+  --glow-g:0 0 24px rgba(57,255,20,0.4);
 
   --shadow-xs:0 1px 2px rgba(0,0,0,0.4);
   --shadow-card:0 1px 0 rgba(255,255,255,0.05) inset,0 1px 3px rgba(0,0,0,0.45),0 18px 38px -16px rgba(0,0,0,0.62);
@@ -1491,7 +1491,7 @@ body.sb-collapsed .main {
             
             <div style="display:flex; align-items:center; justify-content:space-between; background:var(--bg2); border:1px solid var(--bord); padding:20px; border-radius:8px; margin-bottom:20px;">
                 <div style="text-align:center;">
-                    <div style="font-size:24px; margin-bottom:6px;">👤</div>
+                    <div style="margin-bottom:6px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:24px;height:24px;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
                     <div style="font-size:12px; font-weight:bold; color:var(--txt);">Alice</div>
                 </div>
                 <div style="text-align:center; flex:1;">
@@ -1500,7 +1500,7 @@ body.sb-collapsed .main {
                     <div style="font-size:18px; margin-top:4px; color:var(--c-blue);">➔</div>
                 </div>
                 <div style="text-align:center;">
-                    <div style="font-size:24px; margin-bottom:6px;">🔐</div>
+                    <div style="margin-bottom:6px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:24px;height:24px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
                     <div style="font-size:12px; font-weight:bold; color:var(--txt);">Hash A</div>
                 </div>
                 <div style="text-align:center; flex:1; position:relative;">
@@ -1509,7 +1509,7 @@ body.sb-collapsed .main {
                     <div style="font-size:18px; margin-top:4px; color:#f43f5e;">❌</div>
                 </div>
                 <div style="text-align:center;">
-                    <div style="font-size:24px; margin-bottom:6px;">🔐</div>
+                    <div style="margin-bottom:6px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:24px;height:24px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
                     <div style="font-size:12px; font-weight:bold; color:var(--txt);">Hash B</div>
                 </div>
             </div>
@@ -1729,7 +1729,7 @@ body.sb-collapsed .main {
                 <div style="font-size:12px; font-weight:700; color:var(--txt);">Akuisisi Dataset</div>
             </div>
             <div style="font-size:11.5px; color:var(--txt2); line-height:1.5;">QMUL SurvFace 100k citra CCTV publik diunduh via Google Drive, diekstrak dan di-index metadata-nya (subset, identitas, kamera).</div>
-            <div style="margin-top:10px; font-size:11px; color:var(--c-blue); font-weight:600;">📦 100.000 Citra · 4 Subset</div>
+            <div style="margin-top:10px; font-size:11px; color:var(--c-blue); font-weight:600;">100.000 Citra · 4 Subset</div>
         </div>
         <div class="pipe-arrow">▶</div>
         <!-- Step 2 -->
@@ -1739,7 +1739,7 @@ body.sb-collapsed .main {
                 <div style="font-size:12px; font-weight:700; color:var(--txt);">Ekstraksi Fitur</div>
             </div>
             <div style="font-size:11.5px; color:var(--txt2); line-height:1.5;">Setiap foto diubah menjadi <strong>vektor 512 dimensi</strong> menggunakan model <strong>AdaFace</strong> (dirancang untuk citra kualitas rendah).</div>
-            <div style="margin-top:10px; font-size:11px; color:var(--c-blue); font-weight:600;">🧠 AdaFace · 512-dim Embedding</div>
+            <div style="margin-top:10px; font-size:11px; color:var(--c-blue); font-weight:600;">AdaFace · 512-dim Embedding</div>
         </div>
         <div class="pipe-arrow">▶</div>
         <!-- Step 3 -->
@@ -1749,7 +1749,7 @@ body.sb-collapsed .main {
                 <div style="font-size:12px; font-weight:700; color:var(--txt);">Baseline Cancelable</div>
             </div>
             <div style="font-size:11.5px; color:var(--txt2); line-height:1.5;"><strong>Random Projection</strong> (RP) dan <strong>BioHashing</strong> (BH) sebagai baseline — proyeksi embedding ke dimensi kecil menggunakan kunci rahasia.</div>
-            <div style="margin-top:10px; font-size:11px; color:var(--c-blue); font-weight:600;">🔑 Key-Seeded Projection</div>
+            <div style="margin-top:10px; font-size:11px; color:var(--c-blue); font-weight:600;">Key-Seeded Projection</div>
         </div>
         <div class="pipe-arrow">▶</div>
         <!-- Step 4 -->
@@ -1759,7 +1759,7 @@ body.sb-collapsed .main {
                 <div style="font-size:12px; font-weight:700; color:var(--c-purple);">ProposedNet (GRL)</div>
             </div>
             <div style="font-size:11.5px; color:var(--txt2); line-height:1.5;">Jaringan adversarial dengan <strong>Gradient Reversal Layer</strong> — membuang informasi gender/usia sambil mempertajam pemisahan identitas via ArcFace.</div>
-            <div style="margin-top:10px; font-size:11px; color:var(--c-purple); font-weight:600;">⚔️ GRL + ArcFace Margin Head</div>
+            <div style="margin-top:10px; font-size:11px; color:var(--c-purple); font-weight:600;">GRL + ArcFace Margin Head</div>
         </div>
         <div class="pipe-arrow">▶</div>
         <!-- Step 5 -->
@@ -1769,7 +1769,7 @@ body.sb-collapsed .main {
                 <div style="font-size:12px; font-weight:700; color:var(--txt);">Pencarian 1:N</div>
             </div>
             <div style="font-size:11.5px; color:var(--txt2); line-height:1.5;">Probe dibandingkan ke seluruh database menggunakan cosine/Hamming similarity. Hanya yang melewati ambang batas yang <em>dibuka</em> (selective disclosure).</div>
-            <div style="margin-top:10px; font-size:11px; color:var(--c-blue); font-weight:600;">🔍 Selective Disclosure · UU PDP</div>
+            <div style="margin-top:10px; font-size:11px; color:var(--c-blue); font-weight:600;">Selective Disclosure · UU PDP</div>
         </div>
         <div class="pipe-arrow">▶</div>
         <!-- Step 6 -->
@@ -1779,7 +1779,7 @@ body.sb-collapsed .main {
                 <div style="font-size:12px; font-weight:700; color:var(--txt);">Evaluasi &amp; ISO Audit</div>
             </div>
             <div style="font-size:11.5px; color:var(--txt2); line-height:1.5;">CMC, DIR/FPIR, Bootstrap CI, uji ISO/IEC 24745 (unlinkability &amp; revocability), serangan rekonstruksi, dan ablasi dimensi.</div>
-            <div style="margin-top:10px; font-size:11px; color:var(--c-green); font-weight:600;">✅ ISO/IEC 24745 Compliant</div>
+            <div style="margin-top:10px; font-size:11px; color:var(--c-green); font-weight:600;">ISO/IEC 24745 Compliant</div>
         </div>
     </div>
 </div>
@@ -1860,11 +1860,11 @@ body.sb-collapsed .main {
                     <span style="background:rgba(14,165,233,0.2); padding:2px 8px; border-radius:4px; color:var(--c-blue);">→</span>
                 </div>
                 <div style="background:var(--bg2); border:1px solid var(--bord); border-radius:8px; padding:12px; position:relative;">
-                    <div style="font-weight:700; color:var(--txt); margin-bottom:4px;">🔷 Linear(512→256) + BatchNorm + LeakyReLU(0.1)</div>
+                    <div style="font-weight:700; color:var(--txt); margin-bottom:4px;">Linear(512→256) + BatchNorm + LeakyReLU(0.1)</div>
                     <div style="font-size:11px; color:var(--txt2);">Residual connection: fc_res = Linear(512→256)</div>
                 </div>
                 <div style="background:var(--bg2); border:1px solid var(--bord); border-radius:8px; padding:12px;">
-                    <div style="font-weight:700; color:var(--txt); margin-bottom:4px;">🔷 Linear(256→256) + BatchNorm + LeakyReLU(0.1)</div>
+                    <div style="font-weight:700; color:var(--txt); margin-bottom:4px;">Linear(256→256) + BatchNorm + LeakyReLU(0.1)</div>
                     <div style="font-size:11px; color:var(--txt2);">+ Residual skip connection dari input</div>
                 </div>
                 <div style="display:flex; gap:8px;">
@@ -2102,11 +2102,11 @@ body.sb-collapsed .main {
         <div style="display:flex; flex-direction:column; gap:10px;">
             <button class="sim-ctrl-btn sim-enroll" onclick="runSimulation('enroll')" id="btn-enroll" style="width:100%; display:flex; align-items:center; justify-content:center; gap:10px;">
                 <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" style="width:16px;height:16px;"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                🔐 Enroll Template
+                Enroll Template
             </button>
             <button class="sim-ctrl-btn sim-revoke" onclick="runSimulation('revoke')" id="btn-revoke" style="width:100%; display:flex; align-items:center; justify-content:center; gap:10px;">
                 <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" style="width:16px;height:16px;"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-                🔄 Revoke & Regenerate
+                Revoke & Regenerate
             </button>
         </div>
 
@@ -2225,12 +2225,12 @@ body.sb-collapsed .main {
         <div style="font-size:13px; font-weight:700; color:var(--txt); margin-bottom:14px;">Konsep Cancelable Biometrics</div>
         <div style="display:flex; flex-direction:column; gap:10px; font-size:12px;">
             <div style="display:flex; align-items:center; gap:12px; padding:12px; background:rgba(239,68,68,0.05); border-radius:10px; border:1px solid rgba(239,68,68,0.15);">
-                <div style="font-size:22px;">😐</div>
+                <div style="font-size:22px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:24px;height:24px;"><circle cx="12" cy="12" r="10"/><line x1="8" y1="15" x2="16" y2="15"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></div>
                 <div><div style="font-weight:700; color:#ef4444;">Raw Embedding</div><div style="color:var(--txt2); margin-top:2px;">Mengandung identitas LENGKAP — wajah, gender, usia. Berbahaya jika bocor!</div></div>
             </div>
             <div style="text-align:center; color:var(--c-blue); font-size:18px;">↓ GRL + LSH Transform</div>
             <div style="display:flex; align-items:center; gap:12px; padding:12px; background:rgba(16,185,129,0.05); border-radius:10px; border:1px solid rgba(16,185,129,0.15);">
-                <div style="font-size:22px;">🔒</div>
+                <div style="font-size:22px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:24px;height:24px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
                 <div><div style="font-weight:700; color:var(--c-green);">Cancelable Template</div><div style="color:var(--txt2); margin-top:2px;">Gender &amp; usia dihapus. Hanya identitas tersisa. Dapat dicabut kapan saja.</div></div>
             </div>
         </div>
@@ -2239,11 +2239,11 @@ body.sb-collapsed .main {
         <div style="font-size:13px; font-weight:700; color:var(--txt); margin-bottom:14px;">Skema Revocation</div>
         <div style="display:flex; flex-direction:column; gap:10px; font-size:12px;">
             <div style="display:flex; align-items:center; gap:10px;">
-                <div style="width:32px;height:32px;border-radius:8px;background:rgba(14,165,233,0.1);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">🔑</div>
+                <div style="width:32px;height:32px;border-radius:8px;background:rgba(14,165,233,0.1);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg></div>
                 <div><div style="color:var(--txt); font-weight:600;">Kunci Lama (INSTITUTION)</div><div style="color:var(--txt2);">Seed: 20260728 → Template A</div></div>
             </div>
             <div style="display:flex; align-items:center; gap:10px; padding:10px; background:rgba(239,68,68,0.05); border-radius:8px; border:1px solid rgba(239,68,68,0.1);">
-                <div style="font-size:14px;">⚠️</div>
+                <div style="font-size:14px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
                 <div style="color:var(--txt2);">Template <strong style="color:#ef4444;">bocor/dikompromikan</strong> → Revoke diperlukan</div>
             </div>
             <div style="display:flex; align-items:center; gap:10px;">
@@ -2323,7 +2323,7 @@ function runSimulation(mode) {
     const lockIcon = document.getElementById('sim-lock-icon');
     if(hexOut) hexOut.innerHTML = '<span style="color:var(--txt2)">Memproses...</span>';
     if(bitOut) bitOut.innerHTML = '<span style="color:var(--txt2)">Memproses...</span>';
-    if(status) { status.textContent = mode === 'revoke' ? '🔄 Revoking template — mengganti kunci institusi...' : '🔐 Enrolling — memulai pipeline CancelFace...'; status.style.borderColor='var(--c-blue)'; }
+    if(status) { status.textContent = mode === 'revoke' ? 'Revoking template — mengganti kunci institusi...' : 'Enrolling — memulai pipeline CancelFace...'; status.style.borderColor='var(--c-blue)'; }
     if(lockIcon) lockIcon.style.animation = 'lock-shake 0.5s ease infinite';
 
     let delay = 0;
@@ -2365,7 +2365,7 @@ function runSimulation(mode) {
         const modeLabel = mode === 'revoke' ? 'REVOKED & REGENERATED' : 'ENROLLED';
         const keyLabel  = mode === 'revoke' ? 'REVOCATION_KEY_SEED=20260999' : `INSTITUTION_KEY_SEED=${seed}`;
         if(status) {
-            status.innerHTML = `<span style="color:var(--c-green); font-weight:bold;">✅ Template ${modeLabel}</span> · ${keyLabel} · TEMPLATE_DIM=${dim} · ${dim*8} bits · ISO/IEC 24745 COMPLIANT`;
+            status.innerHTML = `<span style="color:var(--c-green); font-weight:bold;">Template ${modeLabel}</span> · ${keyLabel} · TEMPLATE_DIM=${dim} · ${dim*8} bits · ISO/IEC 24745 COMPLIANT`;
             status.style.borderColor='var(--c-green)';
         }
     }, totalTime + 300);
@@ -2591,7 +2591,7 @@ function runSimulation(mode) {
 
     if (hexOut) hexOut.innerHTML = '<span style="color:rgba(100,116,139,0.5);font-style:italic;">Memproses pipeline...</span>';
     if (bitOut) bitOut.innerHTML = '<span style="color:rgba(100,116,139,0.5);font-style:italic;">Menunggu output...</span>';
-    if (status) { status.textContent = mode === 'revoke' ? '🔄 Revoking — mengganti kunci institusi...': '🔐 Enrolling — memulai pipeline CancelFace...'; status.style.borderColor = 'rgba(14,165,233,0.4)'; status.style.color = 'var(--c-blue)'; }
+    if (status) { status.textContent = mode === 'revoke' ? 'Revoking — mengganti kunci institusi...': 'Enrolling — memulai pipeline CancelFace...'; status.style.borderColor = 'rgba(14,165,233,0.4)'; status.style.color = 'var(--c-blue)'; }
     if (lock)   lock.style.animation = 'sim-lock-shake 0.6s ease infinite';
     if (metDim)  metDim.textContent  = dim + '-dim';
     if (metBits) metBits.textContent = (dim * 4) + ' bits';
@@ -2648,11 +2648,11 @@ function runSimulation(mode) {
 
         const modeLabel = mode === 'revoke' ? 'REVOKED & REGEN' : 'ENROLLED';
         if (status) {
-            status.innerHTML = `<strong style="color:var(--c-green);">✅ Template ${modeLabel}</strong> — Seed: ${actualSeed} · Dim: ${dim} · ${dim*4} bits · ISO/IEC 24745 COMPLIANT`;
+            status.innerHTML = `<strong style="color:var(--c-green);">Template ${modeLabel}</strong> — Seed: ${actualSeed} · Dim: ${dim} · ${dim*4} bits · ISO/IEC 24745 COMPLIANT`;
             status.style.borderColor = 'rgba(16,185,129,0.4)';
             status.style.color = 'var(--c-green)';
         }
-        if (metIso) { metIso.textContent = '✅ COMPLIANT'; metIso.style.color = 'var(--c-green)'; }
+        if (metIso) { metIso.textContent = 'COMPLIANT'; metIso.style.color = 'var(--c-green)'; }
     }, totalTime + 200);
 }
 
