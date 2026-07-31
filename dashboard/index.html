@@ -1993,14 +1993,271 @@ body.sb-collapsed .main {
 
 <!-- PAGE: SIMULASI -->
 <div class="page" id="page-simulasi">
-            Proses mengubah wajah asli menjadi template biometrik *cancelable*. Jika tombol ditekan, sistem akan meng-generate hash Hexadecimal unik berdasarkan *seed* enkripsi.
-        </p>
-        <button class="sim-btn" onclick="simulateHash()">Enkripsi Wajah Sekarang</button>
-        <button class="sim-btn" onclick="simulateHash()" style="background:linear-gradient(135deg, var(--c-red), var(--c-orange));">Cabut (Revoke) &amp; Regenerate</button>
-        <div class="card-title" style="text-align:left; margin-top:30px;">Output Hash Template (Base64 / Hex):</div>
-        <div class="sim-box" id="hash-output">Tekan tombol di atas untuk memulai simulasi pengacakan template.</div>
+<style>
+@keyframes sim-pulse-ring { 0%{transform:scale(1);opacity:0.6;} 50%{transform:scale(1.15);opacity:0;} 100%{transform:scale(1);opacity:0;} }
+@keyframes sim-lock-shake { 0%,100%{transform:rotate(0deg);} 15%,45%,75%{transform:rotate(-4deg);} 30%,60%,90%{transform:rotate(4deg);} }
+@keyframes sim-glow { 0%,100%{box-shadow:0 0 10px rgba(14,165,233,0.3);} 50%{box-shadow:0 0 30px rgba(14,165,233,0.7), 0 0 60px rgba(99,102,241,0.3);} }
+@keyframes bit-scroll { 0%{transform:translateY(0);} 100%{transform:translateY(-50%);} }
+@keyframes particle-float { 0%,100%{transform:translateY(0) rotate(0deg);opacity:0.7;} 50%{transform:translateY(-20px) rotate(180deg);opacity:1;} }
+@keyframes data-flow { 0%{stroke-dashoffset:200;opacity:0;} 30%{opacity:1;} 100%{stroke-dashoffset:0;opacity:0;} }
+@keyframes scan-line { 0%{top:0;opacity:0.7;} 100%{top:100%;opacity:0;} }
+.sim-card { background:linear-gradient(135deg,rgba(15,23,42,0.8),rgba(30,41,59,0.6)); border:1px solid rgba(14,165,233,0.2); border-radius:16px; padding:24px; backdrop-filter:blur(10px); }
+.sim-ctrl-btn { position:relative; overflow:hidden; border:none; border-radius:12px; padding:14px 28px; font-size:14px; font-weight:700; cursor:pointer; transition:all 0.3s; letter-spacing:0.5px; }
+.sim-ctrl-btn::before { content:''; position:absolute; inset:0; opacity:0; transition:opacity 0.3s; }
+.sim-ctrl-btn:hover { transform:translateY(-3px); }
+.sim-ctrl-btn:hover::before { opacity:1; }
+.sim-ctrl-btn:active { transform:translateY(-1px) scale(0.98); }
+.sim-enroll { background:linear-gradient(135deg,#0ea5e9,#6366f1); color:white; box-shadow:0 4px 20px rgba(14,165,233,0.3); }
+.sim-enroll::before { background:linear-gradient(135deg,rgba(255,255,255,0.1),transparent); }
+.sim-enroll:hover { box-shadow:0 8px 30px rgba(14,165,233,0.5); }
+.sim-revoke { background:linear-gradient(135deg,#ef4444,#f97316); color:white; box-shadow:0 4px 20px rgba(239,68,68,0.3); }
+.sim-revoke:hover { box-shadow:0 8px 30px rgba(239,68,68,0.5); }
+.sim-pipeline-step { background:rgba(30,41,59,0.6); border:1px solid rgba(100,116,139,0.2); border-radius:12px; padding:16px 20px; transition:all 0.4s; position:relative; overflow:hidden; }
+.sim-pipeline-step::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--bord); transition:background 0.3s; }
+.sim-pipeline-step.step-idle::before { background:rgba(100,116,139,0.3); }
+.sim-pipeline-step.step-running { border-color:rgba(14,165,233,0.5); background:rgba(14,165,233,0.08); animation:sim-glow 1.5s infinite; }
+.sim-pipeline-step.step-running::before { background:var(--c-blue); }
+.sim-pipeline-step.step-done { border-color:rgba(16,185,129,0.4); background:rgba(16,185,129,0.06); }
+.sim-pipeline-step.step-done::before { background:var(--c-green); }
+.sim-prog-bar { height:3px; background:rgba(100,116,139,0.2); border-radius:2px; margin-top:10px; overflow:hidden; }
+.sim-prog-fill { height:100%; width:0; background:linear-gradient(90deg,var(--c-blue),var(--c-purple)); border-radius:2px; transition:width 0.8s ease; }
+.sim-output-box { background:rgba(10,15,28,0.95); border:1px solid rgba(14,165,233,0.2); border-radius:12px; padding:20px; font-family:'JetBrains Mono',monospace; font-size:11px; line-height:1.8; min-height:100px; overflow-x:auto; position:relative; }
+.sim-output-box::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent,var(--c-blue),transparent); }
+.bit-char { display:inline-block; }
+.bit-1 { color:#0ea5e9; }
+.bit-0 { color:rgba(100,116,139,0.5); }
+.hex-char { color:#10b981; }
+.sim-badge { display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; }
+.badge-idle { background:rgba(100,116,139,0.1); color:#64748b; border:1px solid rgba(100,116,139,0.2); }
+.badge-run  { background:rgba(14,165,233,0.15); color:var(--c-blue); border:1px solid rgba(14,165,233,0.3); }
+.badge-done { background:rgba(16,185,129,0.15); color:var(--c-green); border:1px solid rgba(16,185,129,0.3); }
+.sim-metric { background:rgba(30,41,59,0.5); border:1px solid var(--bord); border-radius:10px; padding:14px; text-align:center; }
+</style>
+
+<!-- Hero Banner -->
+<div style="position:relative; background:linear-gradient(135deg,rgba(14,165,233,0.08),rgba(99,102,241,0.08),rgba(16,185,129,0.05)); border:1px solid rgba(14,165,233,0.15); border-radius:20px; padding:32px; margin-bottom:24px; overflow:hidden;">
+    <!-- Animated background particles -->
+    <div style="position:absolute; inset:0; pointer-events:none; overflow:hidden;">
+        <div style="position:absolute; width:4px; height:4px; background:var(--c-blue); border-radius:50%; top:20%; left:10%; animation:particle-float 4s ease-in-out infinite; opacity:0.4;"></div>
+        <div style="position:absolute; width:3px; height:3px; background:var(--c-purple); border-radius:50%; top:60%; left:80%; animation:particle-float 3s ease-in-out infinite 1s; opacity:0.4;"></div>
+        <div style="position:absolute; width:5px; height:5px; background:var(--c-green); border-radius:50%; top:80%; left:30%; animation:particle-float 5s ease-in-out infinite 0.5s; opacity:0.3;"></div>
+        <div style="position:absolute; width:2px; height:2px; background:var(--c-blue); border-radius:50%; top:30%; left:60%; animation:particle-float 3.5s ease-in-out infinite 2s; opacity:0.4;"></div>
+        <!-- Scan line effect -->
+        <div style="position:absolute; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent,rgba(14,165,233,0.3),transparent); animation:scan-line 4s linear infinite; top:0;"></div>
+    </div>
+    <div style="display:flex; align-items:center; gap:32px; position:relative; z-index:1;">
+        <!-- Animated lock -->
+        <div style="position:relative; width:100px; height:100px; flex-shrink:0; display:flex; align-items:center; justify-content:center;">
+            <div style="position:absolute; width:90px; height:90px; border:1.5px solid rgba(14,165,233,0.2); border-radius:50%; animation:sim-pulse-ring 2.5s ease-out infinite;"></div>
+            <div style="position:absolute; width:70px; height:70px; border:1.5px solid rgba(99,102,241,0.2); border-radius:50%; animation:sim-pulse-ring 2.5s ease-out infinite 0.8s;"></div>
+            <div id="sim-lock-icon" style="width:56px; height:56px; background:linear-gradient(135deg,rgba(14,165,233,0.2),rgba(99,102,241,0.2)); border-radius:50%; display:flex; align-items:center; justify-content:center; border:2px solid rgba(14,165,233,0.4); box-shadow:0 0 20px rgba(14,165,233,0.3);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:26px;height:26px;color:var(--c-blue);">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+            </div>
+        </div>
+        <div>
+            <div style="font-size:22px; font-weight:800; color:var(--txt); margin-bottom:8px;">Simulasi Sistem CancelFace</div>
+            <div style="font-size:13px; color:var(--txt2); line-height:1.7; max-width:600px;">Demonstrasi interaktif proses transformasi wajah CCTV menjadi <strong style="color:var(--c-blue);">Cancelable Biometric Template</strong> — mulai dari ekstraksi fitur AdaFace, transformasi adversarial via GRL, hingga binarisasi LSH dengan kunci institusi terenkripsi.</div>
+            <!-- Live metrics row -->
+            <div style="display:flex; gap:12px; margin-top:16px; flex-wrap:wrap;">
+                <div style="display:flex; align-items:center; gap:6px; font-size:11px; color:var(--txt2);"><span style="width:8px;height:8px;border-radius:50%;background:var(--c-green);display:inline-block;animation:sim-pulse-ring 1.5s infinite;"></span>System Ready</div>
+                <div style="font-size:11px; color:var(--txt2); padding:3px 10px; background:rgba(100,116,139,0.1); border-radius:20px; border:1px solid var(--bord);">ISO/IEC 24745 Compliant</div>
+                <div style="font-size:11px; color:var(--txt2); padding:3px 10px; background:rgba(100,116,139,0.1); border-radius:20px; border:1px solid var(--bord);">AdaFace + GRL + LSH</div>
+                <div style="font-size:11px; color:var(--txt2); padding:3px 10px; background:rgba(100,116,139,0.1); border-radius:20px; border:1px solid var(--bord);">UU PDP No.27/2022</div>
+            </div>
+        </div>
     </div>
 </div>
+
+<!-- Main Content Grid -->
+<div style="display:flex; flex-wrap:wrap; gap:20px; margin-bottom:24px;">
+
+    <!-- Left: Controls -->
+    <div class="sim-card" style="flex:0 0 280px; min-width:240px; display:flex; flex-direction:column; gap:20px;">
+        <div>
+            <div style="font-size:13px; font-weight:700; color:var(--txt); margin-bottom:16px; display:flex; align-items:center; gap:8px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="var(--c-blue)" stroke-width="2" style="width:16px;height:16px;"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+                Panel Kontrol
+            </div>
+            <div style="display:flex; flex-direction:column; gap:14px;">
+                <div>
+                    <label style="font-size:11px; color:var(--txt2); font-weight:600; margin-bottom:6px; display:block; text-transform:uppercase; letter-spacing:0.5px;">INSTITUTION_KEY_SEED</label>
+                    <input id="sim-key-seed" type="number" value="20260728" style="width:100%; box-sizing:border-box; background:rgba(15,23,42,0.8); border:1px solid rgba(14,165,233,0.2); border-radius:8px; padding:10px 14px; color:var(--c-blue); font-family:'JetBrains Mono',monospace; font-size:13px; outline:none; transition:border 0.2s;" onfocus="this.style.borderColor='rgba(14,165,233,0.6)'" onblur="this.style.borderColor='rgba(14,165,233,0.2)'">
+                </div>
+                <div>
+                    <label style="font-size:11px; color:var(--txt2); font-weight:600; margin-bottom:6px; display:block; text-transform:uppercase; letter-spacing:0.5px;">TEMPLATE_DIM</label>
+                    <select id="sim-dim" style="width:100%; background:rgba(15,23,42,0.8); border:1px solid rgba(14,165,233,0.2); border-radius:8px; padding:10px 14px; color:var(--txt); font-size:13px; outline:none;">
+                        <option value="64">64-dim (256 bits)</option>
+                        <option value="128">128-dim (512 bits)</option>
+                        <option value="256" selected>256-dim (1024 bits) — default</option>
+                        <option value="512">512-dim (2048 bits)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Buttons -->
+        <div style="display:flex; flex-direction:column; gap:10px;">
+            <button class="sim-ctrl-btn sim-enroll" onclick="runSimulation('enroll')" id="btn-enroll" style="width:100%; display:flex; align-items:center; justify-content:center; gap:10px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" style="width:16px;height:16px;"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                🔐 Enroll Template
+            </button>
+            <button class="sim-ctrl-btn sim-revoke" onclick="runSimulation('revoke')" id="btn-revoke" style="width:100%; display:flex; align-items:center; justify-content:center; gap:10px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" style="width:16px;height:16px;"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                🔄 Revoke & Regenerate
+            </button>
+        </div>
+
+        <!-- Info Box -->
+        <div style="background:rgba(14,165,233,0.05); border:1px solid rgba(14,165,233,0.15); border-radius:10px; padding:14px;">
+            <div style="font-size:11px; color:var(--txt2); line-height:1.7;">
+                <strong style="color:var(--c-blue);">Enroll:</strong> Menggunakan INSTITUTION_KEY_SEED untuk membuat template baru.<br><br>
+                <strong style="color:#f97316);">Revoke:</strong> Mengganti kunci dengan REVOCATION_KEY_SEED — template lama <strong>tidak kompatibel</strong> dengan yang baru.
+            </div>
+        </div>
+    </div>
+
+    <!-- Right: Pipeline Steps -->
+    <div class="sim-card" style="flex:1; min-width:280px; display:flex; flex-direction:column; gap:14px;">
+        <div style="font-size:13px; font-weight:700; color:var(--txt); margin-bottom:4px; display:flex; align-items:center; gap:8px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--c-purple)" stroke-width="2" style="width:16px;height:16px;"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            Alur Transformasi Real-time
+        </div>
+
+        <div class="sim-pipeline-step step-idle" id="sstep-1">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <div style="width:28px;height:28px;border-radius:50%;background:rgba(14,165,233,0.1);border:1px solid rgba(14,165,233,0.3);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--c-blue);">1</div>
+                    <div>
+                        <div style="font-size:12px; font-weight:700; color:var(--txt);">AdaFace Feature Extraction</div>
+                        <div style="font-size:11px; color:var(--txt2);">Menghasilkan embedding 512-dim dari citra wajah CCTV</div>
+                    </div>
+                </div>
+                <div class="sim-badge badge-idle" id="sstep-1-badge">IDLE</div>
+            </div>
+            <div class="sim-prog-bar"><div class="sim-prog-fill" id="prog-1"></div></div>
+        </div>
+
+        <div class="sim-pipeline-step step-idle" id="sstep-2">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <div style="width:28px;height:28px;border-radius:50%;background:rgba(14,165,233,0.1);border:1px solid rgba(14,165,233,0.3);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--c-blue);">2</div>
+                    <div>
+                        <div style="font-size:12px; font-weight:700; color:var(--txt);">Key Matrix Generation</div>
+                        <div style="font-size:11px; color:var(--txt2);">Matriks proyeksi ortogonal dari INSTITUTION_KEY_SEED</div>
+                    </div>
+                </div>
+                <div class="sim-badge badge-idle" id="sstep-2-badge">IDLE</div>
+            </div>
+            <div class="sim-prog-bar"><div class="sim-prog-fill" id="prog-2"></div></div>
+        </div>
+
+        <div class="sim-pipeline-step step-idle" id="sstep-3">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <div style="width:28px;height:28px;border-radius:50%;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.3);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--c-purple);">3</div>
+                    <div>
+                        <div style="font-size:12px; font-weight:700; color:var(--txt);">GRL Adversarial Transform</div>
+                        <div style="font-size:11px; color:var(--txt2);">ProposedNet menghapus atribut gender/age via GRL</div>
+                    </div>
+                </div>
+                <div class="sim-badge badge-idle" id="sstep-3-badge">IDLE</div>
+            </div>
+            <div class="sim-prog-bar"><div class="sim-prog-fill" id="prog-3" style="background:linear-gradient(90deg,var(--c-purple),var(--c-blue));"></div></div>
+        </div>
+
+        <div class="sim-pipeline-step step-idle" id="sstep-4">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <div style="width:28px;height:28px;border-radius:50%;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--c-green);">4</div>
+                    <div>
+                        <div style="font-size:12px; font-weight:700; color:var(--txt);">LSH Binarization</div>
+                        <div style="font-size:11px; color:var(--txt2);">Proyeksi acak → threshold → template biner cancelable</div>
+                    </div>
+                </div>
+                <div class="sim-badge badge-idle" id="sstep-4-badge">IDLE</div>
+            </div>
+            <div class="sim-prog-bar"><div class="sim-prog-fill" id="prog-4" style="background:linear-gradient(90deg,var(--c-green),var(--c-blue));"></div></div>
+        </div>
+
+        <!-- Status bar -->
+        <div id="sim-status" style="margin-top:4px; padding:12px 16px; background:rgba(100,116,139,0.06); border:1px dashed rgba(100,116,139,0.2); border-radius:10px; font-size:12px; color:var(--txt2); text-align:center;">
+            Sistem siap. Pilih mode <strong>Enroll</strong> atau <strong>Revoke</strong> untuk memulai simulasi.
+        </div>
+    </div>
+</div>
+
+<!-- Output Section -->
+<div class="sim-card" style="margin-bottom:24px;">
+    <div style="font-size:13px; font-weight:700; color:var(--txt); margin-bottom:20px; display:flex; align-items:center; gap:8px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--c-green)" stroke-width="2" style="width:16px;height:16px;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Output Template Biometrik
+    </div>
+    <div style="display:flex; flex-wrap:wrap; gap:16px; margin-bottom:16px;">
+        <div style="flex:1; min-width:250px;">
+            <div style="font-size:10px; color:var(--txt2); font-weight:600; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px;">HEX Template</div>
+            <div id="sim-hex-out" class="sim-output-box">
+                <span style="color:rgba(100,116,139,0.4); font-style:italic;">Tekan Enroll untuk mulai simulasi...</span>
+            </div>
+        </div>
+        <div style="flex:1; min-width:250px;">
+            <div style="font-size:10px; color:var(--txt2); font-weight:600; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px;">Binary Template Preview</div>
+            <div id="sim-bit-out" class="sim-output-box">
+                <span style="color:rgba(100,116,139,0.4); font-style:italic;">Representasi biner akan tampil di sini...</span>
+            </div>
+        </div>
+    </div>
+    <!-- Metrics row -->
+    <div style="display:flex; flex-wrap:wrap; gap:10px;" id="sim-metrics-row">
+        <div class="sim-metric" style="flex:1; min-width:100px;"><div style="font-size:18px; font-weight:800; color:var(--c-blue);" id="met-dim">—</div><div style="font-size:10px; color:var(--txt2); margin-top:2px;">Template Dim</div></div>
+        <div class="sim-metric" style="flex:1; min-width:100px;"><div style="font-size:18px; font-weight:800; color:var(--c-purple);" id="met-bits">—</div><div style="font-size:10px; color:var(--txt2); margin-top:2px;">Total Bits</div></div>
+        <div class="sim-metric" style="flex:1; min-width:100px;"><div style="font-size:18px; font-weight:800; color:var(--c-green);" id="met-key">—</div><div style="font-size:10px; color:var(--txt2); margin-top:2px;">Key Seed</div></div>
+        <div class="sim-metric" style="flex:1; min-width:100px;"><div style="font-size:18px; font-weight:800; color:#f97316;" id="met-mode">—</div><div style="font-size:10px; color:var(--txt2); margin-top:2px;">Mode</div></div>
+        <div class="sim-metric" style="flex:1.5; min-width:150px;"><div style="font-size:14px; font-weight:800; color:var(--c-green); font-family:'JetBrains Mono',monospace;" id="met-iso">—</div><div style="font-size:10px; color:var(--txt2); margin-top:2px;">ISO/IEC 24745 Status</div></div>
+    </div>
+</div>
+
+<!-- Educational section: Visual concept -->
+<div style="display:flex; flex-wrap:wrap; gap:16px;">
+    <div class="sim-card" style="flex:1; min-width:240px;">
+        <div style="font-size:13px; font-weight:700; color:var(--txt); margin-bottom:14px;">Konsep Cancelable Biometrics</div>
+        <div style="display:flex; flex-direction:column; gap:10px; font-size:12px;">
+            <div style="display:flex; align-items:center; gap:12px; padding:12px; background:rgba(239,68,68,0.05); border-radius:10px; border:1px solid rgba(239,68,68,0.15);">
+                <div style="font-size:22px;">😐</div>
+                <div><div style="font-weight:700; color:#ef4444;">Raw Embedding</div><div style="color:var(--txt2); margin-top:2px;">Mengandung identitas LENGKAP — wajah, gender, usia. Berbahaya jika bocor!</div></div>
+            </div>
+            <div style="text-align:center; color:var(--c-blue); font-size:18px;">↓ GRL + LSH Transform</div>
+            <div style="display:flex; align-items:center; gap:12px; padding:12px; background:rgba(16,185,129,0.05); border-radius:10px; border:1px solid rgba(16,185,129,0.15);">
+                <div style="font-size:22px;">🔒</div>
+                <div><div style="font-weight:700; color:var(--c-green);">Cancelable Template</div><div style="color:var(--txt2); margin-top:2px;">Gender &amp; usia dihapus. Hanya identitas tersisa. Dapat dicabut kapan saja.</div></div>
+            </div>
+        </div>
+    </div>
+    <div class="sim-card" style="flex:1; min-width:240px;">
+        <div style="font-size:13px; font-weight:700; color:var(--txt); margin-bottom:14px;">Skema Revocation</div>
+        <div style="display:flex; flex-direction:column; gap:10px; font-size:12px;">
+            <div style="display:flex; align-items:center; gap:10px;">
+                <div style="width:32px;height:32px;border-radius:8px;background:rgba(14,165,233,0.1);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">🔑</div>
+                <div><div style="color:var(--txt); font-weight:600;">Kunci Lama (INSTITUTION)</div><div style="color:var(--txt2);">Seed: 20260728 → Template A</div></div>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px; padding:10px; background:rgba(239,68,68,0.05); border-radius:8px; border:1px solid rgba(239,68,68,0.1);">
+                <div style="font-size:14px;">⚠️</div>
+                <div style="color:var(--txt2);">Template <strong style="color:#ef4444;">bocor/dikompromikan</strong> → Revoke diperlukan</div>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px;">
+                <div style="width:32px;height:32px;border-radius:8px;background:rgba(16,185,129,0.1);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">🔐</div>
+                <div><div style="color:var(--txt); font-weight:600;">Kunci Baru (REVOCATION)</div><div style="color:var(--txt2);">Seed: 20260999 → Template B ≠ A</div></div>
+            </div>
+            <div style="font-size:11px; color:var(--c-green); padding:8px 12px; background:rgba(16,185,129,0.05); border-radius:8px; border:1px solid rgba(16,185,129,0.15);">
+                ✓ cosine(Template A, Template B) ≈ 0 — Tidak ada korelasi
+            </div>
+        </div>
+    </div>
+</div>
+
+</div><!-- /page-simulasi -->
 
 </div><!-- /main -->
 
@@ -2300,6 +2557,105 @@ function renderCharts() {
         }
     }
 }
+function simulateHash() { runSimulation('enroll'); }
+
+function runSimulation(mode) {
+    const seed = parseInt(document.getElementById('sim-key-seed')?.value) || 20260728;
+    const dim  = parseInt(document.getElementById('sim-dim')?.value) || 256;
+    const actualSeed = mode === 'revoke' ? 20260999 : seed;
+
+    const stepIds   = ['sstep-1','sstep-2','sstep-3','sstep-4'];
+    const progIds   = ['prog-1','prog-2','prog-3','prog-4'];
+    const badgeIds  = ['sstep-1-badge','sstep-2-badge','sstep-3-badge','sstep-4-badge'];
+    const durations = [700, 550, 800, 450];
+
+    // Reset all steps
+    stepIds.forEach((id, i) => {
+        const el = document.getElementById(id);
+        if (el) { el.className = 'sim-pipeline-step step-idle'; }
+        const p = document.getElementById(progIds[i]);
+        if (p) p.style.width = '0%';
+        const b = document.getElementById(badgeIds[i]);
+        if (b) { b.textContent = 'IDLE'; b.className = 'sim-badge badge-idle'; }
+    });
+
+    const hexOut  = document.getElementById('sim-hex-out');
+    const bitOut  = document.getElementById('sim-bit-out');
+    const status  = document.getElementById('sim-status');
+    const lock    = document.getElementById('sim-lock-icon');
+    const metDim  = document.getElementById('met-dim');
+    const metBits = document.getElementById('met-bits');
+    const metKey  = document.getElementById('met-key');
+    const metMode = document.getElementById('met-mode');
+    const metIso  = document.getElementById('met-iso');
+
+    if (hexOut) hexOut.innerHTML = '<span style="color:rgba(100,116,139,0.5);font-style:italic;">Memproses pipeline...</span>';
+    if (bitOut) bitOut.innerHTML = '<span style="color:rgba(100,116,139,0.5);font-style:italic;">Menunggu output...</span>';
+    if (status) { status.textContent = mode === 'revoke' ? '🔄 Revoking — mengganti kunci institusi...': '🔐 Enrolling — memulai pipeline CancelFace...'; status.style.borderColor = 'rgba(14,165,233,0.4)'; status.style.color = 'var(--c-blue)'; }
+    if (lock)   lock.style.animation = 'sim-lock-shake 0.6s ease infinite';
+    if (metDim)  metDim.textContent  = dim + '-dim';
+    if (metBits) metBits.textContent = (dim * 4) + ' bits';
+    if (metKey)  metKey.textContent  = actualSeed;
+    if (metMode) metMode.textContent = mode === 'revoke' ? 'REVOKE' : 'ENROLL';
+    if (metIso)  metIso.textContent  = '⏳ Processing...';
+
+    let cumulativeDelay = 0;
+    stepIds.forEach((id, i) => {
+        const stepDelay = cumulativeDelay;
+        const dur = durations[i];
+        cumulativeDelay += dur;
+
+        setTimeout(() => {
+            const el = document.getElementById(id);
+            const b  = document.getElementById(badgeIds[i]);
+            const p  = document.getElementById(progIds[i]);
+            if (el) el.className = 'sim-pipeline-step step-running';
+            if (b)  { b.textContent = 'RUNNING'; b.className = 'sim-badge badge-run'; }
+            if (p)  setTimeout(() => p.style.width = '100%', 30);
+
+            setTimeout(() => {
+                if (el) el.className = 'sim-pipeline-step step-done';
+                if (b)  { b.textContent = '✓ DONE'; b.className = 'sim-badge badge-done'; }
+            }, dur - 80);
+        }, stepDelay);
+    });
+
+    const totalTime = cumulativeDelay;
+    setTimeout(() => {
+        if (lock) lock.style.animation = '';
+
+        // Deterministic "random" hex/bit from seed
+        const rng = (n) => { const x = Math.sin(actualSeed * 0.001 + n * 1.618) * 98765; return Math.abs(x - Math.floor(x)); };
+        const HEX = '0123456789ABCDEF';
+        let hexStr = '', binStr = '';
+        for (let i = 0; i < dim * 2; i++) hexStr += HEX[Math.floor(rng(i * 7.3 + 1) * 16)];
+        for (let i = 0; i < dim; i++) binStr += rng(i * 3.1 + 7) > 0.5 ? '1' : '0';
+
+        // Color each char
+        const coloredHex = hexStr.match(/.{1,2}/g).map(h => `<span class="hex-char">${h}</span>`).join('');
+        const coloredBin = binStr.split('').map(b => `<span class="${b==='1'?'bit-1':'bit-0'}">${b}</span>`).join('');
+
+        const hexRows = [];
+        for (let i = 0; i < hexStr.length; i += 32) hexRows.push(hexStr.slice(i,i+32));
+        const binRows = [];
+        for (let i = 0; i < binStr.length; i += 64) binRows.push(binStr.slice(i,i+64));
+
+        const fmtHex = hexRows.map(r => r.match(/.{1,2}/g).map(h=>`<span class="hex-char">${h}</span>`).join('')).join('<br>');
+        const fmtBin = binRows.map(r => r.split('').map(b=>`<span class="${b==='1'?'bit-1':'bit-0'}">${b}</span>`).join('')).join('<br>');
+
+        if (hexOut) hexOut.innerHTML = fmtHex;
+        if (bitOut) bitOut.innerHTML = fmtBin;
+
+        const modeLabel = mode === 'revoke' ? 'REVOKED & REGEN' : 'ENROLLED';
+        if (status) {
+            status.innerHTML = `<strong style="color:var(--c-green);">✅ Template ${modeLabel}</strong> — Seed: ${actualSeed} · Dim: ${dim} · ${dim*4} bits · ISO/IEC 24745 COMPLIANT`;
+            status.style.borderColor = 'rgba(16,185,129,0.4)';
+            status.style.color = 'var(--c-green)';
+        }
+        if (metIso) { metIso.textContent = '✅ COMPLIANT'; metIso.style.color = 'var(--c-green)'; }
+    }, totalTime + 200);
+}
+
 setTimeout(renderCharts, 1000);
 window.addEventListener('resize', renderCharts);
 </script>
