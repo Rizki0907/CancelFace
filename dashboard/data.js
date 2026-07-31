@@ -193,14 +193,20 @@ const cancelfaceData = {
   ],
   "eda_subset": [
     {
-      "split": "Latih (Train)",
-      "count": 5319,
-      "desc": "Citra referensi identitas"
+      "split": "Training Set",
+      "count": 50000
     },
     {
-      "split": "Uji (Test)",
-      "count": 5258,
-      "desc": "Citra query pelacakan"
+      "split": "Unmated Probe",
+      "count": 20000
+    },
+    {
+      "split": "Gallery",
+      "count": 15000
+    },
+    {
+      "split": "Mated Probe",
+      "count": 15000
     }
   ],
   "eda_camera": [
