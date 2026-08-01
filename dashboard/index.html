@@ -760,9 +760,7 @@ body.sb-collapsed .main {
   .ticker { top: 50px; height: 32px; }
 }
 
-40%  { opacity: 1; transform: scale(1.3) rotate(8deg); }
-  100% { opacity: 0; transform: scale(0.9) translateY(-30px) rotate(-5deg); }
-}
+
 
 /* ════════════════════════════════════════════════════════════════
    IMPROVED ANIMATIONS
@@ -1874,18 +1872,19 @@ function toggleTheme() {
 
 function toggleSidebar() {
   const sb = document.querySelector('.sidebar');
-  const main = document.querySelector('.main');
   const ov = document.querySelector('.sb-overlay');
-  if(window.innerWidth <= 900) {
-    if(sb.style.transform === 'translateX(0px)') {
-        sb.style.transform = 'translateX(-100%)';
-        ov.classList.remove('visible');
+  if (window.innerWidth <= 900) {
+    const isOpen = sb.classList.contains('mobile-open');
+    if (isOpen) {
+      sb.classList.remove('mobile-open');
+      ov.classList.remove('visible');
     } else {
-        sb.style.transform = 'translateX(0px)';
-        ov.classList.add('visible');
+      sb.classList.add('mobile-open');
+      ov.classList.add('visible');
     }
   } else {
-    sb.classList.toggle('collapsed');
+    const isCollapsed = sb.classList.toggle('collapsed');
+    document.body.classList.toggle('sb-collapsed', isCollapsed);
   }
 }
 
@@ -2259,6 +2258,31 @@ function runSimulation(mode) {
 
 setTimeout(renderCharts, 1000);
 window.addEventListener('resize', renderCharts);
+
+function openSidebarMobile() { toggleSidebar(); }
+
+// Init on load: sync body.sb-collapsed with sidebar state
+window.addEventListener('load', function() {
+  // Force dark mode by default
+  if (!document.documentElement.getAttribute('data-theme') || document.documentElement.getAttribute('data-theme') === 'light') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+  // Sync body class with sidebar state
+  const sb = document.querySelector('.sidebar');
+  if (sb && sb.classList.contains('collapsed')) {
+    document.body.classList.add('sb-collapsed');
+  } else {
+    document.body.classList.remove('sb-collapsed');
+  }
+  // On mobile: overlay click closes sidebar
+  const ov = document.querySelector('.sb-overlay');
+  if (ov) ov.addEventListener('click', function() {
+    const sb = document.querySelector('.sidebar');
+    sb.classList.remove('mobile-open');
+    ov.classList.remove('visible');
+  });
+});
+
 </script>
 </body>
 </html>
